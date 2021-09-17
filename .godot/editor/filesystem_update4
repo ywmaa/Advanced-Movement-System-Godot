@@ -1,0 +1,4 @@
+res://Maps/TestMap.tscn
+res://Maps/floor.tres
+res://Player/Player.gd
+res://default_env.tres

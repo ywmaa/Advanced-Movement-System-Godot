@@ -1,0 +1,17 @@
+RayCast3D
+Timer
+Control
+AnimationTree
+CharacterBody3D
+Node3D
+AnimationPlayer
+Label
+VisibleOnScreenEnabler3D
+ColorRect
+WorldEnvironment
+DirectionalLight3D
+ClippedCamera3D
+CollisionShape3D
+MeshInstance3D
+StaticBody3D
+Node

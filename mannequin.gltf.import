@@ -1,0 +1,140 @@
+[remap]
+
+importer="scene"
+importer_version=1
+type="PackedScene"
+uid="uid://bpqdhf43wsxuw"
+path="res://.godot/imported/mannequin.gltf-98532b89208a420ef6062a14ecd8bb22.scn"
+
+[deps]
+
+source_file="res://mannequin.gltf"
+dest_files=["res://.godot/imported/mannequin.gltf-98532b89208a420ef6062a14ecd8bb22.scn"]
+
+[params]
+
+nodes/root_type="Node3D"
+nodes/root_name="Scene Root"
+nodes/root_scale=1.0
+meshes/ensure_tangents=true
+meshes/generate_lods=true
+meshes/create_shadow_meshes=true
+meshes/light_baking=2
+meshes/lightmap_texel_size=0.1
+skins/use_named_skins=true
+animation/import=true
+animation/bake_reset_animation=true
+animation/fps=15
+import_script/path=""
+_subresources={
+"animations": {
+"Crouched Walking": {
+"save_to_file/enabled": true,
+"save_to_file/keep_custom_tracks": "",
+"save_to_file/path": "res://Player/Animations/new/Crouched Walking.tres",
+"settings/loops": false
+},
+"Crouching Idle": {
+"save_to_file/enabled": true,
+"save_to_file/keep_custom_tracks": "",
+"save_to_file/path": "res://Player/Animations/new/Crouching Idle.tres",
+"settings/loops": false
+},
+"Male Crouch Pose": {
+"save_to_file/enabled": true,
+"save_to_file/keep_custom_tracks": "",
+"save_to_file/path": "res://Player/Animations/new/Male Crouch Pose.tres",
+"settings/loops": false
+},
+"Sprinting Forward Roll": {
+"save_to_file/enabled": true,
+"save_to_file/keep_custom_tracks": "",
+"save_to_file/path": "res://Player/Animations/new/Sprinting Forward Roll.tres",
+"settings/loops": false
+},
+"T-Pose": {
+"save_to_file/enabled": true,
+"save_to_file/keep_custom_tracks": "",
+"save_to_file/path": "res://Player/Animations/T-Pose.tres",
+"settings/loops": false
+},
+"Walking Backward": {
+"save_to_file/enabled": true,
+"save_to_file/keep_custom_tracks": "",
+"save_to_file/path": "res://Player/Animations/new/Walking Backward.tres",
+"settings/loops": false
+},
+"idle": {
+"save_to_file/enabled": true,
+"save_to_file/keep_custom_tracks": "",
+"save_to_file/path": "res://Player/Animations/idle.tres",
+"settings/loops": false
+},
+"jump": {
+"save_to_file/enabled": true,
+"save_to_file/keep_custom_tracks": "",
+"save_to_file/path": "res://Player/Animations/jump.tres",
+"settings/loops": false
+},
+"left strafe": {
+"save_to_file/enabled": true,
+"save_to_file/keep_custom_tracks": "",
+"save_to_file/path": "res://Player/Animations/left strafe.tres",
+"settings/loops": false
+},
+"left strafe walking": {
+"save_to_file/enabled": true,
+"save_to_file/keep_custom_tracks": "",
+"save_to_file/path": "res://Player/Animations/left strafe walking.tres",
+"settings/loops": false
+},
+"left turn": {
+"save_to_file/enabled": true,
+"save_to_file/keep_custom_tracks": "",
+"save_to_file/path": "res://Player/Animations/left turn.tres",
+"settings/loops": false
+},
+"left turn 90": {
+"save_to_file/enabled": true,
+"save_to_file/keep_custom_tracks": "",
+"save_to_file/path": "res://Player/Animations/left turn 90.tres",
+"settings/loops": false
+},
+"right strafe": {
+"save_to_file/enabled": true,
+"save_to_file/keep_custom_tracks": "",
+"save_to_file/path": "res://Player/Animations/right strafe.tres",
+"settings/loops": false
+},
+"right strafe walking": {
+"save_to_file/enabled": true,
+"save_to_file/keep_custom_tracks": "",
+"save_to_file/path": "res://Player/Animations/right strafe walking.tres",
+"settings/loops": false
+},
+"right turn": {
+"save_to_file/enabled": true,
+"save_to_file/keep_custom_tracks": "",
+"save_to_file/path": "res://Player/Animations/right turn.tres",
+"settings/loops": false
+},
+"right turn 90": {
+"save_to_file/enabled": true,
+"save_to_file/keep_custom_tracks": "",
+"save_to_file/path": "res://Player/Animations/right turn 90.tres",
+"settings/loops": false
+},
+"running": {
+"save_to_file/enabled": true,
+"save_to_file/keep_custom_tracks": "",
+"save_to_file/path": "res://Player/Animations/running.tres",
+"settings/loops": false
+},
+"walking": {
+"save_to_file/enabled": true,
+"save_to_file/keep_custom_tracks": "",
+"save_to_file/path": "res://Player/Animations/walking.tres",
+"settings/loops": false
+}
+}
+}
