@@ -12,7 +12,7 @@ _global_script_classes=[{
 "base": "",
 "class": &"GitAPI",
 "language": &"NativeScript",
-"path": "res://git_api.gdns"
+"path": "res://godot-git-plugin-v1.2.1-x11/git_api.gdns"
 }]
 _global_script_class_icons={
 "GitAPI": ""
@@ -20,7 +20,7 @@ _global_script_class_icons={
 
 [application]
 
-config/name="ThirdPerson"
+config/name="AMSG"
 run/main_scene="res://Maps/TestMap.tscn"
 config/icon="res://icon.png"
 
@@ -35,7 +35,8 @@ window/size/height=720
 
 [gdnative]
 
-singletons=["res://git_api.gdnlib"]
+singletons=["res://godot-git-plugin-v1.2.1-x11/git_api.gdnlib"]
+singletons_disabled=[]
 
 [input]
 

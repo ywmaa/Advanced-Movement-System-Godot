@@ -8,7 +8,7 @@ enum MovementAction {LowMantle , HighMantle , Rolling , GettingUp}
 enum OverlayState {Default , Rifle , Pistol}
 enum RotationMode {VelocityDirection , LookingDirection , Aiming}
 enum Stance {Standing , Crouching}
-enum CameraMode {ThirdPerson , FirstPerson}
+enum ViewMode {ThirdPerson , FirstPerson}
 enum MantleType {HighMantle , LowMantle, FallingCatch}
 enum MovementDirection {Forward , Right, Left, Backward}
 

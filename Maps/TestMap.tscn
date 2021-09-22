@@ -105,4 +105,3 @@ script = null
 
 [node name="Player" parent="." instance=ExtResource( "1_qjb26" )]
 transform = Transform3D(0.987165, 0, 0, 0, 0.987165, 0, 0, 0, 0.987165, -1.29505, 8.97657, -0.537073)
-acceleration = 6

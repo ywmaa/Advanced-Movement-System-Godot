@@ -6,6 +6,7 @@ extends CharacterBody3D
 #####################################
 #Refrences
 @onready var AnimRef = $AnimationTree
+@onready var CameraRef = $CameraRoot
 #####################################
 
 
@@ -16,7 +17,7 @@ extends CharacterBody3D
 
 #####################################
 #Movement Settings
-@export var acceleration = 15
+
 @export var angular_acceleration = 7
 var weight_on_ground = 4
 @export var gravity = 28
@@ -49,13 +50,28 @@ var weight_on_ground = 4
 
 #####################################
 #for logic #it is better not to change it if you don't want to break the system / only change it if you want to redesign the system
+var Acceleration
+var AccelerationFromInput :Vector3
+@export var MaxAcceleration = 15
+var MovementSpeed = 0
+var PrevVelocity :Vector3
+
+var IsMoving :bool = false
+
+var AimRate_H :float
+var PrevAimRate_H :float
 
 var direction = Vector3.FORWARD
-var movement_speed = 0
+
+
 var vertical_velocity = 0
 var strafe_dir = Vector3.ZERO
 var strafe = Vector3.ZERO
 var aim_turn = 0
+
+var TargetRotation = Vector3.ZERO
+var LastVelocityRotation = Vector3.ZERO
+var LastMovementInputRotation = Vector3.ZERO
 
 var CurrentMovementData = {
 	Walk_Speed = 1.75, 
@@ -68,14 +84,13 @@ var CurrentMovementData = {
 
 
 #status
-var MovementState = GlobalEnums.MovementState
-var PrevMovementState = GlobalEnums.MovementState
-var MovementAction = GlobalEnums.MovementAction
-var RotationMode = GlobalEnums.RotationMode
-var Gait = GlobalEnums.Gait
-var Stance = GlobalEnums.Stance
-var OverlayState = GlobalEnums.OverlayState
-var sprinting = false
+var MovementState = GlobalEnums.MovementState.Grounded
+var PrevMovementState = GlobalEnums.MovementState.None
+var MovementAction = GlobalEnums.MovementAction.LowMantle
+var RotationMode = GlobalEnums.RotationMode.LookingDirection
+var Gait = GlobalEnums.Gait.Walking
+var Stance = GlobalEnums.Stance.Standing
+var OverlayState = GlobalEnums.OverlayState.Default
 
 #####################################
 
@@ -83,9 +98,16 @@ var sprinting = false
 func _ready():
 	CurrentMovementData = MovementData.Normal.LookingDirection.Standing
 	
+	#Update states to use the initial desired values.
+	OnGaitChanged(DesiredGait)
+	OnRotationModeChanged(DesiredRotationMode)
+	OnOverlayStateChanged(OverlayState)
+	TargetRotation = $Armature.get_rotation()
+	LastVelocityRotation = $Armature.get_rotation()
+	LastMovementInputRotation = $Armature.get_rotation()
 	
-	
-	
+func _process(delta):
+	SetEssentialValues(delta)
 	
 func _input(event):
 	if event is InputEventMouseMotion: 
@@ -93,13 +115,13 @@ func _input(event):
 	#------------------ Sprint ------------------#
 	if UsingSprintToggle:
 		if event.is_action_pressed("sprint"):
-			sprinting = false if sprinting else true 
+			Gait = GlobalEnums.Gait.Walking if Gait == GlobalEnums.Gait.Sprinting else GlobalEnums.Gait.Sprinting 
 	else:
-		sprinting = Input.is_action_pressed("sprint")
+		Gait = GlobalEnums.Gait.Sprinting if Input.is_action_pressed("sprint") else GlobalEnums.Gait.Walking 
 		
 	
 	if is_on_floor():
-		if !$AnimationTree.get("parameters/roll/active"):
+		if !AnimRef.get("parameters/roll/active"):
 			#------------------ Jump ------------------#
 			if OnePressJump == true:
 				if Input.is_action_just_pressed("jump"):
@@ -117,15 +139,15 @@ func _input(event):
 func _physics_process(delta):
 	#------------------ roll control ------------------#
 	if !$roll_timer.is_stopped():
-		acceleration = 3.5
+		Acceleration = 3.5
 	else:
-		acceleration = 5.0
+		Acceleration = 15
 	#------------------ Aim ------------------#
 	if Input.is_action_pressed("aim"):
-		if !$AnimationTree.get("parameters/roll/active"):
-			$AnimationTree.set("parameters/aim_transition/current",0)
+		if !AnimRef.get("parameters/roll/active"):
+			AnimRef.set("parameters/aim_transition/current",0)
 	else:
-		$AnimationTree.set("parameters/aim_transition/current",1)
+		AnimRef.set("parameters/aim_transition/current",1)
 	
 	#------------------ Movement ------------------#
 	
@@ -138,26 +160,17 @@ func _physics_process(delta):
 				Input.get_action_strength("forward") - Input.get_action_strength("back"))
 		strafe_dir = direction
 		direction = direction.rotated(Vector3.UP,h_rot).normalized()
-		if sprinting && $AnimationTree.get("parameters/aim_transition/current") == 1 :
-			movement_speed = CurrentMovementData.Run_Speed
+		if Gait == GlobalEnums.Gait.Sprinting :
+			AddMovementInput(direction, CurrentMovementData.Run_Speed ,delta)
 		else:
-			movement_speed = CurrentMovementData.Walk_Speed
+			AddMovementInput(direction, CurrentMovementData.Walk_Speed ,delta)
 			
 	else:
-		movement_speed = 0
+		AddMovementInput(direction, 0.0 ,delta)
 		strafe_dir = Vector3.ZERO
-		if $AnimationTree.get("parameters/aim_transition/current") == 0:
+		if AnimRef.get("parameters/aim_transition/current") == 0:
 			direction = $CameraRoot/h.transform.basis.z
 			
-	#Move
-	linear_velocity.x = lerp(linear_velocity.x, direction.x * movement_speed ,delta * acceleration) 
-	linear_velocity.y = lerp(linear_velocity.y, vertical_velocity - get_floor_normal().y * weight_on_ground ,delta * acceleration) 
-	linear_velocity.z = lerp(linear_velocity.z, direction.z * movement_speed,delta * acceleration) 
-	move_and_slide()
-	
-
-
-		
 	
 	
 	
@@ -170,17 +183,17 @@ func _physics_process(delta):
 		vertical_velocity = 0
 		
 	#------------------ Rotate Character Mesh ------------------#
-	if $AnimationTree.get("parameters/aim_transition/current") == 1:
+	if AnimRef.get("parameters/aim_transition/current") == 1:
 		$Armature.rotation.y = lerp_angle($Armature.rotation.y, atan2(direction.x , direction.z), delta * angular_acceleration)
 	else:
 		$Armature.rotation.y = lerp_angle($Armature.rotation.y, h_rot, delta * angular_acceleration)
 		
 		
-	strafe.x = lerp(strafe.x,strafe_dir.x ,delta * acceleration)
-	strafe.y = lerp(strafe.y,strafe_dir.y,delta * acceleration)
-	strafe.z = lerp(strafe.z,strafe_dir.z + aim_turn,delta * acceleration)
+	strafe.x = lerp(strafe.x,strafe_dir.x ,delta * MaxAcceleration)
+	strafe.y = lerp(strafe.y,strafe_dir.y,delta * MaxAcceleration)
+	strafe.z = lerp(strafe.z,strafe_dir.z + aim_turn,delta * MaxAcceleration)
 	
-	$AnimationTree.set("parameters/strafe/blend_position",Vector2(-strafe.x,strafe.z))
+	AnimRef.set("parameters/strafe/blend_position",Vector2(-strafe.x,strafe.z))
 	
 	#------------------ blend the animation with the velocity ------------------#
 	#https://www.desmos.com/calculator/wnajovy5pc Explains the linear equations here to blend the animation with the velocity
@@ -188,9 +201,9 @@ func _physics_process(delta):
 	var wr_blend = (linear_velocity.length() - CurrentMovementData.Walk_Speed) / (CurrentMovementData.Run_Speed - CurrentMovementData.Walk_Speed)
 	
 	if linear_velocity.length() <= CurrentMovementData.Walk_Speed:
-		$AnimationTree.set("parameters/IWR_blend/blend_amount" , iw_blend)
+		AnimRef.set("parameters/IWR_blend/blend_amount" , iw_blend)
 	else:
-		$AnimationTree.set("parameters/IWR_blend/blend_amount" , wr_blend)
+		AnimRef.set("parameters/IWR_blend/blend_amount" , wr_blend)
 		
 	
 	
@@ -203,7 +216,7 @@ func _physics_process(delta):
 
 
 func roll():
-	$AnimationTree.set("parameters/roll/active",true)
+	AnimRef.set("parameters/roll/active",true)
 	$roll_timer.start()
 	linear_velocity = (direction - get_floor_normal()) * roll_magnitude
 
@@ -287,6 +300,15 @@ var MovementData = {
 
 
 
+func OnGaitChanged(NewGait):
+	Gait = NewGait
+func OnRotationModeChanged(NewRotationMode):
+	RotationMode = NewRotationMode
+	if RotationMode == GlobalEnums.RotationMode.VelocityDirection:
+		if CameraRef.ViewMode == GlobalEnums.ViewMode.FirstPerson:
+			CameraRef.OnViewModeChanged(GlobalEnums.ViewMode.ThirdPerson)
+func OnOverlayStateChanged(NewOverlayState):
+	OverlayState = NewOverlayState
 
 
 
@@ -294,3 +316,40 @@ var MovementData = {
 
 
 
+
+
+
+
+
+#These values represent how the capsule is moving as well as how it wants to move,
+#and therefore are essential for any data driven animation system.
+#They are also used throughout the system for various functions, so I found it is easiest to manage them all in one place.
+func SetEssentialValues(delta): 
+	
+	#
+	Acceleration = (linear_velocity - PrevVelocity) / delta
+	PrevVelocity = linear_velocity
+	#
+
+
+	if IsMoving:
+		pass
+		#needs revision
+		#LastVelocityRotation.rotated(linear_velocity.normalized(),1.0)
+	
+	#This represents the speed the camera is rotating left to right. 
+	AimRate_H = abs(($CameraRoot/h.rotation.y - PrevAimRate_H) / delta)
+	PrevAimRate_H = $CameraRoot/h.rotation.y
+	
+	
+func DrawDebugShapes():
+	pass
+
+func AddMovementInput(direction: Vector3, Speed: float , delta):
+	linear_velocity.x = lerp(linear_velocity.x, direction.x * Speed, MaxAcceleration * delta) 
+	linear_velocity.y = lerp(linear_velocity.y, vertical_velocity - get_floor_normal().y * weight_on_ground ,MaxAcceleration * delta) 
+	linear_velocity.z = lerp(linear_velocity.z, direction.z * Speed,MaxAcceleration * delta) 
+	move_and_slide()
+	IsMoving = Speed > 0.0
+	MovementSpeed = Speed
+	AccelerationFromInput = Speed * MaxAcceleration * direction

@@ -1,6 +1,11 @@
 extends Node3D
 
-var CameraMode = GlobalEnums.CameraMode
+#####################################
+#Refrences
+@onready var PlayerRef = get_parent()
+#####################################
+
+@export var ViewMode = GlobalEnums.ViewMode
 @export var MouseSensitvity = 0.01
 var camere_h = 0
 var camere_v = 0
@@ -39,3 +44,13 @@ func _physics_process(delta):
 		$h.rotation.y = lerp($h.rotation.y,camere_h,delta * acceleration_h)
 	
 	$h/v.rotation.x = lerp($h/v.rotation.x,camere_v,delta * acceleration_v)
+
+func OnViewModeChanged(NewViewMode):
+	ViewMode = NewViewMode
+	if ViewMode == GlobalEnums.ViewMode.ThirdPerson:
+		if PlayerRef.RotationMode == GlobalEnums.RotationMode.VelocityDirection || PlayerRef.RotationMode == GlobalEnums.RotationMode.LookingDirection:
+			PlayerRef.OnRotationModeChanged(PlayerRef.DesiredRotationMode) 
+	elif ViewMode == GlobalEnums.ViewMode.FirstPerson:
+		if PlayerRef.RotationMode == GlobalEnums.RotationMode.VelocityDirection:
+			PlayerRef.OnRotationModeChanged(GlobalEnums.RotationMode.LookingDirection) 
+	

@@ -207,7 +207,7 @@ node_connections = [&"output", 0, &"weapon-blend", &"IWR_blend", 0, &"idle", &"I
 [node name="Player" type="CharacterBody3D"]
 transform = Transform3D(0.987165, 0, 0, 0, 0.987165, 0, 0, 0, 0.987165, 0, 0, 0)
 script = ExtResource( "1_lrww3" )
-DesiredRotationMode = 1
+DesiredRotationMode = 0
 OnePressJump = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
@@ -614,6 +614,7 @@ script = ExtResource( "22_wjarj" )
 
 [node name="CameraRoot" type="Node3D" parent="."]
 script = ExtResource( "2_3h36s" )
+ViewMode = 0
 
 [node name="h" type="Node3D" parent="CameraRoot"]
 script = null
