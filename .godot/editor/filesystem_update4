@@ -1,6 +1,13 @@
 res://Maps/TestMap.tscn
 res://Maps/floor.tres
+res://Player/Animations/idle.tres
+res://Player/Animations/left strafe walking.tres
+res://Player/Animations/left strafe.tres
+res://Player/Animations/new/Walking Backward.tres
+res://Player/Animations/right strafe walking.tres
+res://Player/Animations/right strafe.tres
+res://Player/Animations/running.tres
+res://Player/Animations/walking.tres
 res://Player/Player.gd
 res://Player/Player.tscn
-res://Player/Status.gd
 res://default_env.tres

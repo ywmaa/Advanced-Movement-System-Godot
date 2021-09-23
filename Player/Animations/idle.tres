@@ -3,6 +3,7 @@
 [resource]
 resource_name = "idle-loop"
 length = 4.18333
+loop = true
 tracks/0/type = "transform"
 tracks/0/path = NodePath("Armature/Skeleton3D:LeftHandThumb1")
 tracks/0/interp = 1
