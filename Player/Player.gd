@@ -51,9 +51,9 @@ const BONUS_GRAVITY = 2.0
 
 #####################################
 #for logic #it is better not to change it if you don't want to break the system / only change it if you want to redesign the system
-var ActualAcceleration
+var ActualAcceleration :Vector3
 var InputAcceleration :Vector3
-@export var MaxAcceleration = 15.0
+
 var vertical_velocity = 0
 
 var InputSpeed = 0
@@ -80,10 +80,12 @@ var CurrentMovementData = {
 	Walk_Speed = 1.75, 
 	Run_Speed = 3.75, 
 	Sprint_Speed = 6.5,
+	Walk_Acceleration = 15.0, 
+	Run_Acceleration = 15.0, 
+	Sprint_Acceleration = 15.0,
 	Movement_Curve = preload("res://FakeCurve.tres"), 
 	Rotation_Rate_Curve = preload("res://FakeCurve.tres"), 
 }
-
 
 
 #status
@@ -144,7 +146,6 @@ func _physics_process(delta):
 		GlobalEnums.MovementState.None:
 			pass
 		GlobalEnums.MovementState.Grounded:
-			UpdateCharacterMovement()
 			UpdateGroundedRotation()
 		GlobalEnums.MovementState.In_Air:
 			pass
@@ -177,12 +178,12 @@ func _physics_process(delta):
 		strafe_dir = direction
 		direction = direction.rotated(Vector3.UP,h_rot).normalized()
 		if Gait == GlobalEnums.Gait.Sprinting :
-			AddMovementInput(direction, CurrentMovementData.Run_Speed ,delta)
+			AddMovementInput(direction, CurrentMovementData.Run_Speed,CurrentMovementData.Run_Acceleration ,delta)
 		else:
-			AddMovementInput(direction, CurrentMovementData.Walk_Speed ,delta)
+			AddMovementInput(direction, CurrentMovementData.Walk_Speed,CurrentMovementData.Walk_Acceleration ,delta)
 			
 	else:
-		AddMovementInput(direction, 0.0 ,delta)
+		AddMovementInput(direction, 0.0 , CurrentMovementData.Walk_Acceleration,delta)
 		strafe_dir = Vector3.ZERO
 		if AnimRef.get("parameters/aim_transition/current") == 0:
 			direction = $CameraRoot/h.transform.basis.z
@@ -209,9 +210,7 @@ func _physics_process(delta):
 		$Armature.rotation.y = lerp_angle($Armature.rotation.y, h_rot, delta * angular_acceleration)
 		
 		
-	strafe.x = lerp(strafe.x,strafe_dir.x ,delta * MaxAcceleration)
-	strafe.y = lerp(strafe.y,strafe_dir.y,delta * MaxAcceleration)
-	strafe.z = lerp(strafe.z,strafe_dir.z + aim_turn,delta * MaxAcceleration)
+
 	
 	AnimRef.set("parameters/strafe/blend_position",Vector2(-strafe.x,strafe.z))
 	
@@ -256,7 +255,9 @@ var MovementData = {
 				Walk_Speed = 1.75, 
 				Run_Speed = 3.75, 
 				Sprint_Speed = 6.5,
-				Movement_Curve = preload("res://FakeCurve.tres"), 
+				Walk_Acceleration = 20.0, 
+				Run_Acceleration = 20.0, 
+				Sprint_Acceleration = 7.5,
 				Rotation_Rate_Curve = preload("res://FakeCurve.tres"), 
 			},
 
@@ -264,7 +265,9 @@ var MovementData = {
 				Walk_Speed = 1.5, 
 				Run_Speed = 2, 
 				Sprint_Speed = 3,
-				Movement_Curve = preload("res://FakeCurve.tres"), 
+				Walk_Acceleration = 25.0, 
+				Run_Acceleration = 25.0, 
+				Sprint_Acceleration = 5.0,				
 				Rotation_Rate_Curve = preload("res://FakeCurve.tres"), 
 			}
 		},
@@ -278,7 +281,9 @@ var MovementData = {
 				Walk_Speed = 1.75, 
 				Run_Speed = 3.75, 
 				Sprint_Speed = 6.5,
-				Movement_Curve = preload("res://FakeCurve.tres"), 
+				Walk_Acceleration = 20.0, 
+				Run_Acceleration = 20.0, 
+				Sprint_Acceleration = 7.5,			
 				Rotation_Rate_Curve = preload("res://FakeCurve.tres"), 
 			},
 
@@ -286,7 +291,9 @@ var MovementData = {
 				Walk_Speed = 1.5, 
 				Run_Speed = 2, 
 				Sprint_Speed = 3,
-				Movement_Curve = preload("res://FakeCurve.tres"), 
+				Walk_Acceleration = 25.0, 
+				Run_Acceleration = 25.0, 
+				Sprint_Acceleration = 5.0,				
 				Rotation_Rate_Curve = preload("res://FakeCurve.tres"), 
 			}
 		},
@@ -301,7 +308,9 @@ var MovementData = {
 				Walk_Speed = 1.65, 
 				Run_Speed = 3.75, 
 				Sprint_Speed = 6.5,
-				Movement_Curve = preload("res://FakeCurve.tres"), 
+				Walk_Acceleration = 20.0, 
+				Run_Acceleration = 20.0, 
+				Sprint_Acceleration = 7.5,		
 				Rotation_Rate_Curve = preload("res://FakeCurve.tres"), 
 			},
 
@@ -309,7 +318,9 @@ var MovementData = {
 				Walk_Speed = 1.5, 
 				Run_Speed = 2, 
 				Sprint_Speed = 3,
-				Movement_Curve = preload("res://FakeCurve.tres"), 
+				Walk_Acceleration = 25.0, 
+				Run_Acceleration = 25.0, 
+				Sprint_Acceleration = 5.0,				
 				Rotation_Rate_Curve = preload("res://FakeCurve.tres"), 
 			}
 		}
@@ -325,6 +336,7 @@ func OnRotationModeChanged(NewRotationMode):
 	if RotationMode == GlobalEnums.RotationMode.VelocityDirection:
 		if CameraRef.ViewMode == GlobalEnums.ViewMode.FirstPerson:
 			CameraRef.OnViewModeChanged(GlobalEnums.ViewMode.ThirdPerson)
+	UpdateCharacterMovement()
 func OnOverlayStateChanged(NewOverlayState):
 	OverlayState = NewOverlayState
 
@@ -346,9 +358,57 @@ var PrevPosition :Vector3
 var PrevVelocity :Vector3
 var PrevAimRate_H :float
 func SetEssentialValues(delta): 
+	#
+	AimRate_H = abs(($CameraRoot/h.rotation.y - PrevAimRate_H) / delta)
+	PrevAimRate_H = $CameraRoot/h.rotation.y
+	#
+	
+func UpdateCharacterMovement():
+	#------------------ Update Movement Values ------------------#
+	match RotationMode:
+		GlobalEnums.RotationMode.VelocityDirection:
+			match Stance:
+				GlobalEnums.Stance.Standing:
+					CurrentMovementData = MovementData.Normal.VelocityDirection.Standing
+				GlobalEnums.Stance.Crouching:
+					CurrentMovementData = MovementData.Normal.VelocityDirection.Crouching
+					
+					
+		GlobalEnums.RotationMode.LookingDirection:
+			match Stance:
+				GlobalEnums.Stance.Standing:
+					CurrentMovementData = MovementData.Normal.LookingDirection.Standing
+				GlobalEnums.Stance.Crouching:
+					CurrentMovementData = MovementData.Normal.LookingDirection.Crouching
+					
+					
+		GlobalEnums.RotationMode.Aiming:
+			match Stance:
+				GlobalEnums.Stance.Standing:
+					CurrentMovementData = MovementData.Normal.Aiming.Standing
+				GlobalEnums.Stance.Crouching:
+					CurrentMovementData = MovementData.Normal.Aiming.Crouching
+	
+	
+	
+func UpdateGroundedRotation():
+	pass
+			
+			
+func Debug():
+	$Status/Label.text = "InputSpeed : %s" % InputSpeed
+	$Status/Label2.text = "ActualSpeed : %s" % ActualSpeed
+func AddMovementInput(direction: Vector3, Speed: float , Acceleration: float, delta):
+	linear_velocity.x = lerp(linear_velocity.x, direction.x * Speed, Acceleration * delta) 
+	linear_velocity.y = lerp(linear_velocity.y, vertical_velocity - get_floor_normal().y  ,Acceleration * delta) 
+	linear_velocity.z = lerp(linear_velocity.z, direction.z * Speed,Acceleration * delta) 
+	move_and_slide()
+	InputSpeed = Speed
+	InputIsMoving = Speed > 0.0
+	InputAcceleration = Speed * Acceleration * direction
 	
 	#
-	ActualAcceleration = (linear_velocity - PrevVelocity) / (MaxAcceleration * delta)
+	ActualAcceleration = (linear_velocity - PrevVelocity) / (Acceleration * delta)
 	PrevVelocity = linear_velocity
 	#
 	
@@ -357,40 +417,8 @@ func SetEssentialValues(delta):
 	PrevPosition = position
 	#
 	
-	#
-	AimRate_H = abs(($CameraRoot/h.rotation.y - PrevAimRate_H) / delta)
-	PrevAimRate_H = $CameraRoot/h.rotation.y
-	#
-	
-	if IsMoving:
-		pass
-		#needs revision
-		#LastVelocityRotation.rotated(linear_velocity.normalized(),1.0)
-	
-	#This represents the speed the camera is rotating left to right. 
+	strafe.x = lerp(strafe.x,strafe_dir.x ,delta * Acceleration)
+	strafe.y = lerp(strafe.y,strafe_dir.y,delta * Acceleration)
+	strafe.z = lerp(strafe.z,strafe_dir.z + aim_turn,delta * Acceleration)
 	
 	
-
-func UpdateCharacterMovement():
-	pass
-func UpdateGroundedRotation():
-	pass
-			
-			
-func Debug():
-	$Status/Label.text = "InputSpeed : %s" % InputSpeed
-	$Status/Label2.text = "ActualSpeed : %s" % ActualSpeed
-
-func AddMovementInput(direction: Vector3, Speed: float , delta):
-	linear_velocity.x = lerp(linear_velocity.x, direction.x * Speed, MaxAcceleration * delta) 
-	linear_velocity.y = lerp(linear_velocity.y, vertical_velocity - get_floor_normal().y  ,MaxAcceleration * delta) 
-	linear_velocity.z = lerp(linear_velocity.z, direction.z * Speed,MaxAcceleration * delta) 
-	move_and_slide()
-	InputSpeed = Speed
-	InputIsMoving = Speed > 0.0
-	InputAcceleration = Speed * MaxAcceleration * direction
-	
-	
-
-func GetAllowedGait():
-	pass

@@ -1,7 +1,0 @@
-[gd_resource type="Curve3D" format=3 uid="uid://jummyapwt06"]
-
-[resource]
-_data = {
-"points": PackedVector3Array(),
-"tilts": PackedFloat32Array()
-}
