@@ -4,7 +4,7 @@ extends Node
 #------------------ Player Enums ------------------#
 enum Gait {Walking , Running , Sprinting}
 enum MovementState {None , Grounded , In_Air , Mantling, Ragdoll}
-enum MovementAction {LowMantle , HighMantle , Rolling , GettingUp}
+enum MovementAction {None ,LowMantle , HighMantle , Rolling , GettingUp}
 enum OverlayState {Default , Rifle , Pistol}
 enum RotationMode {VelocityDirection , LookingDirection , Aiming}
 enum Stance {Standing , Crouching}

@@ -1,7 +1,6 @@
-res://Curves/NormalMovement.tres
-res://Curves/ResponsiveMovement.tres
-res://GlobalEnums.gd
 res://Maps/TestMap.tscn
 res://Maps/floor.tres
+res://Player/Camera.gd
 res://Player/Player.gd
+res://Player/Player.tscn
 res://default_env.tres
