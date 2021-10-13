@@ -5,7 +5,14 @@ extends Node3D
 @onready var PlayerRef = get_parent()
 #####################################
 
-@export var ViewMode = GlobalEnums.ViewMode
+@export var ViewMode = Global.ViewMode :
+	get: ViewMode
+	set(NewViewMode):
+		ViewMode = NewViewMode
+		if ViewMode == Global.ViewMode.FirstPerson:
+			if PlayerRef.RotationMode == Global.RotationMode.VelocityDirection:
+				PlayerRef.RotationMode = Global.RotationMode.LookingDirection
+	
 @export var MouseSensitvity = 0.01
 var camera_h = 0
 var camera_v = 0
@@ -33,7 +40,7 @@ func _physics_process(delta):
 	
 	var mesh_front = get_node("../Armature").transform.basis.z
 	
-	var auto_rotate_speed = (PI - mesh_front.angle_to($h.transform.basis.z)) * get_parent().linear_velocity.length() * rot_speed_multiplier
+	var auto_rotate_speed = (PI - mesh_front.angle_to($h.transform.basis.z)) * get_parent().motion_velocity.length() * rot_speed_multiplier
 	
 	if $mouse_control_stay_delay.is_stopped() and FollowCameraEnabled == true:
 		#FOLLOW CAMERA
@@ -44,13 +51,3 @@ func _physics_process(delta):
 		$h.rotation.y = lerp($h.rotation.y,camera_h,delta * acceleration_h)
 	
 	$h/v.rotation.x = lerp($h/v.rotation.x,camera_v,delta * acceleration_v)
-
-func OnViewModeChanged(NewViewMode):
-	ViewMode = NewViewMode
-	if ViewMode == GlobalEnums.ViewMode.ThirdPerson:
-		if PlayerRef.RotationMode == GlobalEnums.RotationMode.VelocityDirection || PlayerRef.RotationMode == GlobalEnums.RotationMode.LookingDirection:
-			PlayerRef.OnRotationModeChanged(PlayerRef.DesiredRotationMode) 
-	elif ViewMode == GlobalEnums.ViewMode.FirstPerson:
-		if PlayerRef.RotationMode == GlobalEnums.RotationMode.VelocityDirection:
-			PlayerRef.OnRotationModeChanged(GlobalEnums.RotationMode.LookingDirection) 
-	

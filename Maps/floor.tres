@@ -1,6 +1,6 @@
 [gd_resource type="VisualShader" load_steps=5 format=3 uid="uid://bb6fys6tydvir"]
 
-[ext_resource type="Texture2D" uid="uid://lrv5s5qmfhd0" path="res://Maps/Grid.png" id="1_6ol84"]
+[ext_resource type="Texture2D" uid="uid://cmywka21r5j5a" path="res://Maps/Grid.png" id="1_6ol84"]
 
 [sub_resource type="VisualShaderNodeTexture" id="VisualShaderNodeTexture_s1p6c"]
 default_input_values = []
@@ -45,7 +45,6 @@ void fragment() {
 
 }
 "
-graph_offset = Vector2(-375.688, -68.4823)
 engine_version = {
 "major": 4,
 "minor": 0

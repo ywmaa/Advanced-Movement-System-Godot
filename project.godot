@@ -9,25 +9,24 @@
 config_version=4
 
 _global_script_classes=[{
-"base": "",
-"class": &"GitAPI",
-"language": &"NativeScript",
-"path": "res://godot-git-plugin-v1.2.1-x11/git_api.gdns"
+"base": "Node",
+"class": &"Interactable",
+"language": &"GDScript",
+"path": "res://Interactable/Interactable.gd"
 }]
 _global_script_class_icons={
-"GitAPI": ""
+"Interactable": ""
 }
 
 [application]
 
 config/name="AMSG"
-run/main_scene="res://Maps/TestMap.tscn"
+run/main_scene="res://Maps/MovementTestMap.tscn"
 config/icon="res://icon.png"
 
 [autoload]
 
-GlobalEnums="*res://GlobalEnums.gd"
-FunctionsLibrary="*res://FunctionsLibrary.gd"
+Global="*res://Global.gd"
 
 [display]
 
@@ -35,7 +34,7 @@ window/size/height=720
 
 [gdnative]
 
-singletons=["res://godot-git-plugin-v1.2.1-x11/git_api.gdnlib"]
+singletons=[]
 singletons_disabled=[]
 
 [input]
@@ -85,9 +84,16 @@ run={
 "events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"store_command":true,"alt_pressed":false,"shift_pressed":false,"meta_pressed":false,"command_pressed":false,"pressed":false,"keycode":81,"physical_keycode":0,"unicode":0,"echo":false,"script":null)
 ]
 }
+interaction={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"store_command":true,"alt_pressed":false,"shift_pressed":false,"meta_pressed":false,"command_pressed":false,"pressed":false,"keycode":70,"physical_keycode":0,"unicode":0,"echo":false,"script":null)
+]
+}
 
 [rendering]
 
 vulkan/rendering/back_end=1
+environment/glow/use_high_quality=true
+anti_aliasing/quality/msaa=3
 occlusion_culling/use_occlusion_culling=true
-environment/defaults/default_environment="res://default_env.tres"
+environment/defaults/default_environment="res://Maps/default_env.tres"

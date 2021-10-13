@@ -1,5 +1,0 @@
-[gd_resource type="Curve" format=3 uid="uid://g55t5fci211j"]
-
-[resource]
-max_value = 10.0
-_data = [Vector2(0, 10), 0.0, 0.0, 0, 1, Vector2(0.25, 10), 0.0, 0.0, 1, 0, Vector2(0.5, 10), 0.0, 0.0, 0, 0, Vector2(0.75, 2), 0.0, 0.0, 0, 0]

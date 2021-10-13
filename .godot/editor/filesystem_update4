@@ -1,6 +1,3 @@
-res://Maps/TestMap.tscn
+res://Maps/MovementTestMap.tscn
+res://Maps/default_env.tres
 res://Maps/floor.tres
-res://Player/Camera.gd
-res://Player/Player.gd
-res://Player/Player.tscn
-res://default_env.tres

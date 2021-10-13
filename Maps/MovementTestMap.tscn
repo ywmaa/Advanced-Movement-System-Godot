@@ -1,0 +1,115 @@
+[gd_scene load_steps=9 format=3 uid="uid://dtka851el4ykx"]
+
+[ext_resource type="Environment" uid="uid://b20xexwhxflcp" path="res://Maps/default_env.tres" id="1_7h7du"]
+[ext_resource type="Shader" uid="uid://bb6fys6tydvir" path="res://Maps/floor.tres" id="2_qaej3"]
+[ext_resource type="PackedScene" uid="uid://chwsb15x7es45" path="res://Player/Player.tscn" id="3_882kt"]
+[ext_resource type="Script" path="res://Interactable/Light/InteractableLight.gd" id="4_kyyln"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2afi4"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_n4eeh"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_y111v"]
+shader = ExtResource( "2_qaej3" )
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cpp0l"]
+albedo_color = Color(1, 0.0235294, 0, 1)
+
+[node name="Node" type="Node"]
+script = null
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = ExtResource( "1_7h7du" )
+script = null
+
+[node name="Player" parent="." instance=ExtResource( "3_882kt" )]
+transform = Transform3D(0.990681, 0, 0, 0, 0.990681, 0, 0, 0, 0.990681, 1.2147, 1.91718, 2.76778)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+transform = Transform3D(24.1622, 0, 0, 0, 0.185017, 0, 0, 0, 24.1622, 0, 0, 0)
+script = null
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource( "BoxShape3D_2afi4" )
+script = null
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D/CollisionShape3D"]
+layers = 2
+mesh = SubResource( "BoxMesh_n4eeh" )
+skeleton = NodePath("../../..")
+surface_material_override/0 = SubResource( "ShaderMaterial_y111v" )
+script = null
+
+[node name="StaticBody3D2" type="StaticBody3D" parent="."]
+transform = Transform3D(24.1622, 0, 0, 0, -0.0421356, 23.5273, 0, -0.180155, -5.50268, 0, 0, 18.9232)
+script = null
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D2"]
+shape = SubResource( "BoxShape3D_2afi4" )
+script = null
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D2/CollisionShape3D"]
+layers = 2
+mesh = SubResource( "BoxMesh_n4eeh" )
+skeleton = NodePath("../../..")
+surface_material_override/0 = SubResource( "ShaderMaterial_y111v" )
+script = null
+
+[node name="Ceiling" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.554642, 0, 0, 0, 1, -0.0643511, 1.95787, 0.0558277)
+script = null
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ceiling"]
+shape = SubResource( "BoxShape3D_2afi4" )
+script = null
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ceiling/CollisionShape3D"]
+layers = 2
+mesh = SubResource( "BoxMesh_n4eeh" )
+skeleton = NodePath("../../..")
+surface_material_override/0 = SubResource( "ShaderMaterial_y111v" )
+script = null
+
+[node name="light" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.84419, 1.95787, 16.7421)
+collision_layer = 2
+script = ExtResource( "4_kyyln" )
+light = NodePath("../SpotLight3D")
+on = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="light"]
+shape = SubResource( "BoxShape3D_2afi4" )
+script = null
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="light/CollisionShape3D"]
+layers = 2
+mesh = SubResource( "BoxMesh_n4eeh" )
+skeleton = NodePath("../../..")
+surface_material_override/0 = SubResource( "StandardMaterial3D_cpp0l" )
+script = null
+
+[node name="Ceiling2" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.554642, 0, 0, 0, 1, 2.4914, 1.74703, 0.0558277)
+script = null
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ceiling2"]
+shape = SubResource( "BoxShape3D_2afi4" )
+script = null
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ceiling2/CollisionShape3D"]
+layers = 2
+mesh = SubResource( "BoxMesh_n4eeh" )
+skeleton = NodePath("../../..")
+surface_material_override/0 = SubResource( "ShaderMaterial_y111v" )
+script = null
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.998819, 0.0194639, 0.0445193, -0.0467522, 0.634491, 0.771515, -0.0132304, -0.772685, 0.634652, -0.531392, 8.38026, -2.80088)
+layers = 3
+shadow_enabled = true
+use_in_sky_only = true
+script = null
+
+[node name="SpotLight3D" type="SpotLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -0.996865, 0.0791203, 0, -0.0791203, -0.996865, 0.789293, 2.01648, 14.7671)
+script = null

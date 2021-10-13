@@ -1,6 +1,6 @@
-[gd_scene load_steps=58 format=3 uid="uid://emjyryyc1ten"]
+[gd_scene load_steps=59 format=3 uid="uid://chwsb15x7es45"]
 
-[ext_resource type="Script" path="res://Player/Player.gd" id="1_lrww3"]
+[ext_resource type="Script" path="res://Player/PlayerGameplay.gd" id="1_6o7w8"]
 [ext_resource type="Skin" uid="uid://crjm41kmo0j3t" path="res://Player/Mesh/skin.tres" id="2_1jcqs"]
 [ext_resource type="Script" path="res://Player/Camera.gd" id="2_3h36s"]
 [ext_resource type="ArrayMesh" uid="uid://8joppvsyy8xg" path="res://Player/Mesh/Alpha_SurfaceMesh.tres" id="2_t0i3i"]
@@ -27,10 +27,11 @@
 [ext_resource type="Texture2D" uid="uid://ijv6wr22hov8" path="res://Player/UI/Debug/direction.png" id="20_axcda"]
 [ext_resource type="Texture2D" uid="uid://ck5riwbh478s4" path="res://Player/UI/Debug/velocity.png" id="21_yofel"]
 [ext_resource type="Script" path="res://Player/AnimationTree.gd" id="22_wjarj"]
+[ext_resource type="Script" path="res://Player/Interaction.gd" id="24_2q227"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_c35sx"]
 radius = 0.375
-height = 2.092
+height = 2.0
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_fjnvq"]
 filters = []
@@ -202,20 +203,29 @@ nodes/walk_scale/node = SubResource( "AnimationNodeTimeScale_dod57" )
 nodes/walk_scale/position = Vector2(-180, 380)
 nodes/weapon-blend/node = SubResource( "AnimationNodeBlend2_g4liw" )
 nodes/weapon-blend/position = Vector2(1020, 220)
-node_connections = [&"output", 0, &"ag_trans", &"IWR_blend", 0, &"idle", &"IWR_blend", 1, &"walk_scale", &"IWR_blend", 2, &"run_scale", &"ag_trans", 0, &"jump_blend", &"ag_trans", 1, &"cs_trans", &"ag_weapon_trans", 0, &"Animation 5", &"ag_weapon_trans", 1, &"ir_rifle_blend", &"crouch_iw_blend", 0, &"Animation", &"crouch_iw_blend", 1, &"Animation 2", &"cs_trans", 0, &"crouch_iw_blend", &"cs_trans", 1, &"IWR_blend", &"ir_rifle_blend", 0, &"Animation 3", &"ir_rifle_blend", 1, &"Animation 4", &"jump 2", 1, &"jump_scale", &"jump_scale", 0, &"jump", &"run_scale", 0, &"run", &"walk_scale", 0, &"walk", &"weapon-blend", 1, &"ag_weapon_trans"]
+node_connections = [&"output", 0, &"ag_trans", &"IWR_blend", 0, &"idle", &"IWR_blend", 1, &"walk_scale", &"IWR_blend", 2, &"run_scale", &"ag_weapon_trans", 0, &"Animation 5", &"ag_weapon_trans", 1, &"ir_rifle_blend", &"ir_rifle_blend", 0, &"Animation 3", &"ir_rifle_blend", 1, &"Animation 4", &"ag_trans", 0, &"jump_blend", &"ag_trans", 1, &"cs_trans", &"crouch_iw_blend", 0, &"Animation", &"crouch_iw_blend", 1, &"Animation 2", &"jump 2", 1, &"jump_scale", &"cs_trans", 0, &"crouch_iw_blend", &"cs_trans", 1, &"IWR_blend", &"run_scale", 0, &"run", &"weapon-blend", 1, &"ag_weapon_trans", &"jump_scale", 0, &"jump", &"walk_scale", 0, &"walk"]
 
 [node name="Player" type="CharacterBody3D"]
 transform = Transform3D(0.987165, 0, 0, 0, 0.987165, 0, 0, 0, 0.987165, 0, 0, 0)
-script = ExtResource( "1_lrww3" )
+script = ExtResource( "1_6o7w8" )
 DesiredRotationMode = 0
+DesiredGait = 0
+DesiredStance = 0
 OnePressJump = true
+UsingCrouchToggle = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.947755, 0, 0, 0, 1, 0, 1.00202, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.00202, 0)
 shape = SubResource( "CapsuleShape3D_c35sx" )
 script = null
 
+[node name="HeadBonker" type="RayCast3D" parent="CollisionShape3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+target_position = Vector3(0, 0.1, 0)
+script = null
+
 [node name="Armature" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1.05512, 0, 0, 0, 1, 0, -0.0552363, 0)
 script = null
 
 [node name="Skeleton3D" type="Skeleton3D" parent="Armature"]
@@ -223,32 +233,32 @@ bones/0/name = "Hips"
 bones/0/parent = -1
 bones/0/rest = Transform3D(0.999429, -0.00369013, 0.0335912, 0.00482731, 0.999416, -0.0338355, -0.0334467, 0.0339783, 0.998863, 8.60314e-07, 0.996613, 0.0024818)
 bones/0/enabled = true
-bones/0/pose = Transform3D(0.994904, 0.0550021, -0.0845015, -0.0551715, 0.998477, 0.000330532, 0.084391, 0.00433323, 0.996423, -0.000783333, 0.016344, 0.0055398)
+bones/0/pose = Transform3D(0.994595, 0.0593221, -0.0852099, -0.0596111, 0.998221, -0.000848452, 0.085008, 0.00592332, 0.996363, -0.000783328, 0.016344, 0.0055398)
 bones/1/name = "Spine"
 bones/1/parent = 0
 bones/1/rest = Transform3D(0.999723, 0.00567487, -0.022825, -0.00809519, 0.994184, -0.107385, 0.0220829, 0.10754, 0.993955, 6.11398e-09, 0.0992345, -0.0122733)
 bones/1/enabled = true
-bones/1/pose = Transform3D(0.999073, -0.0429695, -0.00263274, 0.0430471, 0.996421, 0.0727451, -0.000502501, -0.072791, 0.997347, 1.69966e-08, 2.95043e-06, -3.96743e-07)
+bones/1/pose = Transform3D(0.999084, -0.0425547, -0.00453243, 0.0427689, 0.996578, 0.0707357, 0.00150678, -0.0708647, 0.997485, 1.69966e-08, 2.95043e-06, -3.96743e-07)
 bones/2/name = "Spine1"
 bones/2/parent = 1
 bones/2/rest = Transform3D(0.998877, -0.0214878, -0.0422151, 0.0196469, 0.998858, -0.0435486, 0.0431027, 0.0426704, 0.998159, -1.38912e-06, 0.116454, -0.0142234)
 bones/2/enabled = true
-bones/2/pose = Transform3D(0.99976, -0.0218236, -0.00199331, 0.0218149, 0.999753, -0.00428319, 0.0020863, 0.00423868, 0.999989, -5.23869e-09, -9.46224e-07, -1.04308e-07)
+bones/2/pose = Transform3D(0.999761, -0.0216879, -0.00278156, 0.0216725, 0.99975, -0.00546683, 0.00289943, 0.00540524, 0.999981, -5.23869e-09, -9.46224e-07, -1.04308e-07)
 bones/3/name = "Spine2"
 bones/3/parent = 2
 bones/3/rest = Transform3D(0.998867, -0.023401, -0.0414443, 0.0216126, 0.998838, -0.0430852, 0.0424043, 0.0421407, 0.998211, 9.14407e-07, 0.133602, -0.0162646)
 bones/3/enabled = true
-bones/3/pose = Transform3D(0.999759, -0.0218976, -0.00138401, 0.0218923, 0.999753, -0.00378401, 0.00146653, 0.0037528, 0.999992, -3.52738e-08, -4.88758e-06, 1.9744e-07)
+bones/3/pose = Transform3D(0.999761, -0.0217698, -0.00216782, 0.0217588, 0.999751, -0.00496525, 0.00227537, 0.0049169, 0.999985, -3.52738e-08, -4.88758e-06, 1.9744e-07)
 bones/4/name = "Neck"
 bones/4/parent = 3
 bones/4/rest = Transform3D(0.999301, 0.00414202, 0.0371525, -0.00445389, 0.999956, 0.00831556, -0.0371164, -0.00847522, 0.999275, 2.53883e-07, 0.150325, 0.00792903)
 bones/4/enabled = true
-bones/4/pose = Transform3D(0.999988, -0.00257053, 0.00407749, 0.00303904, 0.992841, -0.119405, -0.00374136, 0.119416, 0.992837, 4.84288e-08, 1.04904e-05, 2.56114e-07)
+bones/4/pose = Transform3D(0.999982, -0.00414417, 0.00423291, 0.00461185, 0.993095, -0.117227, -0.00371787, 0.117244, 0.993096, 4.84288e-08, 1.04904e-05, 2.56114e-07)
 bones/5/name = "Head"
 bones/5/parent = 4
 bones/5/rest = Transform3D(0.99634, 0.0326466, 0.0789988, -0.0370961, 0.997768, 0.0555274, -0.0770097, -0.0582547, 0.995327, 2.74328e-08, 0.103218, 0.0314243)
 bones/5/enabled = true
-bones/5/pose = Transform3D(0.996535, -0.0381312, 0.0739161, 0.0346031, 0.998227, 0.0484373, -0.075632, -0.0457117, 0.996087, 2.14204e-07, -7.47293e-06, -7.37607e-07)
+bones/5/pose = Transform3D(0.996436, -0.036863, 0.0758649, 0.0335406, 0.998441, 0.0446111, -0.0773912, -0.0419076, 0.99612, 2.14204e-07, -7.47293e-06, -7.37607e-07)
 bones/6/name = "HeadTop_End"
 bones/6/parent = 5
 bones/6/rest = Transform3D(1, -2.06795e-24, -6.98492e-10, -4.1359e-25, 1, -3.55271e-15, 6.98492e-10, 3.55271e-15, 1, 1.54312e-06, 0.184747, 0.066364)
@@ -268,27 +278,27 @@ bones/9/name = "LeftShoulder"
 bones/9/parent = 3
 bones/9/rest = Transform3D(0.956289, 0.245191, -0.159351, -0.249309, 0.968405, -0.00607143, 0.152828, 0.0455336, 0.987203, 0.0610582, 0.091104, 0.00705548)
 bones/9/enabled = true
-bones/9/pose = Transform3D(0.968918, -0.12184, -0.215299, 0.106029, 0.990846, -0.0835626, 0.22351, 0.0581373, 0.972966, -1.30758e-06, 3.83705e-06, 2.00234e-08)
+bones/9/pose = Transform3D(0.967337, -0.124607, -0.220755, 0.108234, 0.9905, -0.084824, 0.229227, 0.0581603, 0.971634, -1.30758e-06, 3.83705e-06, 2.00234e-08)
 bones/10/name = "LeftArm"
 bones/10/parent = 9
 bones/10/rest = Transform3D(0.488414, 0.768271, -0.413776, -0.868258, 0.475176, -0.142602, 0.0870595, 0.428914, 0.899141, 0.12655, -0.00265921, -0.0260093)
 bones/10/enabled = true
-bones/10/pose = Transform3D(0.982524, 0.0865373, -0.1648, -0.134666, 0.941679, -0.30839, 0.128501, 0.325194, 0.936876, -3.69549e-06, 1.92225e-06, -2.51457e-07)
+bones/10/pose = Transform3D(0.983426, 0.091103, -0.156759, -0.13668, 0.940588, -0.310827, 0.119128, 0.327101, 0.93745, -3.69549e-06, 1.92225e-06, -2.51457e-07)
 bones/11/name = "LeftForeArm"
 bones/11/parent = 10
 bones/11/rest = Transform3D(0.981422, -1.18477e-07, -0.19186, 1.05073e-07, 1, -8.00358e-08, 0.19186, 5.83895e-08, 0.981422, 0.274047, 3.50824e-07, 3.85561e-08)
 bones/11/enabled = true
-bones/11/pose = Transform3D(0.996261, -2.48613e-07, 0.0863964, 2.35448e-07, 1, 1.62577e-07, -0.0863964, -1.41627e-07, 0.996261, -1.78814e-06, -8.64267e-06, 2.8871e-07)
+bones/11/pose = Transform3D(0.996249, -2.86397e-07, 0.0865344, 2.84089e-07, 1, 3.89923e-08, -0.0865344, -1.42626e-08, 0.996249, -1.78814e-06, -8.64267e-06, 2.8871e-07)
 bones/12/name = "LeftHand"
 bones/12/parent = 11
 bones/12/rest = Transform3D(0.981049, 0.183501, 0.0622021, -0.180068, 0.982003, -0.0569645, -0.0715357, 0.0446844, 0.996437, 0.276145, 2.01823e-07, 2.13892e-07)
 bones/12/enabled = true
-bones/12/pose = Transform3D(0.990701, 0.0973262, 0.0950758, -0.135928, 0.7386, 0.660298, -0.00595871, -0.667081, 0.744961, 1.49012e-07, 1.51061e-06, -3.42727e-07)
+bones/12/pose = Transform3D(0.990354, 0.101228, 0.0946148, -0.138546, 0.733604, 0.665305, -0.002062, -0.671996, 0.740552, 1.49012e-07, 1.51061e-06, -3.42727e-07)
 bones/13/name = "LeftHandMiddle1"
 bones/13/parent = 12
 bones/13/rest = Transform3D(0.891022, 0.447173, 0.0782045, -0.448003, 0.894, -0.00756189, -0.0732963, -0.0282981, 0.996909, 0.127755, 2.46914e-07, 2.04652e-07)
 bones/13/enabled = true
-bones/13/pose = Transform3D(0.923674, -0.377502, -0.0657161, 0.377269, 0.925959, -0.0163893, 0.0670373, -0.00965433, 0.997704, 2.49594e-06, 4.41819e-06, 5.46686e-07)
+bones/13/pose = Transform3D(0.923674, -0.377502, -0.0657161, 0.377269, 0.925959, -0.0163893, 0.0670373, -0.00965434, 0.997704, 2.49594e-06, 4.41819e-06, 5.46686e-07)
 bones/14/name = "LeftHandMiddle2"
 bones/14/parent = 13
 bones/14/rest = Transform3D(0.978288, 0.206168, 0.021117, -0.206168, 0.978514, -0.0022008, -0.021117, -0.00220063, 0.999775, 0.0361397, -4.39579e-09, 2.23516e-08)
@@ -298,7 +308,7 @@ bones/15/name = "LeftHandMiddle3"
 bones/15/parent = 14
 bones/15/rest = Transform3D(0.97046, 0.240006, 0.0245825, -0.240006, 0.970767, -0.00299422, -0.0245825, -0.00299417, 0.999693, 0.0345977, 2.54065e-08, -2.64496e-07)
 bones/15/enabled = true
-bones/15/pose = Transform3D(0.999304, -0.0371217, -0.0038022, 0.0371217, 0.999311, -7.06662e-05, 0.0038022, -7.0527e-05, 0.999993, 2.50712e-06, 3.00817e-07, -1.46567e-07)
+bones/15/pose = Transform3D(0.999304, -0.0371217, -0.0038022, 0.0371217, 0.999311, -7.06663e-05, 0.0038022, -7.0527e-05, 0.999993, 2.50712e-06, 3.00817e-07, -1.46567e-07)
 bones/16/name = "LeftHandMiddle4"
 bones/16/parent = 15
 bones/16/rest = Transform3D(1, -8.9407e-08, 8.19564e-08, 8.9407e-08, 1, 3.72529e-08, -8.19564e-08, -3.72529e-08, 1, 0.0368019, 1.14814e-07, 3.27826e-07)
@@ -353,7 +363,7 @@ bones/26/name = "LeftHandRing2"
 bones/26/parent = 25
 bones/26/rest = Transform3D(0.943103, 0.330769, 0.0338789, -0.330769, 0.943694, -0.00576722, -0.0338789, -0.005767, 0.999409, 0.0360119, -5.12372e-08, 3.24777e-07)
 bones/26/enabled = true
-bones/26/pose = Transform3D(0.937687, -0.345672, -0.0354052, 0.345672, 0.938334, -0.00631609, 0.0354052, -0.00631605, 0.999353, -4.45172e-07, -2.40467e-06, 8.84756e-08)
+bones/26/pose = Transform3D(0.937687, -0.345672, -0.0354052, 0.345672, 0.938334, -0.00631609, 0.0354052, -0.00631606, 0.999353, -4.45172e-07, -2.40467e-06, 8.84756e-08)
 bones/27/name = "LeftHandRing3"
 bones/27/parent = 26
 bones/27/rest = Transform3D(0.930947, 0.363253, 0.0372058, -0.363253, 0.931664, -0.00699916, -0.0372057, -0.00699927, 0.999283, 0.0330731, 3.52243e-08, -2.18864e-07)
@@ -388,22 +398,22 @@ bones/33/name = "RightShoulder"
 bones/33/parent = 3
 bones/33/rest = Transform3D(0.960104, -0.270185, 0.0721104, 0.271547, 0.962377, -0.00961707, -0.066799, 0.0288147, 0.99735, -0.061057, 0.0911051, 0.00705561)
 bones/33/enabled = true
-bones/33/pose = Transform3D(0.97854, -0.00597103, 0.205972, 0.0162726, 0.998698, -0.0483568, -0.205415, 0.0506708, 0.977362, 2.64123e-06, 1.01551e-05, -1.06171e-07)
+bones/33/pose = Transform3D(0.978385, 0.00472478, 0.206736, 0.00562609, 0.998761, -0.0494515, -0.206714, 0.0495457, 0.977146, 2.64123e-06, 1.01551e-05, -1.06171e-07)
 bones/34/name = "RightArm"
 bones/34/parent = 33
 bones/34/rest = Transform3D(0.571667, -0.668124, 0.476242, 0.773018, 0.633143, -0.0396662, -0.275027, 0.390819, 0.878419, -0.12655, -0.00266028, -0.026009)
 bones/34/enabled = true
-bones/34/pose = Transform3D(0.991124, -0.0524415, -0.122161, 0.0120739, 0.95062, -0.310124, 0.132392, 0.305896, 0.942815, 1.22935e-07, -2.05636e-06, 4.47035e-07)
+bones/34/pose = Transform3D(0.992209, -0.0532527, -0.11263, 0.0157015, 0.950286, -0.310984, 0.123592, 0.306792, 0.943718, 1.22935e-07, -2.05636e-06, 4.47035e-07)
 bones/35/name = "RightForeArm"
 bones/35/parent = 34
 bones/35/rest = Transform3D(0.919144, -2.75476e-07, 0.393922, 2.90701e-07, 1, 2.10191e-08, -0.393922, 9.51939e-08, 0.919144, -0.274047, 3.50824e-07, 5.34572e-08)
 bones/35/enabled = true
-bones/35/pose = Transform3D(0.993656, -1.68184e-07, -0.112465, 1.70726e-07, 1, 1.29636e-08, 0.112465, -3.2082e-08, 0.993656, -1.78814e-07, -2.38419e-06, -7.82311e-08)
+bones/35/pose = Transform3D(0.9936, -3.57826e-07, -0.112959, 3.56333e-07, 1, -3.34059e-08, 0.112959, -7.05908e-09, 0.9936, -1.78814e-07, -2.38419e-06, -7.82311e-08)
 bones/36/name = "RightHand"
 bones/36/parent = 35
 bones/36/rest = Transform3D(0.994562, -0.102849, 0.0163657, 0.102444, 0.994451, 0.023908, -0.0187338, -0.0221014, 0.99958, -0.276145, 1.12416e-07, 1.8409e-07)
 bones/36/enabled = true
-bones/36/pose = Transform3D(0.992829, -0.104629, -0.0578257, 0.118425, 0.926866, 0.356223, 0.0163254, -0.360516, 0.93261, 1.78814e-07, -7.39121e-06, -9.59262e-08)
+bones/36/pose = Transform3D(0.993052, -0.103066, -0.0567843, 0.116594, 0.927011, 0.356449, 0.0159021, -0.360593, 0.932588, 1.78814e-07, -7.39121e-06, -9.59262e-08)
 bones/37/name = "RightHandMiddle1"
 bones/37/parent = 36
 bones/37/rest = Transform3D(0.925749, -0.378095, -0.00569714, 0.378132, 0.925547, 0.0194498, -0.00208088, -0.0201599, 0.999795, -0.127755, 5.31989e-08, 1.78575e-07)
@@ -508,22 +518,22 @@ bones/57/name = "RightUpLeg"
 bones/57/parent = 0
 bones/57/rest = Transform3D(0.991613, -0.0224239, -0.127277, 0.0501003, 0.974519, 0.218638, 0.119131, -0.223181, 0.96747, -0.0912445, -0.0665639, -0.000553783)
 bones/57/enabled = true
-bones/57/pose = Transform3D(0.99636, -0.0621792, 0.0583201, 0.0706956, 0.984961, -0.15765, -0.0476404, 0.161199, 0.985771, -4.47035e-08, 3.24845e-06, 3.96743e-07)
+bones/57/pose = Transform3D(0.996068, -0.0653273, 0.0598379, 0.0732998, 0.987072, -0.142532, -0.0497531, 0.146357, 0.98798, -4.47035e-08, 3.24845e-06, 3.96743e-07)
 bones/58/name = "RightLeg"
 bones/58/parent = 57
 bones/58/rest = Transform3D(0.996809, 0.0622373, 0.0499792, -0.0429054, 0.945766, -0.322003, -0.0673093, 0.318831, 0.945419, -0.0024468, -0.405954, -0.00514529)
 bones/58/enabled = true
-bones/58/pose = Transform3D(0.969676, 0.133211, -0.204898, -0.0765604, 0.961766, 0.262955, 0.232092, -0.239294, 0.9428, 9.31323e-08, 5.96046e-08, -2.98023e-08)
+bones/58/pose = Transform3D(0.969859, 0.132359, -0.204585, -0.0767235, 0.96278, 0.259167, 0.231274, -0.235659, 0.943916, 9.31323e-08, 5.96046e-08, -2.98023e-08)
 bones/59/name = "RightFoot"
 bones/59/parent = 58
 bones/59/rest = Transform3D(0.999992, -0.00390479, -0.000119776, 0.0038764, 0.987982, 0.154519, -0.000485026, -0.154518, 0.98799, 0.00244668, -0.420479, -0.0206023)
 bones/59/enabled = true
-bones/59/pose = Transform3D(0.991116, -0.131625, -0.019059, 0.128878, 0.985894, -0.106788, 0.0328461, 0.103383, 0.994099, -4.76837e-07, -2.98023e-08, 0)
+bones/59/pose = Transform3D(0.991097, -0.131664, -0.0197649, 0.128466, 0.9847, -0.117742, 0.0349649, 0.114154, 0.992848, -4.76837e-07, -2.98023e-08, 0)
 bones/60/name = "RightToeBase"
 bones/60/parent = 59
 bones/60/rest = Transform3D(1, 1.43757e-09, 1.4426e-08, -2.68239e-09, 0.996238, 0.086665, -1.42471e-08, -0.086665, 0.996238, -0.00373359, -0.104922, 0.126407)
 bones/60/enabled = true
-bones/60/pose = Transform3D(1, -4.70714e-08, 3.74411e-07, 2.13677e-08, 0.997661, 0.068357, -3.76753e-07, -0.068357, 0.997661, 1.78814e-07, -9.53674e-07, -6.70552e-08)
+bones/60/pose = Transform3D(1, -1.65608e-08, 5.44776e-08, 1.26141e-08, 0.997429, 0.0716645, -5.55243e-08, -0.0716645, 0.997429, 1.78814e-07, -9.53674e-07, -6.70552e-08)
 bones/61/name = "RightToe_End"
 bones/61/parent = 60
 bones/61/rest = Transform3D(1, 3.43902e-11, -3.98046e-10, -3.43901e-11, 1, 2.16234e-07, 3.98046e-10, -2.16234e-07, 1, 7.45058e-09, 2.95467e-08, 0.0999252)
@@ -533,22 +543,22 @@ bones/62/name = "LeftUpLeg"
 bones/62/parent = 0
 bones/62/rest = Transform3D(0.983753, -0.0830059, 0.159185, -0.00662501, 0.869303, 0.494234, -0.179405, -0.487259, 0.85463, 0.0912445, -0.0665639, -0.000553779)
 bones/62/enabled = true
-bones/62/pose = Transform3D(0.989598, -0.0846252, 0.116336, 0.113798, 0.955213, -0.273163, -0.0880094, 0.28356, 0.954907, 2.68221e-07, 3.92646e-06, 1.85333e-06)
+bones/62/pose = Transform3D(0.990156, -0.0829869, 0.112714, 0.110092, 0.959033, -0.261026, -0.0864348, 0.270865, 0.958729, 2.68221e-07, 3.92646e-06, 1.85333e-06)
 bones/63/name = "LeftLeg"
 bones/63/parent = 62
 bones/63/rest = Transform3D(0.996624, 0.00950146, -0.0815512, -0.0739476, 0.535464, -0.841314, 0.035674, 0.844505, 0.534359, 0.00244681, -0.405954, -0.00517038)
 bones/63/enabled = true
-bones/63/pose = Transform3D(0.99384, -0.0874311, 0.0680964, 0.0202804, 0.747582, 0.66386, -0.10895, -0.65839, 0.74475, 2.22586e-07, -2.98023e-08, -2.98023e-08)
+bones/63/pose = Transform3D(0.993573, -0.0867971, 0.0726565, 0.016954, 0.748753, 0.662632, -0.111916, -0.657142, 0.745412, 2.22586e-07, -2.98023e-08, -2.98023e-08)
 bones/64/name = "LeftFoot"
 bones/64/parent = 63
 bones/64/rest = Transform3D(0.999568, 0.0293842, 0.000928617, -0.0293597, 0.999368, -0.0200441, -0.00151701, 0.0200082, 0.999799, -0.0024467, -0.42048, -0.0205764)
 bones/64/enabled = true
-bones/64/pose = Transform3D(0.99998, -0.00548914, 0.00307782, 0.00544952, 0.999904, 0.0127381, -0.00314745, -0.0127211, 0.999914, 1.08033e-07, 3.8743e-06, -9.96515e-08)
+bones/64/pose = Transform3D(0.999954, -0.00916944, 0.00294311, 0.00914836, 0.999933, 0.00709688, -0.00300798, -0.00706963, 0.99997, 1.08033e-07, 3.8743e-06, -9.96515e-08)
 bones/65/name = "LeftToeBase"
 bones/65/parent = 64
 bones/65/rest = Transform3D(1, -3.89452e-08, 9.92433e-08, 2.43847e-08, 0.989766, 0.1427, -1.03785e-07, -0.1427, 0.989766, 0.00373359, -0.104922, 0.126407)
 bones/65/enabled = true
-bones/65/pose = Transform3D(0.997047, 0.0764777, 0.00697467, -0.0763534, 0.996942, -0.0166145, -0.00822398, 0.0160329, 0.999838, -2.93832e-07, -1.87755e-06, -1.93715e-07)
+bones/65/pose = Transform3D(0.997047, 0.0764791, 0.00695883, -0.0763534, 0.996939, -0.0168251, -0.0082243, 0.0162441, 0.999834, -2.93832e-07, -1.87755e-06, -1.93715e-07)
 bones/66/name = "LeftToe_End"
 bones/66/parent = 65
 bones/66/rest = Transform3D(1, 3.72529e-09, -1.86265e-09, -3.72529e-09, 1, 7.45616e-08, 1.86265e-09, -7.45616e-08, 1, 1.49012e-08, 2.24235e-08, 0.0999252)
@@ -613,6 +623,7 @@ parameters/weapon-blend/blend_amount = 0.0
 script = ExtResource( "22_wjarj" )
 
 [node name="CameraRoot" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.03796e-08, 0)
 script = ExtResource( "2_3h36s" )
 ViewMode = 0
 FollowCameraEnabled = false
@@ -630,8 +641,19 @@ fov = 70.0
 process_callback = 1
 script = null
 
+[node name="InteractionRaycast" type="RayCast3D" parent="CameraRoot/h/v/Camera"]
+target_position = Vector3(0, 0, -6)
+collision_mask = 2
+script = ExtResource( "24_2q227" )
+
 [node name="mouse_control_stay_delay" type="Timer" parent="CameraRoot"]
 process_callback = 0
+one_shot = true
+script = null
+
+[node name="roll_timer" type="Timer" parent="."]
+process_callback = 0
+wait_time = 0.2
 one_shot = true
 script = null
 
@@ -811,8 +833,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="roll_timer" type="Timer" parent="."]
-process_callback = 0
-wait_time = 0.2
-one_shot = true
+[node name="InteractionLabel" type="Label" parent="Status"]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -55.0
+text = "Press E to interact"
+align = 1
+valign = 1
+structured_text_bidi_override_options = []
 script = null
