@@ -10,6 +10,7 @@
 [sub_resource type="BoxMesh" id="BoxMesh_n4eeh"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_y111v"]
+render_priority = 0
 shader = ExtResource( "2_qaej3" )
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cpp0l"]

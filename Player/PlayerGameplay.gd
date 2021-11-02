@@ -25,13 +25,13 @@ func _ready():
 func _physics_process(delta):
 	super._physics_process(delta)
 	#------------------ Input Movement ------------------#
-	h_rotation = $CameraRoot/h.transform.basis.get_euler().y
-	v_rotation = $CameraRoot/h/v.transform.basis.get_euler().x
+	h_rotation = $CameraRoot.HObject.transform.basis.get_euler().y
+	v_rotation = $CameraRoot.VObject.transform.basis.get_euler().x
 
 	if Input.is_action_pressed("forward") || Input.is_action_pressed("back") || Input.is_action_pressed("right") || Input.is_action_pressed("left") :
-		direction = Vector3(Input.get_action_strength("left") - Input.get_action_strength("right"),
+		direction = Vector3(Input.get_action_strength("right") - Input.get_action_strength("left"),
 			v_rotation * (Input.get_action_strength("back") - Input.get_action_strength("forward")) if IsFlying == true else 0.0,
-			Input.get_action_strength("forward") - Input.get_action_strength("back"))
+			Input.get_action_strength("back") - Input.get_action_strength("forward"))
 		direction = direction.rotated(Vector3.UP,h_rotation).normalized()
 		if Gait == Global.Gait.Sprinting :
 			AddMovementInput(direction, CurrentMovementData.Sprint_Speed,CurrentMovementData.Sprint_Acceleration)

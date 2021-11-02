@@ -3,6 +3,8 @@ extends Node3D
 #####################################
 #Refrences
 @onready var PlayerRef = get_parent()
+@onready var HObject = $SpringArm3D
+@onready var VObject = $SpringArm3D
 #####################################
 
 @export var ViewMode = Global.ViewMode :
@@ -22,32 +24,33 @@ var acceleration_h = 10
 var acceleration_v = 10
 @export var rot_speed_multiplier = 0.15 #reduce this to make the rotation radius larger
 @export var FollowCameraEnabled = true
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-	$h/v/Camera.add_exception(get_parent())
-
+	#$h/v/Camera.add_exception(get_parent())
+	
 
 func _input(event):
 	if event is InputEventMouseMotion:
 		if FollowCameraEnabled == true:
 			$mouse_control_stay_delay.start()
 		camera_h += -event.relative.x * MouseSensitvity
-		camera_v += event.relative.y * MouseSensitvity
+		camera_v += -event.relative.y * MouseSensitvity
 
 func _physics_process(delta):
 	camera_v = clamp(camera_v,deg2rad(camera_vertical_min),deg2rad(camera_vertical_max))
 	
 	var mesh_front = get_node("../Armature").transform.basis.z
 	
-	var auto_rotate_speed = (PI - mesh_front.angle_to($h.transform.basis.z)) * get_parent().motion_velocity.length() * rot_speed_multiplier
+	var auto_rotate_speed = (PI - mesh_front.angle_to(HObject.transform.basis.z)) * get_parent().motion_velocity.length() * rot_speed_multiplier * -1
 	
 	if $mouse_control_stay_delay.is_stopped() and FollowCameraEnabled == true:
 		#FOLLOW CAMERA
-		$h.rotation.y = lerp_angle($h.rotation.y,get_node("../Armature").transform.basis.get_euler().y,delta * auto_rotate_speed)
-		camera_h = $h.rotation.y
+		HObject.rotation.y = lerp_angle(HObject.rotation.y,get_node("../Armature").transform.basis.get_euler().y,delta * auto_rotate_speed)
+		camera_h = HObject.rotation.y
 	else:
 		#MOUSE CAMERA
-		$h.rotation.y = lerp($h.rotation.y,camera_h,delta * acceleration_h)
+		HObject.rotation.y = lerp(HObject.rotation.y,camera_h,delta * acceleration_h)
 	
-	$h/v.rotation.x = lerp($h/v.rotation.x,camera_v,delta * acceleration_v)
+	VObject.rotation.x = lerp(VObject.rotation.x,camera_v,delta * acceleration_v)

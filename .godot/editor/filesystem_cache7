@@ -1,50 +1,51 @@
 102b54792f6b2ef812636a2bdaeb9d34
-::res://::1634145437
-gitcommands.txt::TextFile::-1::1631922826::0::1::::<><>::
-Global.gd::GDScript::-1::1633891796::0::1::::<>Node<>::
-icon.png::StreamTexture2D::3721835874470705432::1631109808::1632983104::1::::<><>::
-::res://Interactable/::1633968434
-Interactable.gd::GDScript::-1::1633853922::0::1::::Interactable<>Node<>::
-::res://Interactable/Light/::1633970144
-InteractableLight.gd::GDScript::-1::1633970144::0::1::::<>Interactable<>::
-::res://Maps/::1634057161
-default_env.tres::Environment::4334533782152461559::1634057161::0::1::::<><>::
-floor.tres::VisualShader::2520952675929263405::1634057161::0::1::::<><>::uid://cmywka21r5j5a
-Grid.png::StreamTexture2D::5666006231834885024::1631126484::1632983196::1::::<><>::
-MovementTestMap.tscn::PackedScene::8513554405004406243::1634057161::0::1::::<><>::uid://b20xexwhxflcp<>uid://bb6fys6tydvir<>uid://chwsb15x7es45<>res://Interactable/Light/InteractableLight.gd
-::res://Player/::1634057161
-AnimationTree.gd::GDScript::-1::1631529003::0::1::::<>AnimationTree<>::
-Camera.gd::GDScript::-1::1633907696::0::1::::<>Node3D<>::
-CharacterMovement_Base.gd::GDScript::-1::1633912098::0::1::::<>CharacterBody3D<>::
-Interaction.gd::GDScript::-1::1633858858::0::1::::<>RayCast3D<>::
-Player.tscn::PackedScene::5310675688144637888::1634057161::0::1::::<><>::res://Player/PlayerGameplay.gd<>uid://crjm41kmo0j3t<>res://Player/Camera.gd<>uid://8joppvsyy8xg<>uid://c4kd7bpdwntqf<>uid://bondfjekfvnf<>uid://cdbfafdil6d6g<>uid://cl0lghrsjb7ac<>uid://osp7uim4sbfr<>uid://dk2jv6cp7kymw<>uid://ba14sxxx7oqt8<>uid://rbahkj5hfbaq<>uid://deyml45b028v0<>uid://bo1mefcibj33g<>uid://bj75v8xjhlth3<>uid://bbob5quddupc1<>uid://dihjpx3yrmyxs<>uid://cmwemlfi04xm5<>uid://d112gyis40o56<>uid://lf7jyegeequ1<>uid://duppt5ivooa4t<>uid://bebd2imbloxa2<>uid://dpkisrpco54qj<>res://Player/Status.gd<>uid://ijv6wr22hov8<>uid://ck5riwbh478s4<>res://Player/AnimationTree.gd<>res://Player/Interaction.gd
-PlayerGameplay.gd::GDScript::-1::1633950613::0::1::::<>CharacterBody3D<>::
-Status.gd::GDScript::-1::1633816326::0::1::::<>Control<>::
-::res://Player/Animations/::1633789465
-idle.tres::Animation::99885087197864731::1633789465::0::1::::<><>::
-jump.tres::Animation::5597207087694980250::1633789464::0::1::::<><>::
-left strafe walking.tres::Animation::3423474329391492102::1633789464::0::1::::<><>::
-left strafe.tres::Animation::7490312308976249327::1633789464::0::1::::<><>::
-left turn 90.tres::Animation::2485625978108693066::1633789465::0::1::::<><>::
-left turn.tres::Animation::3086041145240086142::1633789464::0::1::::<><>::
-right strafe walking.tres::Animation::5660788685008762698::1633789464::0::1::::<><>::
-right strafe.tres::Animation::7735797936710697328::1633789464::0::1::::<><>::
-right turn 90.tres::Animation::784359451720081442::1633789464::0::1::::<><>::
-right turn.tres::Animation::9039497154618253227::1633789464::0::1::::<><>::
-running.tres::Animation::8594950864158880989::1633789464::0::1::::<><>::
-T-Pose.tres::Animation::4985776128648761368::1633789464::0::1::::<><>::
-walking.tres::Animation::2669471242198188087::1633789465::0::1::::<><>::
-::res://Player/Animations/new/::1633789464
-Crouched Walking.tres::Animation::1020771574212108831::1633789464::0::1::::<><>::
-Crouching Idle.tres::Animation::2441888687035072631::1633789464::0::1::::<><>::
-Sprinting Forward Roll.tres::Animation::1195287760667300524::1633789464::0::1::::<><>::
-Walking Backward.tres::Animation::7917474273464320574::1633789464::0::1::::<><>::
-::res://Player/Mesh/::1631187490
-Alpha_JointsMesh.tres::ArrayMesh::6829200982674650585::1631172445::0::1::::<><>::
-Alpha_SurfaceMesh.tres::ArrayMesh::2335688885790947416::1631172444::0::1::::<><>::
-skin.tres::Skin::5985412882575805847::1631183206::0::1::::<><>::
-::res://Player/UI/::1631187693
-::res://Player/UI/Debug/::1631187749
-circle.png::StreamTexture2D::8233257279602617965::1631187711::1631187749::1::::<><>::
-direction.png::StreamTexture2D::581421748388452395::1631187711::1631187748::1::::<><>::
-velocity.png::StreamTexture2D::5537708769033194101::1631187711::1631187748::1::::<><>::
+::res://::1635854448
+gitcommands.txt::TextFile::-1::1635545580::0::1::::<><>::
+Global.gd::GDScript::-1::1635545580::0::1::::<>Node<>::
+icon.png::StreamTexture2D::3721835874470705432::1635545580::1635545580::1::::<><>::
+README.md::TextFile::-1::1635545580::0::1::::<><>::
+::res://Interactable/::1635545580
+Interactable.gd::GDScript::-1::1635545580::0::1::::Interactable<>Node<>::
+::res://Interactable/Light/::1635545580
+InteractableLight.gd::GDScript::-1::1635545580::0::1::::<>Interactable<>::
+::res://Maps/::1635854395
+default_env.tres::Environment::4334533782152461559::1635854395::0::1::::<><>::
+floor.tres::VisualShader::2520952675929263405::1635854237::0::1::::<><>::uid://cmywka21r5j5a
+Grid.png::StreamTexture2D::5666006231834885024::1635545580::1635545580::1::::<><>::
+MovementTestMap.tscn::PackedScene::8513554405004406243::1635545627::0::1::::<><>::uid://b20xexwhxflcp<>uid://bb6fys6tydvir<>uid://chwsb15x7es45<>res://Interactable/Light/InteractableLight.gd
+::res://Player/::1635854436
+AnimationTree.gd::GDScript::-1::1635545580::0::1::::<>AnimationTree<>::
+Camera.gd::GDScript::-1::1635545580::0::1::::<>Node3D<>::
+CharacterMovement_Base.gd::GDScript::-1::1635545580::0::1::::<>CharacterBody3D<>::
+Interaction.gd::GDScript::-1::1635545580::0::1::::<>RayCast3D<>::
+Player.tscn::PackedScene::5310675688144637888::1635545628::0::1::::<><>::res://Player/PlayerGameplay.gd<>uid://crjm41kmo0j3t<>res://Player/Camera.gd<>uid://8joppvsyy8xg<>uid://c4kd7bpdwntqf<>uid://bondfjekfvnf<>uid://cdbfafdil6d6g<>uid://cl0lghrsjb7ac<>uid://osp7uim4sbfr<>uid://dk2jv6cp7kymw<>uid://ba14sxxx7oqt8<>uid://rbahkj5hfbaq<>uid://deyml45b028v0<>uid://bo1mefcibj33g<>uid://bj75v8xjhlth3<>uid://bbob5quddupc1<>uid://dihjpx3yrmyxs<>uid://cmwemlfi04xm5<>uid://d112gyis40o56<>uid://lf7jyegeequ1<>uid://duppt5ivooa4t<>uid://bebd2imbloxa2<>uid://dpkisrpco54qj<>res://Player/Status.gd<>uid://ijv6wr22hov8<>uid://ck5riwbh478s4<>res://Player/AnimationTree.gd<>res://Player/Interaction.gd
+PlayerGameplay.gd::GDScript::-1::1635545580::0::1::::<>CharacterBody3D<>::
+Status.gd::GDScript::-1::1635545580::0::1::::<>Control<>::
+::res://Player/Animations/::1635545580
+idle.tres::Animation::99885087197864731::1635545580::0::1::::<><>::
+jump.tres::Animation::5597207087694980250::1635545580::0::1::::<><>::
+left strafe walking.tres::Animation::3423474329391492102::1635545580::0::1::::<><>::
+left strafe.tres::Animation::7490312308976249327::1635545580::0::1::::<><>::
+left turn 90.tres::Animation::2485625978108693066::1635545580::0::1::::<><>::
+left turn.tres::Animation::3086041145240086142::1635545580::0::1::::<><>::
+right strafe walking.tres::Animation::5660788685008762698::1635545580::0::1::::<><>::
+right strafe.tres::Animation::7735797936710697328::1635545580::0::1::::<><>::
+right turn 90.tres::Animation::784359451720081442::1635545580::0::1::::<><>::
+right turn.tres::Animation::9039497154618253227::1635545580::0::1::::<><>::
+running.tres::Animation::8594950864158880989::1635545580::0::1::::<><>::
+T-Pose.tres::Animation::4985776128648761368::1635545580::0::1::::<><>::
+walking.tres::Animation::2669471242198188087::1635545580::0::1::::<><>::
+::res://Player/Animations/new/::1635545580
+Crouched Walking.tres::Animation::1020771574212108831::1635545580::0::1::::<><>::
+Crouching Idle.tres::Animation::2441888687035072631::1635545580::0::1::::<><>::
+Sprinting Forward Roll.tres::Animation::1195287760667300524::1635545580::0::1::::<><>::
+Walking Backward.tres::Animation::7917474273464320574::1635545580::0::1::::<><>::
+::res://Player/Mesh/::1635545580
+Alpha_JointsMesh.tres::ArrayMesh::6829200982674650585::1635545580::0::1::::<><>::
+Alpha_SurfaceMesh.tres::ArrayMesh::2335688885790947416::1635545580::0::1::::<><>::
+skin.tres::Skin::5985412882575805847::1635545580::0::1::::<><>::
+::res://Player/UI/::1635545580
+::res://Player/UI/Debug/::1635545580
+circle.png::StreamTexture2D::8233257279602617965::1635545580::1635545580::1::::<><>::
+direction.png::StreamTexture2D::581421748388452395::1635545580::1635545580::1::::<><>::
+velocity.png::StreamTexture2D::5537708769033194101::1635545580::1635545580::1::::<><>::

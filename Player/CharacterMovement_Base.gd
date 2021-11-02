@@ -242,7 +242,7 @@ func _ready():
 func _physics_process(delta):
 	head_bonked = bonker.is_colliding()
 	SetEssentialValues(delta)
-	Debug()
+	#Debug()
 	match MovementState:
 		Global.MovementState.None:
 			pass
@@ -257,7 +257,7 @@ func _physics_process(delta):
 					Global.RotationMode.LookingDirection:
 						SmoothCharacterRotation(MeshRef.rotation if ActualSpeed > 1.0 else motion_velocity ,0.0,5.0,delta)
 					Global.RotationMode.Aiming:
-						SmoothCharacterRotation($CameraRoot/h.transform.basis.z ,0.0,15.0,delta)
+						SmoothCharacterRotation($CameraRoot.HObject.transform.basis.z ,0.0,15.0,delta)
 			#------------------ Mantle Check ------------------#
 			if InputIsMoving == true:
 				MantleCheck()
@@ -320,8 +320,8 @@ var PrevVelocity :Vector3
 var PrevAimRate_H :float
 func SetEssentialValues(delta):
 	#
-	AimRate_H = abs(($CameraRoot/h.rotation.y - PrevAimRate_H) / delta)
-	PrevAimRate_H = $CameraRoot/h.rotation.y
+	AimRate_H = abs(($CameraRoot.HObject.rotation.y - PrevAimRate_H) / delta)
+	PrevAimRate_H = $CameraRoot.HObject.rotation.y
 	#
 	
 func UpdateCharacterMovement():
@@ -367,13 +367,13 @@ func UpdateGroundedRotation(delta):
 						if Gait == Global.Gait.Sprinting:
 							SmoothCharacterRotation(motion_velocity,500.0,CalcGroundedRotationRate(),delta)
 						else:
-							SmoothCharacterRotation($CameraRoot/h.transform.basis.z ,500.0,CalcGroundedRotationRate(),delta)
+							SmoothCharacterRotation($CameraRoot.HObject.transform.basis.z ,500.0,CalcGroundedRotationRate(),delta)
 					Global.RotationMode.Aiming:
-						SmoothCharacterRotation($CameraRoot/h.transform.basis.z ,1000.0,20.0,delta)
+						SmoothCharacterRotation($CameraRoot.HObject.transform.basis.z ,1000.0,20.0,delta)
 			else:
 				if $CameraRoot.ViewMode == Global.ViewMode.FirstPerson or RotationMode == Global.RotationMode.Aiming:
 					#------------------ Limit Rotation ------------------#
-					var RotationDifferenceNormalized = (Vector3(0.0,MeshRef.rotation.y - atan2($CameraRoot/h.transform.basis.z.x,$CameraRoot/h.transform.basis.z.z),0.0).normalized()).y
+					var RotationDifferenceNormalized = (Vector3(0.0,MeshRef.rotation.y - atan2($CameraRoot.HObject.transform.basis.z.x,$CameraRoot.HObject.transform.basis.z.z),0.0).normalized()).y
 					print(RotationDifferenceNormalized)
 					if not (-1.0 <= RotationDifferenceNormalized and RotationDifferenceNormalized >= 1.0): #Value is not InRange (-100,100)
 						SmoothCharacterRotation(Vector3(0.0,RotationDifferenceNormalized + -1,0.0) if RotationDifferenceNormalized > 0.0 else  Vector3(0.0,RotationDifferenceNormalized + 1,0.0) ,0.0,20.0,delta)

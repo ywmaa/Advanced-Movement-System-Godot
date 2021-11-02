@@ -7,9 +7,9 @@ extends Control
 
 func _physics_process(_delta):
 	
-	var h_rot = get_parent().get_node("CameraRoot/h").transform.basis.get_euler().y
+	var h_rot = get_parent().get_node("CameraRoot/SpringArm3D").transform.basis.get_euler().y
 	
 	$Control.set_rotation(h_rot)
-	direction.rotation = atan2(-player.direction.z, -player.direction.x) 
-	velocity.position = Vector2(-player.motion_velocity.x, -player.motion_velocity.z) * 10 
-	mesh.rotation = -90-get_node("../Armature").rotation.y - player.rotation.y + .5
+	direction.rotation = atan2(player.direction.z, player.direction.x) 
+	velocity.position = Vector2(player.motion_velocity.x, player.motion_velocity.z) * 10 
+	mesh.rotation = 90-get_node("../Armature").rotation.y - player.rotation.y - .5

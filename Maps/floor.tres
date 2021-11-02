@@ -3,18 +3,13 @@
 [ext_resource type="Texture2D" uid="uid://cmywka21r5j5a" path="res://Maps/Grid.png" id="1_6ol84"]
 
 [sub_resource type="VisualShaderNodeTexture" id="VisualShaderNodeTexture_s1p6c"]
-default_input_values = []
-expanded_output_ports = []
 texture = ExtResource( "1_6ol84" )
 
 [sub_resource type="VisualShaderNodeInput" id="VisualShaderNodeInput_vg0om"]
-default_input_values = []
-expanded_output_ports = []
 input_name = "uv"
 
 [sub_resource type="VisualShaderNodeVectorOp" id="VisualShaderNodeVectorOp_1itqx"]
 default_input_values = [0, Vector3(0, 0, 0), 1, Vector3(60, 40, 1)]
-expanded_output_ports = []
 operator = 2
 
 [resource]
