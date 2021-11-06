@@ -1,2 +1,0 @@
-Curve
-Curve3D
