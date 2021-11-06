@@ -1,4 +1,4 @@
-# Welcome to the Advanced-Movement-System-Godot wiki!
+# Welcome to the Advanced-Movement-System-Godot
 
 # This project is a template for creating advanced Third/First Person movement in GODOT;
 You may use it in any other camera type like RTS, but you will need to tweak it yourself.
