@@ -1,3 +1,0 @@
-git add .
-git commit -m "implented main character animations"
-git push origin master

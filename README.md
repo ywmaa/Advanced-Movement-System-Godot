@@ -4,7 +4,9 @@ This project is a template for creating advanced Third/First Person movement in 
 
 You may use it in any other camera type like RTS, but you will need to tweak it yourself.
 
+The Project isn't even in pre-alpha so don't expect a lot of stuff to work 
 
+for example : there isn't any animation working yet (Just a standing mesh), the rotation system in (Looking Direction,Aiming,First Person) Mode Not working probably
 
 Current Features :
 

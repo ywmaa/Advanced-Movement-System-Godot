@@ -9,6 +9,7 @@ enum OverlayState {Default , Rifle , Pistol}
 enum RotationMode {VelocityDirection , LookingDirection , Aiming}
 enum Stance {Standing , Crouching}
 enum ViewMode {ThirdPerson , FirstPerson}
+enum ViewAngle {RightShoulder , LeftShoulder , Head}
 enum MantleType {HighMantle , LowMantle, FallingCatch}
 enum MovementDirection {Forward , Right, Left, Backward}
 

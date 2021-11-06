@@ -6,14 +6,35 @@ extends Node3D
 @onready var HObject = $SpringArm3D
 @onready var VObject = $SpringArm3D
 #####################################
-
+var CameraHOffset = 0.0
+@export var ViewAngle = Global.ViewAngle :
+	get: return ViewAngle
+	set(NewViewAngle):
+		ViewAngle = NewViewAngle
+		if $SpringArm3D/Camera:
+			if NewViewAngle == Global.ViewAngle.RightShoulder and ViewMode != Global.ViewMode.FirstPerson:
+				CameraHOffset = 0.45
+			elif NewViewAngle == Global.ViewAngle.LeftShoulder and ViewMode != Global.ViewMode.FirstPerson:
+				CameraHOffset = -0.45
+			elif NewViewAngle == Global.ViewAngle.Head:
+				CameraHOffset = 0.0
+			
 @export var ViewMode = Global.ViewMode :
-	get: ViewMode
+	get: return ViewMode
 	set(NewViewMode):
 		ViewMode = NewViewMode
-		if ViewMode == Global.ViewMode.FirstPerson:
-			if PlayerRef.RotationMode == Global.RotationMode.VelocityDirection:
-				PlayerRef.RotationMode = Global.RotationMode.LookingDirection
+		if VObject:
+			VObject.rotation.x = 0.0
+		if $SpringArm3D:
+			if ViewMode == Global.ViewMode.FirstPerson:
+				ViewAngle = Global.ViewAngle.Head
+				$SpringArm3D.spring_length = -0.4
+				VObject = $SpringArm3D/Camera
+				if PlayerRef.RotationMode == Global.RotationMode.VelocityDirection:
+					PlayerRef.RotationMode = Global.RotationMode.LookingDirection
+			elif ViewMode == Global.ViewMode.ThirdPerson:
+				$SpringArm3D.spring_length = 2.5
+				VObject = $SpringArm3D
 	
 @export var MouseSensitvity = 0.01
 var camera_h = 0
@@ -22,35 +43,27 @@ var camera_v = 0
 @export var camera_vertical_max =90
 var acceleration_h = 10
 var acceleration_v = 10
-@export var rot_speed_multiplier = 0.15 #reduce this to make the rotation radius larger
-@export var FollowCameraEnabled = true
 
-# Called when the node enters the scene tree for the first time.
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-	#$h/v/Camera.add_exception(get_parent())
-	
 
 func _input(event):
 	if event is InputEventMouseMotion:
-		if FollowCameraEnabled == true:
-			$mouse_control_stay_delay.start()
 		camera_h += -event.relative.x * MouseSensitvity
 		camera_v += -event.relative.y * MouseSensitvity
+		
+	
+		
+	
 
 func _physics_process(delta):
+	if $SpringArm3D/Camera.h_offset != CameraHOffset:
+		$SpringArm3D/Camera.h_offset = lerp($SpringArm3D/Camera.h_offset,CameraHOffset,delta)
+		
 	camera_v = clamp(camera_v,deg2rad(camera_vertical_min),deg2rad(camera_vertical_max))
+	HObject.rotation.y = lerp(HObject.rotation.y,camera_h,delta * acceleration_h)
 	
-	var mesh_front = get_node("../Armature").transform.basis.z
 	
-	var auto_rotate_speed = (PI - mesh_front.angle_to(HObject.transform.basis.z)) * get_parent().motion_velocity.length() * rot_speed_multiplier * -1
-	
-	if $mouse_control_stay_delay.is_stopped() and FollowCameraEnabled == true:
-		#FOLLOW CAMERA
-		HObject.rotation.y = lerp_angle(HObject.rotation.y,get_node("../Armature").transform.basis.get_euler().y,delta * auto_rotate_speed)
-		camera_h = HObject.rotation.y
-	else:
-		#MOUSE CAMERA
-		HObject.rotation.y = lerp(HObject.rotation.y,camera_h,delta * acceleration_h)
-	
+
 	VObject.rotation.x = lerp(VObject.rotation.x,camera_v,delta * acceleration_v)
+

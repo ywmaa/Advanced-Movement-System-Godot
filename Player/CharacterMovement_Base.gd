@@ -207,9 +207,9 @@ var CurrentMovementData = {
 	Run_Speed = 3.75,
 	Sprint_Speed = 6.5,
 
-	Walk_Acceleration = 15.0,
-	Run_Acceleration = 15.0,
-	Sprint_Acceleration = 15.0,
+	Walk_Acceleration = 20.0,
+	Run_Acceleration = 20.0,
+	Sprint_Acceleration = 7.5,
 
 	idle_Rotation_Rate = 0.5,
 	Walk_Rotation_Rate = 4.0,
@@ -234,21 +234,82 @@ var Gait = Global.Gait.Walking :
 var Stance = Global.Stance.Standing
 var OverlayState = Global.OverlayState.Default
 
+func UpdateCharacterMovement():
+	#------------------ Update Movement Values ------------------#
+	match RotationMode:
+		Global.RotationMode.VelocityDirection:
+			match Stance:
+				Global.Stance.Standing:
+					CurrentMovementData = MovementData.Normal.VelocityDirection.Standing
+				Global.Stance.Crouching:
+					CurrentMovementData = MovementData.Normal.VelocityDirection.Crouching
+					
+					
+		Global.RotationMode.LookingDirection:
+			match Stance:
+				Global.Stance.Standing:
+					CurrentMovementData = MovementData.Normal.LookingDirection.Standing
+				Global.Stance.Crouching:
+					CurrentMovementData = MovementData.Normal.LookingDirection.Crouching
+					
+					
+		Global.RotationMode.Aiming:
+			match Stance:
+				Global.Stance.Standing:
+					CurrentMovementData = MovementData.Normal.Aiming.Standing
+				Global.Stance.Crouching:
+					CurrentMovementData = MovementData.Normal.Aiming.Crouching
 #####################################
-
-
-func _ready():
-	CurrentMovementData = MovementData.Normal.LookingDirection.Standing
+var PrevVelocity :Vector3
+var PrevAimRate_H :float
+var RotationDifference
 func _physics_process(delta):
 	head_bonked = bonker.is_colliding()
-	SetEssentialValues(delta)
+	#
+	AimRate_H = abs(($CameraRoot.HObject.rotation.y - PrevAimRate_H) / delta)
+	PrevAimRate_H = $CameraRoot.HObject.rotation.y
+	#
 	#Debug()
 	match MovementState:
 		Global.MovementState.None:
 			pass
 		Global.MovementState.Grounded:
+			
+			
+			
+			
 			#------------------ Rotate Character Mesh ------------------#
-			UpdateGroundedRotation(delta)
+			match MovementAction:
+				Global.MovementAction.None:
+					if (IsMoving and InputIsMoving) or ActualSpeed > 1.5:
+						match RotationMode:
+							Global.RotationMode.VelocityDirection:
+								SmoothCharacterRotation(motion_velocity ,800.0,CalcGroundedRotationRate(),delta)
+							Global.RotationMode.LookingDirection:
+								if Gait == Global.Gait.Sprinting:
+									SmoothCharacterRotation(motion_velocity,500.0,CalcGroundedRotationRate(),delta)
+								else:
+									SmoothCharacterRotation(-$CameraRoot.HObject.transform.basis.z ,500.0,CalcGroundedRotationRate(),delta)
+							Global.RotationMode.Aiming:
+								SmoothCharacterRotation(-$CameraRoot.HObject.transform.basis.z ,1000.0,20.0,delta)
+					else:
+						if $CameraRoot.ViewMode == Global.ViewMode.FirstPerson or RotationMode == Global.RotationMode.Aiming:
+							#------------------ Limit Rotation ------------------#
+							RotationDifference = rad2deg(wrapf($CameraRoot.HObject.rotation.y,-PI,PI)) - rad2deg(MeshRef.rotation.y)  
+							print(RotationDifference)
+							if (RotationDifference <= -100.0 and RotationDifference >= 100.0): #Value is not InRange (-100,100)
+								SmoothCharacterRotation(Vector3(0.0,rad2deg(wrapf($CameraRoot.HObject.rotation.y,-PI,PI)) - 100,0.0) if RotationDifference > 0.0 else  Vector3(0.0,rad2deg(wrapf($CameraRoot.HObject.rotation.y,-PI,PI)) + 100,0.0) ,1000.0,20.0,delta)
+								
+				Global.MovementAction.Rolling:
+					if InputIsMoving == true:
+						SmoothCharacterRotation(InputAcceleration ,0.0,2.0,delta)
+						
+						
+						
+						
+						
+						
+						
 		Global.MovementState.In_Air:
 			#------------------ Rotate Character Mesh In Air ------------------#
 			match RotationMode:
@@ -257,7 +318,7 @@ func _physics_process(delta):
 					Global.RotationMode.LookingDirection:
 						SmoothCharacterRotation(MeshRef.rotation if ActualSpeed > 1.0 else motion_velocity ,0.0,5.0,delta)
 					Global.RotationMode.Aiming:
-						SmoothCharacterRotation($CameraRoot.HObject.transform.basis.z ,0.0,15.0,delta)
+						SmoothCharacterRotation(-$CameraRoot.HObject.transform.basis.z ,0.0,15.0,delta)
 			#------------------ Mantle Check ------------------#
 			if InputIsMoving == true:
 				MantleCheck()
@@ -313,75 +374,9 @@ func _physics_process(delta):
 	
 
 
-#These values represent how the capsule is moving,
-#and therefore are essential for any data driven animation system.
-#They are also used throughout the system for various functions, so I found it is easiest to manage them all in one place.
-var PrevVelocity :Vector3
-var PrevAimRate_H :float
-func SetEssentialValues(delta):
-	#
-	AimRate_H = abs(($CameraRoot.HObject.rotation.y - PrevAimRate_H) / delta)
-	PrevAimRate_H = $CameraRoot.HObject.rotation.y
-	#
-	
-func UpdateCharacterMovement():
-	#------------------ Update Movement Values ------------------#
-	match RotationMode:
-		Global.RotationMode.VelocityDirection:
-			match Stance:
-				Global.Stance.Standing:
-					CurrentMovementData = MovementData.Normal.VelocityDirection.Standing
-				Global.Stance.Crouching:
-					CurrentMovementData = MovementData.Normal.VelocityDirection.Crouching
-					
-					
-		Global.RotationMode.LookingDirection:
-			match Stance:
-				Global.Stance.Standing:
-					CurrentMovementData = MovementData.Normal.LookingDirection.Standing
-				Global.Stance.Crouching:
-					CurrentMovementData = MovementData.Normal.LookingDirection.Crouching
-					
-					
-		Global.RotationMode.Aiming:
-			match Stance:
-				Global.Stance.Standing:
-					CurrentMovementData = MovementData.Normal.Aiming.Standing
-				Global.Stance.Crouching:
-					CurrentMovementData = MovementData.Normal.Aiming.Crouching
-	
 
 
 
-
-
-
-func UpdateGroundedRotation(delta):
-	match MovementAction:
-		Global.MovementAction.None:
-			if (IsMoving and InputIsMoving) or ActualSpeed > 1.5:
-				match RotationMode:
-					Global.RotationMode.VelocityDirection:
-						SmoothCharacterRotation(motion_velocity ,800.0,CalcGroundedRotationRate(),delta)
-					Global.RotationMode.LookingDirection:
-						if Gait == Global.Gait.Sprinting:
-							SmoothCharacterRotation(motion_velocity,500.0,CalcGroundedRotationRate(),delta)
-						else:
-							SmoothCharacterRotation($CameraRoot.HObject.transform.basis.z ,500.0,CalcGroundedRotationRate(),delta)
-					Global.RotationMode.Aiming:
-						SmoothCharacterRotation($CameraRoot.HObject.transform.basis.z ,1000.0,20.0,delta)
-			else:
-				if $CameraRoot.ViewMode == Global.ViewMode.FirstPerson or RotationMode == Global.RotationMode.Aiming:
-					#------------------ Limit Rotation ------------------#
-					var RotationDifferenceNormalized = (Vector3(0.0,MeshRef.rotation.y - atan2($CameraRoot.HObject.transform.basis.z.x,$CameraRoot.HObject.transform.basis.z.z),0.0).normalized()).y
-					print(RotationDifferenceNormalized)
-					if not (-1.0 <= RotationDifferenceNormalized and RotationDifferenceNormalized >= 1.0): #Value is not InRange (-100,100)
-						SmoothCharacterRotation(Vector3(0.0,RotationDifferenceNormalized + -1,0.0) if RotationDifferenceNormalized > 0.0 else  Vector3(0.0,RotationDifferenceNormalized + 1,0.0) ,0.0,20.0,delta)
-					
-		Global.MovementAction.Rolling:
-			if InputIsMoving == true:
-				SmoothCharacterRotation(InputAcceleration ,0.0,2.0,delta)
-			
 
 func SmoothCharacterRotation(Target:Vector3,Targetlerpspeed,nodelerpspeed,delta):
 	var TargetRotation = Vector3.ZERO

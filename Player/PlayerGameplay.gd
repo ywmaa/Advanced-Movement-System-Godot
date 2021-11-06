@@ -21,9 +21,27 @@ func _ready():
 	super._ready()
 	
 	
-
+var timer := 0.2
+var StopTimer := true
 func _physics_process(delta):
 	super._physics_process(delta)
+	if timer > 0.0:
+		timer -= delta
+	else:
+		timer = 0.0
+	
+	if Input.is_action_just_released("SwitchCameraView"):
+		if timer > 0.0:
+			$CameraRoot.ViewAngle = $CameraRoot.ViewAngle + 1 if $CameraRoot.ViewAngle < 2 else 0
+	if Input.is_action_just_pressed("SwitchCameraView"):
+		timer = 0.2
+		StopTimer = false
+	if Input.is_action_pressed("SwitchCameraView") and timer <= 0.0:
+		if StopTimer == false:
+			$CameraRoot.ViewMode = $CameraRoot.ViewMode + 1 if $CameraRoot.ViewMode < 1 else 0
+			StopTimer = true
+		
+		
 	#------------------ Input Movement ------------------#
 	h_rotation = $CameraRoot.HObject.transform.basis.get_euler().y
 	v_rotation = $CameraRoot.VObject.transform.basis.get_euler().x
@@ -61,21 +79,7 @@ func _physics_process(delta):
 			AnimRef.set("parameters/aim_transition/current",0)
 	else:
 		AnimRef.set("parameters/aim_transition/current",1)
-	
-	
-func _input(event):
-	#------------------ Sprint ------------------#
-	if UsingSprintToggle:
-		if event.is_action_pressed("sprint"):
-			DesiredGait = Global.Gait.Walking if DesiredGait == Global.Gait.Sprinting else Global.Gait.Sprinting
-	else:
-		if Input.is_action_pressed("sprint"):
-			DesiredGait = Global.Gait.Sprinting
-		elif Input.is_action_pressed("run"):
-			DesiredGait = Global.Gait.Running 
-		else:
-			DesiredGait = Global.Gait.Walking
-	#------------------ Jump ------------------#
+		#------------------ Jump ------------------#
 	if is_on_floor():
 		if !AnimRef.get("parameters/roll/active"):
 			if OnePressJump == true:
@@ -90,12 +94,26 @@ func _input(event):
 						DesiredStance = Global.Stance.Standing
 					elif not head_bonked:
 						jump()
+	
+func _input(event):
+	#------------------ Sprint ------------------#
+	if UsingSprintToggle:
+		if event.is_action_pressed("sprint"):
+			DesiredGait = Global.Gait.Walking if DesiredGait == Global.Gait.Sprinting else Global.Gait.Sprinting
+	else:
+		if Input.is_action_pressed("sprint"):
+			DesiredGait = Global.Gait.Sprinting
+		elif Input.is_action_pressed("run"):
+			DesiredGait = Global.Gait.Running 
+		else:
+			DesiredGait = Global.Gait.Walking
+
 
 
 		if RotationMode == Global.RotationMode.VelocityDirection:
 			if CameraRef != null:
 				if CameraRef.ViewMode == Global.ViewMode.FirstPerson:
-					CameraRef.OnViewModeChanged(Global.ViewMode.ThirdPerson)
+					CameraRef.ViewMode = Global.ViewMode.ThirdPerson
 					
 
 

@@ -1,9 +1,5 @@
 res://Maps/MovementTestMap.tscn
 res://Maps/default_env.tres
 res://Maps/floor.tres
-res://Player/Camera.gd
-res://Player/CharacterMovement_Base.gd
-res://Player/Interaction.gd
+res://Player/Animations/idle.tres
 res://Player/Player.tscn
-res://Player/PlayerGameplay.gd
-res://Player/Status.gd
