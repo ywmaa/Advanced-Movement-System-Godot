@@ -11,8 +11,11 @@ You may use it in any other camera type like RTS, but you will need to tweak it 
 
 (Shift) Sprint
 
+
 (C) Long Press : Switch First/Third Person View
+
 (C) One Press : Switch Camera Angle (Right Shoulder,Left Shoulder,Head(Center) )
+
 
 (Space) Jump
 
