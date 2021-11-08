@@ -2,6 +2,8 @@ extends Node3D
 
 #####################################
 #Refrences
+@onready var SpringArm = $SpringArm3D
+@onready var Camera = $SpringArm3D/Camera
 @onready var PlayerRef = get_parent()
 @onready var HObject = $SpringArm3D
 @onready var VObject = $SpringArm3D
@@ -11,7 +13,7 @@ var CameraHOffset = 0.0
 	get: return ViewAngle
 	set(NewViewAngle):
 		ViewAngle = NewViewAngle
-		if $SpringArm3D/Camera:
+		if Camera:
 			if NewViewAngle == Global.ViewAngle.RightShoulder and ViewMode != Global.ViewMode.FirstPerson:
 				CameraHOffset = 0.45
 			elif NewViewAngle == Global.ViewAngle.LeftShoulder and ViewMode != Global.ViewMode.FirstPerson:
@@ -25,7 +27,7 @@ var CameraHOffset = 0.0
 		ViewMode = NewViewMode
 		if VObject:
 			VObject.rotation.x = 0.0
-		if $SpringArm3D:
+		if SpringArm:
 			if ViewMode == Global.ViewMode.FirstPerson:
 				ViewAngle = Global.ViewAngle.Head
 				$SpringArm3D.spring_length = -0.4

@@ -17,6 +17,7 @@ var v_rotation :float
 
 var direction := Vector3.FORWARD
 
+var PreviousRotationMode 
 func _ready():
 	super._ready()
 	
@@ -75,10 +76,12 @@ func _physics_process(delta):
 	
 	#------------------ Input Aim ------------------#
 	if Input.is_action_pressed("aim"):
-		if !AnimRef.get("parameters/roll/active"):
-			AnimRef.set("parameters/aim_transition/current",0)
+		if DesiredRotationMode != Global.RotationMode.Aiming:
+			PreviousRotationMode = DesiredRotationMode
+			DesiredRotationMode = Global.RotationMode.Aiming
 	else:
-		AnimRef.set("parameters/aim_transition/current",1)
+		if DesiredRotationMode == Global.RotationMode.Aiming:
+			DesiredRotationMode = PreviousRotationMode
 		#------------------ Jump ------------------#
 	if is_on_floor():
 		if !AnimRef.get("parameters/roll/active"):

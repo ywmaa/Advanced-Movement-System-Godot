@@ -7,7 +7,7 @@ var current_collider
 func _ready():
 	interaction_label.set_text("")
 
-func _process(delta):
+func _process():
 	var collider = get_collider()
 	
 	if is_colliding() and collider is Interactable:

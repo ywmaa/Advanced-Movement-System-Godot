@@ -25,6 +25,7 @@ script = null
 
 [node name="Player" parent="." instance=ExtResource( "3_882kt" )]
 transform = Transform3D(0.990681, 0, 0, 0, 0.990681, 0, 0, 0, 0.990681, 1.2147, 1.91718, 2.76778)
+DesiredRotationMode = 0
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
 transform = Transform3D(24.1622, 0, 0, 0, 0.185017, 0, 0, 0, 24.1622, 0, 0, 0)
