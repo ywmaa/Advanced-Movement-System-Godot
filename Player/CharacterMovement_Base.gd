@@ -367,9 +367,9 @@ func _physics_process(delta):
 	var wr_blend = (ActualSpeed - CurrentMovementData.Walk_Speed) / (CurrentMovementData.Run_Speed - CurrentMovementData.Walk_Speed)
 
 	if ActualSpeed <= CurrentMovementData.Walk_Speed:
-		AnimRef.set("parameters/IWR_blend/blend_amount" , iw_blend)
+		AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_amount" , iw_blend)
 	else:
-		AnimRef.set("parameters/IWR_blend/blend_amount" , wr_blend)
+		AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_amount" , wr_blend)
 		
 	
 
