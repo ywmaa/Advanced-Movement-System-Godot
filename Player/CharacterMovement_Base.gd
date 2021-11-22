@@ -363,14 +363,26 @@ func _physics_process(delta):
 	
 	#------------------ blend the animation with the velocity ------------------#
 	#https://www.desmos.com/calculator/wnajovy5pc Explains the linear equations here to blend the animation with the velocity
-	var iw_blend = (ActualSpeed - CurrentMovementData.Walk_Speed) / CurrentMovementData.Walk_Speed
-	var wr_blend = (ActualSpeed - CurrentMovementData.Walk_Speed) / (CurrentMovementData.Run_Speed - CurrentMovementData.Walk_Speed)
+#	var iw_blend = (ActualSpeed - CurrentMovementData.Walk_Speed) / CurrentMovementData.Walk_Speed
+#	var wr_blend = (ActualSpeed - CurrentMovementData.Walk_Speed) / (CurrentMovementData.Run_Speed - CurrentMovementData.Walk_Speed)
+#
+#	if ActualSpeed <= CurrentMovementData.Walk_Speed:
+#		AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_amount" , iw_blend)
+#	else:
+#		AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_amount" , wr_blend)
 
-	if ActualSpeed <= CurrentMovementData.Walk_Speed:
-		AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_amount" , iw_blend)
+	## Currently using imediate switch because there is a bug in the animation blend
+	if InputSpeed > 0.0:
+		if Gait == Global.Gait.Sprinting :
+			AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_amount" , 1)
+		elif Gait == Global.Gait.Running:
+			AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_amount" , 1)
+		else:
+			AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_amount" , 0)
 	else:
-		AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_amount" , wr_blend)
-		
+		AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_amount" , -1)
+	
+	
 	
 
 
