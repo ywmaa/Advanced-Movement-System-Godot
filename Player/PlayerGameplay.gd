@@ -97,7 +97,16 @@ func _physics_process(delta):
 						DesiredStance = Global.Stance.Standing
 					elif not head_bonked:
 						jump()
-	
+	#------------------ Look At ------------------#
+	match RotationMode:
+		Global.RotationMode.VelocityDirection:
+			if InputIsMoving:
+				IKLookAt(motion_velocity + Vector3(0.0,1.0,0.0))
+		Global.RotationMode.LookingDirection:
+			IKLookAt(-$CameraRoot/SpringArm3D.transform.basis.z * 2.0 + Vector3(0.0,1.5,0.0))
+		Global.RotationMode.Aiming:
+			IKLookAt(-$CameraRoot/SpringArm3D.transform.basis.z * 2.0 + Vector3(0.0,1.5,0.0))
+			
 func _input(event):
 	#------------------ Sprint ------------------#
 	if UsingSprintToggle:

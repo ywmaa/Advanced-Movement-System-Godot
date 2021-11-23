@@ -246,6 +246,7 @@ func UpdateCharacterMovement():
 					
 					
 		Global.RotationMode.LookingDirection:
+			IKLookAt(motion_velocity + Vector3(0.0,1.0,0.0))
 			match Stance:
 				Global.Stance.Standing:
 					CurrentMovementData = MovementData.Normal.LookingDirection.Standing
@@ -412,7 +413,9 @@ func CalcGroundedRotationRate():
 
 
 
-
+func IKLookAt(position: Vector3):
+	if $LookAtObject:
+		$LookAtObject.position = position
 
 
 
