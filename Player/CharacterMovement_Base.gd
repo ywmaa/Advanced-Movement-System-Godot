@@ -283,7 +283,7 @@ func _physics_process(delta):
 				Global.MovementAction.None:
 					if (IsMoving and InputIsMoving) or ActualSpeed > 1.5:
 						SmoothCharacterRotation(motion_velocity,CalcGroundedRotationRate(),delta)
-
+						print(CalcGroundedRotationRate())
 				Global.MovementAction.Rolling:
 					if InputIsMoving == true:
 						SmoothCharacterRotation(InputAcceleration ,2.0,delta)
@@ -379,7 +379,7 @@ func CalcGroundedRotationRate():
 			Global.Gait.Running:
 				return lerp(CurrentMovementData.Walk_Rotation_Rate,CurrentMovementData.Run_Rotation_Rate, Global.MapRangeClamped(ActualSpeed,CurrentMovementData.Walk_Speed,CurrentMovementData.Run_Speed,1.0,2.0)) * clamp(AimRate_H,1.0,3.0)
 			Global.Gait.Sprinting:
-				return lerp(CurrentMovementData.Run_Rotation_Rate,CurrentMovementData.Sprint_Rotation_Rate,  Global.MapRangeClamped(ActualSpeed,CurrentMovementData.Run_Speed,CurrentMovementData.Sprint_Speed,2.0,3.0)) * clamp(AimRate_H,1.0,3.0)
+				return lerp(CurrentMovementData.Run_Rotation_Rate,CurrentMovementData.Sprint_Rotation_Rate,  Global.MapRangeClamped(ActualSpeed,CurrentMovementData.Run_Speed,CurrentMovementData.Sprint_Speed,2.0,3.0)) * clamp(AimRate_H,1.0,2.5)
 	else:
 		return CurrentMovementData.idle_Rotation_Rate * clamp(AimRate_H,1.0,3.0)
 
