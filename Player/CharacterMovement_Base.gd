@@ -246,7 +246,6 @@ func UpdateCharacterMovement():
 					
 					
 		Global.RotationMode.LookingDirection:
-			IKLookAt(motion_velocity + Vector3(0.0,1.0,0.0))
 			match Stance:
 				Global.Stance.Standing:
 					CurrentMovementData = MovementData.Normal.LookingDirection.Standing
@@ -283,43 +282,22 @@ func _physics_process(delta):
 			match MovementAction:
 				Global.MovementAction.None:
 					if (IsMoving and InputIsMoving) or ActualSpeed > 1.5:
-						match RotationMode:
-							Global.RotationMode.VelocityDirection:
-								SmoothCharacterRotation(motion_velocity ,800.0,CalcGroundedRotationRate(),delta)
-							Global.RotationMode.LookingDirection:
-								if Gait == Global.Gait.Sprinting:
-									SmoothCharacterRotation(motion_velocity,500.0,CalcGroundedRotationRate(),delta)
-								else:
-									SmoothCharacterRotation(-$CameraRoot.HObject.transform.basis.z ,500.0,CalcGroundedRotationRate(),delta)
-							Global.RotationMode.Aiming:
-								SmoothCharacterRotation(-$CameraRoot.HObject.transform.basis.z ,1000.0,20.0,delta)
-					else:
-						if $CameraRoot.ViewMode == Global.ViewMode.FirstPerson or RotationMode == Global.RotationMode.Aiming:
-							#------------------ Limit Rotation ------------------#
-							RotationDifference = rad2deg(wrapf($CameraRoot.HObject.rotation.y,-PI,PI)) - rad2deg(MeshRef.rotation.y)  
-							print(RotationDifference)
-							if (RotationDifference <= -100.0 and RotationDifference >= 100.0): #Value is not InRange (-100,100)
-								SmoothCharacterRotation(Vector3(0.0,rad2deg(wrapf($CameraRoot.HObject.rotation.y,-PI,PI)) - 100,0.0) if RotationDifference > 0.0 else  Vector3(0.0,rad2deg(wrapf($CameraRoot.HObject.rotation.y,-PI,PI)) + 100,0.0) ,1000.0,20.0,delta)
-								
+						SmoothCharacterRotation(motion_velocity,CalcGroundedRotationRate(),delta)
+
 				Global.MovementAction.Rolling:
 					if InputIsMoving == true:
-						SmoothCharacterRotation(InputAcceleration ,0.0,2.0,delta)
-						
-						
-						
-						
-						
+						SmoothCharacterRotation(InputAcceleration ,2.0,delta)
 						
 						
 		Global.MovementState.In_Air:
 			#------------------ Rotate Character Mesh In Air ------------------#
 			match RotationMode:
 					Global.RotationMode.VelocityDirection:
-						SmoothCharacterRotation(MeshRef.rotation if ActualSpeed > 1.0 else motion_velocity ,0.0,5.0,delta)
+						SmoothCharacterRotation(MeshRef.rotation if ActualSpeed > 1.0 else motion_velocity ,5.0,delta)
 					Global.RotationMode.LookingDirection:
-						SmoothCharacterRotation(MeshRef.rotation if ActualSpeed > 1.0 else motion_velocity ,0.0,5.0,delta)
+						SmoothCharacterRotation(MeshRef.rotation if ActualSpeed > 1.0 else motion_velocity ,5.0,delta)
 					Global.RotationMode.Aiming:
-						SmoothCharacterRotation(-$CameraRoot.HObject.transform.basis.z ,0.0,15.0,delta)
+						SmoothCharacterRotation(-$CameraRoot.HObject.transform.basis.z ,15.0,delta)
 			#------------------ Mantle Check ------------------#
 			if InputIsMoving == true:
 				MantleCheck()
@@ -328,11 +306,7 @@ func _physics_process(delta):
 		Global.MovementState.Ragdoll:
 			pass
 	
-	#------------------ roll control ------------------#
-#	if !$roll_timer.is_stopped():
-#		MaxAcceleration = 3.5
-#	else:
-#		MaxAcceleration = 15
+
 	#------------------ Crouch ------------------#
 	if head_bonked:
 		vertical_velocity = -2
@@ -353,10 +327,12 @@ func _physics_process(delta):
 		motion_velocity.y =  lerp(motion_velocity.y,vertical_velocity - get_floor_normal().y,delta * gravity)
 		move_and_slide()
 	if !is_on_floor() and IsFlying == false:
+		#MovementState = Global.MovementState.In_Air it is broken now
 		air_time += delta
 		vertical_velocity -= (gravity + gravity * air_time * BONUS_GRAVITY) * delta
 		#vertical_velocity -= gravity * delta * (5 if vertical_velocity > 0 else 1) | Another Formula (More Intense)
 	else:
+		MovementState = Global.MovementState.Grounded
 		air_time = 0.0
 #		if vertical_velocity < -20:
 #			roll()
@@ -391,12 +367,8 @@ func _physics_process(delta):
 
 
 
-func SmoothCharacterRotation(Target:Vector3,Targetlerpspeed,nodelerpspeed,delta):
-	var TargetRotation = Vector3.ZERO
-	
-	TargetRotation.z = lerp(TargetRotation.z,Target.z,delta * Targetlerpspeed)
-	TargetRotation.x = lerp(TargetRotation.x,Target.x,delta * Targetlerpspeed)
-	MeshRef.rotation.y = lerp_angle(MeshRef.rotation.y, atan2(TargetRotation.x,TargetRotation.z) , delta * nodelerpspeed)
+func SmoothCharacterRotation(Target:Vector3,nodelerpspeed,delta):
+	MeshRef.rotation.y = lerp_angle(MeshRef.rotation.y, atan2(Target.x,Target.z) , delta * nodelerpspeed)
 	
 func CalcGroundedRotationRate():
 	
@@ -449,11 +421,6 @@ func jump():
 	print("jumped")
 	vertical_velocity = jump_magnitude
 
-func roll(direction):
-	
-	AnimRef.set("parameters/roll/active",true)
-	$roll_timer.start()
-	motion_velocity = (direction - get_floor_normal()) * roll_magnitude
 
 func Debug():
 	
