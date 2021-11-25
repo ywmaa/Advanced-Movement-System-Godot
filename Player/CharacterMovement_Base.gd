@@ -7,6 +7,7 @@ extends CharacterBody3D
 #Refrences
 @onready var AnimRef = $AnimationTree
 @onready var MeshRef = $Armature
+@onready var SkeletonRef = $Armature/Skeleton3D
 @onready var CollShapeRef = $CollisionShape3D
 @onready var bonker = $CollisionShape3D/HeadBonker
 #####################################
@@ -20,6 +21,16 @@ extends CharacterBody3D
 @export var gravity := 9.8
 var air_time := 0.0
 const BONUS_GRAVITY := 2.0
+
+@export var Ragdoll := false :
+	get: return Ragdoll
+	set(NewRagdoll):
+		Ragdoll = NewRagdoll
+		if Ragdoll == true:
+			SkeletonRef.physical_bones_start_simulation()
+		else:
+			SkeletonRef.physical_bones_stop_simulation()
+
 
 @export var jump_magnitude := 5.0
 @export var roll_magnitude := 17.0
@@ -283,7 +294,6 @@ func _physics_process(delta):
 				Global.MovementAction.None:
 					if (IsMoving and InputIsMoving) or ActualSpeed > 1.5:
 						SmoothCharacterRotation(motion_velocity,CalcGroundedRotationRate(),delta)
-						print(CalcGroundedRotationRate())
 				Global.MovementAction.Rolling:
 					if InputIsMoving == true:
 						SmoothCharacterRotation(InputAcceleration ,2.0,delta)
@@ -344,20 +354,20 @@ func _physics_process(delta):
 #	var wr_blend = (ActualSpeed - CurrentMovementData.Walk_Speed) / (CurrentMovementData.Run_Speed - CurrentMovementData.Walk_Speed)
 #
 #	if ActualSpeed <= CurrentMovementData.Walk_Speed:
-#		AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_amount" , iw_blend)
+#		AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_position" , iw_blend)
 #	else:
-#		AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_amount" , wr_blend)
+#		AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_position" , wr_blend)
 
 	## Currently using imediate switch because there is a bug in the animation blend
 	if InputSpeed > 0.0:
 		if Gait == Global.Gait.Sprinting :
-			AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_amount" , 1)
+			AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_position" , 1)
 		elif Gait == Global.Gait.Running:
-			AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_amount" , 1)
+			AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_position" , 1)
 		else:
-			AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_amount" , 0)
+			AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_position" , 0)
 	else:
-		AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_amount" , -1)
+		AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_position" , -1)
 	
 	
 	
@@ -420,7 +430,6 @@ func MantleCheck():
 func jump():
 	print("jumped")
 	vertical_velocity = jump_magnitude
-
 
 func Debug():
 	

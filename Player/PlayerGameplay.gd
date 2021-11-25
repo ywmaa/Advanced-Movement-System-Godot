@@ -119,7 +119,8 @@ func _input(event):
 			DesiredGait = Global.Gait.Running 
 		else:
 			DesiredGait = Global.Gait.Walking
-
+	if event.is_action_pressed("ragdoll"):
+		Ragdoll = true
 
 
 		if RotationMode == Global.RotationMode.VelocityDirection:

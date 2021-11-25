@@ -15,7 +15,7 @@ albedo_color = Color(1, 0.0235294, 0, 1)
 [node name="Node" type="Node"]
 
 [node name="Player" parent="." instance=ExtResource( "3_882kt" )]
-transform = Transform3D(0.990681, 0, 0, 0, 0.990681, 0, 0, 0, 0.990681, 1.2147, 1.91718, 2.76778)
+transform = Transform3D(0.990681, 0, 0, 0, 0.990681, 0, 0, 0, 0.990681, 1.2147, 3.12075, 2.76778)
 
 [node name="light" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.84419, 1.95787, 16.7421)
