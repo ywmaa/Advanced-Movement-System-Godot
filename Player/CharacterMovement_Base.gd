@@ -286,9 +286,6 @@ func _physics_process(delta):
 			pass
 		Global.MovementState.Grounded:
 			
-			
-			
-			
 			#------------------ Rotate Character Mesh ------------------#
 			match MovementAction:
 				Global.MovementAction.None:
@@ -301,11 +298,13 @@ func _physics_process(delta):
 						
 		Global.MovementState.In_Air:
 			#------------------ Rotate Character Mesh In Air ------------------#
+			print(ActualSpeed)
 			match RotationMode:
+				
 					Global.RotationMode.VelocityDirection:
-						SmoothCharacterRotation(MeshRef.rotation if ActualSpeed > 1.0 else motion_velocity ,5.0,delta)
+						SmoothCharacterRotation(motion_velocity if ActualSpeed > 1.0 else  -$CameraRoot.HObject.transform.basis.z,5.0,delta)
 					Global.RotationMode.LookingDirection:
-						SmoothCharacterRotation(MeshRef.rotation if ActualSpeed > 1.0 else motion_velocity ,5.0,delta)
+						SmoothCharacterRotation(motion_velocity if ActualSpeed > 1.0 else  -$CameraRoot.HObject.transform.basis.z,5.0,delta)
 					Global.RotationMode.Aiming:
 						SmoothCharacterRotation(-$CameraRoot.HObject.transform.basis.z ,15.0,delta)
 			#------------------ Mantle Check ------------------#
@@ -337,7 +336,7 @@ func _physics_process(delta):
 		motion_velocity.y =  lerp(motion_velocity.y,vertical_velocity - get_floor_normal().y,delta * gravity)
 		move_and_slide()
 	if !is_on_floor() and IsFlying == false:
-		#MovementState = Global.MovementState.In_Air it is broken now
+		MovementState = Global.MovementState.In_Air 
 		air_time += delta
 		vertical_velocity -= (gravity + gravity * air_time * BONUS_GRAVITY) * delta
 		#vertical_velocity -= gravity * delta * (5 if vertical_velocity > 0 else 1) | Another Formula (More Intense)
