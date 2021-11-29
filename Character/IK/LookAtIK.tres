@@ -1,4 +1,4 @@
-[gd_resource type="SkeletonModificationStack3D" load_steps=10 format=3 uid="uid://xg46cnhn1cjp"]
+[gd_resource type="SkeletonModificationStack3D" load_steps=10 format=3 uid="uid://di76q7lrd8obs"]
 
 [sub_resource type="SkeletonModification3DLookAt" id="SkeletonModification3DLookAt_e14p0"]
 bone_name = "Spine"

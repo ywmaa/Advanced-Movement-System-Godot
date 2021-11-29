@@ -5,7 +5,8 @@ var current_collider
 @onready var interaction_label = get_node("../../../../Status/InteractionLabel")
 
 func _ready():
-	interaction_label.set_text("")
+	if interaction_label:
+		interaction_label.set_text("")
 
 func _process(_delta):
 	var collider = get_collider()
@@ -24,10 +25,11 @@ func _process(_delta):
 
 
 func set_interaction_text(text):
-	if text == "":
-		interaction_label.set_text("")
-		interaction_label.set_visible(false)
-	else:
-		var interaction_key = OS.get_keycode_string(InputMap.action_get_events("interaction")[0].keycode)
-		interaction_label.set_text("Press %s to %s" % [interaction_key , text])
-		interaction_label.set_visible(true)
+	if interaction_label:
+		if text == "":
+			interaction_label.set_text("")
+			interaction_label.set_visible(false)
+		else:
+			var interaction_key = OS.get_keycode_string(InputMap.action_get_events("interaction")[0].keycode)
+			interaction_label.set_text("Press %s to %s" % [interaction_key , text])
+			interaction_label.set_visible(true)

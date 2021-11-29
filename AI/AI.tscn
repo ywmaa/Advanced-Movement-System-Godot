@@ -1,0 +1,46 @@
+[gd_scene load_steps=3 format=3 uid="uid://bhuo8bjgjjhtv"]
+
+[ext_resource type="PackedScene" uid="uid://dvskyskj2hvfe" path="res://Character/Character.tscn" id="1_btv7d"]
+[ext_resource type="Script" path="res://AI/AI_Base.gd" id="2_7v0jn"]
+
+[node name="Player" instance=ExtResource( "1_btv7d" )]
+script = ExtResource( "2_7v0jn" )
+AI = true
+DesiredRotationMode = 0
+DesiredGait = 0
+DesiredStance = 0
+
+[node name="Skeleton3D" parent="Armature" index="0"]
+bones/0/position = Vector3(-9.95854e-11, 0.860029, 4.85262e-09)
+bones/0/rotation = Quaternion(0.0476156, 7.91577e-05, -5.62956e-06, 0.998866)
+bones/1/rotation = Quaternion(-0.0831294, -6.18152e-05, 3.63061e-06, 0.996539)
+bones/2/rotation = Quaternion(-0.0360646, -8.32542e-05, -5.07323e-06, 0.999349)
+bones/3/rotation = Quaternion(0.189491, 6.99731e-05, -6.58431e-06, 0.981882)
+bones/4/rotation = Quaternion(-0.0456415, -6.40186e-08, 6.32553e-09, 0.998958)
+bones/5/rotation = Quaternion(0.0651632, 0.00899579, -0.916411, 0.394797)
+bones/6/rotation = Quaternion(-0.082973, -0.0235627, -0.307842, 0.94752)
+bones/7/rotation = Quaternion(0.0623138, -0.00234537, -0.097331, 0.993297)
+bones/8/rotation = Quaternion(-0.0736361, 0.0218378, 0.0865525, 0.993282)
+bones/10/rotation = Quaternion(0.057436, -0.0732182, -0.186118, 0.978111)
+bones/11/rotation = Quaternion(0.199328, -0.058088, -0.141217, 0.967963)
+bones/13/rotation = Quaternion(0.0652174, -0.00912188, 0.916409, 0.394788)
+bones/14/rotation = Quaternion(-0.0832291, 0.0234212, 0.306981, 0.94778)
+bones/15/rotation = Quaternion(0.0618751, 0.00250129, 0.0972942, 0.993327)
+bones/16/rotation = Quaternion(-0.0737349, -0.0217401, -0.086625, 0.993271)
+bones/18/rotation = Quaternion(0.0568916, 0.0744431, 0.192327, 0.976848)
+bones/19/rotation = Quaternion(0.199242, 0.0584633, 0.144145, 0.967526)
+bones/21/rotation = Quaternion(-0.00251988, 0.181701, 0.983022, -0.02543)
+bones/22/rotation = Quaternion(-0.204557, -5.00217e-05, 0.0058229, 0.978837)
+bones/23/rotation = Quaternion(0.525595, 0.0200166, 0.222617, 0.820848)
+bones/24/rotation = Quaternion(0.148749, 0.510432, 0.225413, 0.816408)
+bones/25/rotation = Quaternion(-0.00492301, -0.116389, -0.99269, -0.0315593)
+bones/26/rotation = Quaternion(-0.198144, 5.02262e-05, -0.00563097, 0.980157)
+bones/27/rotation = Quaternion(0.573099, -0.0224372, -0.18747, 0.797439)
+bones/28/rotation = Quaternion(0.148736, -0.510436, -0.225404, 0.81641)
+bones/29/position = Vector3(0.13564, 0.0711728, 0.0313572)
+bones/29/rotation = Quaternion(-0.698209, 0.0638417, 0.0627864, 0.710272)
+bones/31/position = Vector3(-0.146389, 0.0713112, -0.0755383)
+bones/31/rotation = Quaternion(-0.700388, -0.0352689, -0.0346862, 0.712047)
+
+[node name="Camera" parent="CameraRoot/SpringArm3D" index="0"]
+current = false

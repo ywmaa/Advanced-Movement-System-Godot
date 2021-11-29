@@ -35,7 +35,7 @@ var CameraHOffset = 0.0
 				if PlayerRef.RotationMode == Global.RotationMode.VelocityDirection:
 					PlayerRef.RotationMode = Global.RotationMode.LookingDirection
 			elif ViewMode == Global.ViewMode.ThirdPerson:
-				$SpringArm3D.spring_length = 2.5
+				$SpringArm3D.spring_length = 1.75
 				VObject = $SpringArm3D
 	
 @export var MouseSensitvity = 0.01

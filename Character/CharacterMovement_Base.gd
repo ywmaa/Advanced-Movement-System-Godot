@@ -10,12 +10,14 @@ extends CharacterBody3D
 @onready var SkeletonRef = $Armature/Skeleton3D
 @onready var CollShapeRef = $CollisionShape3D
 @onready var bonker = $CollisionShape3D/HeadBonker
+@onready var CameraRoot = $CameraRoot
 #####################################
 
 
 
 #####################################
 #Movement Settings
+@export var AI := false
 
 @export var IsFlying := false
 @export var gravity := 9.8
@@ -29,7 +31,7 @@ const BONUS_GRAVITY := 2.0
 		if Ragdoll == true:
 			SkeletonRef.physical_bones_start_simulation()
 		else:
-			SkeletonRef.physical_bones_stop_simulation()
+			pass#			SkeletonRef.physical_bones_stop_simulation()
 
 
 @export var jump_magnitude := 5.0
@@ -295,12 +297,10 @@ func _physics_process(delta):
 					if InputIsMoving == true:
 						SmoothCharacterRotation(InputAcceleration ,2.0,delta)
 						
-						
+		
 		Global.MovementState.In_Air:
 			#------------------ Rotate Character Mesh In Air ------------------#
-			print(ActualSpeed)
 			match RotationMode:
-				
 					Global.RotationMode.VelocityDirection:
 						SmoothCharacterRotation(motion_velocity if ActualSpeed > 1.0 else  -$CameraRoot.HObject.transform.basis.z,5.0,delta)
 					Global.RotationMode.LookingDirection:
@@ -319,7 +319,7 @@ func _physics_process(delta):
 	#------------------ Crouch ------------------#
 	if head_bonked:
 		vertical_velocity = -2
-		
+	Stance = Stance
 	if Stance == Global.Stance.Crouching:
 		CollShapeRef.shape.height -= crouch_switch_speed * delta 
 		bonker.transform.origin.y -= crouch_switch_speed * delta 
@@ -427,13 +427,13 @@ func MantleCheck():
 	pass
 
 func jump():
-	print("jumped")
 	vertical_velocity = jump_magnitude
 
 func Debug():
-	
-	$Status/Label.text = "InputSpeed : %s" % InputSpeed
-	$Status/Label2.text = "ActualSpeed : %s" % ActualSpeed
+	pass
+#	$Status/Label.text = "InputSpeed : %s" % InputSpeed
+#	$Status/Label2.text = "ActualSpeed : %s" % ActualSpeed
+
 
 
 

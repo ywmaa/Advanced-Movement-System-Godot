@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://dtka851el4ykx"]
+[gd_scene load_steps=9 format=3 uid="uid://bnwsqqtdmwhtu"]
 
-[ext_resource type="Environment" uid="uid://b20xexwhxflcp" path="res://Maps/default_env.tres" id="1_7h7du"]
+[ext_resource type="Environment" uid="uid://qsko45wpxerg" path="res://Maps/default_env.tres" id="1_7h7du"]
 [ext_resource type="Material" uid="uid://bf6te7t23qtp3" path="res://Maps/GridMat.tres" id="3_27oba"]
-[ext_resource type="PackedScene" uid="uid://chwsb15x7es45" path="res://Player/Player.tscn" id="3_882kt"]
 [ext_resource type="Script" path="res://Interactable/Light/InteractableLight.gd" id="4_kyyln"]
+[ext_resource type="PackedScene" uid="uid://cmh421lq6vho6" path="res://Player/Player.tscn" id="4_m0eur"]
+[ext_resource type="PackedScene" uid="uid://bhuo8bjgjjhtv" path="res://AI/AI.tscn" id="5_k442x"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_2afi4"]
 
@@ -14,8 +15,11 @@ albedo_color = Color(1, 0.0235294, 0, 1)
 
 [node name="Node" type="Node"]
 
-[node name="Player" parent="." instance=ExtResource( "3_882kt" )]
-transform = Transform3D(0.990681, 0, 0, 0, 0.990681, 0, 0, 0, 0.990681, 1.2147, 3.12075, 2.76778)
+[node name="StupidAI" parent="." instance=ExtResource( "5_k442x" )]
+transform = Transform3D(0.987165, 0, 0, 0, 0.987165, 0, 0, 0, 0.987165, 0.62685, 1.57356, -10.9001)
+
+[node name="Player" parent="." instance=ExtResource( "4_m0eur" )]
+transform = Transform3D(0.987165, 0, 0, 0, 0.987165, 0, 0, 0, 0.987165, 4.8819, 4.26859, 2.99229)
 
 [node name="light" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.84419, 1.95787, 16.7421)

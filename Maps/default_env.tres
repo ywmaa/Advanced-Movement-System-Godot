@@ -1,4 +1,4 @@
-[gd_resource type="Environment" load_steps=3 format=3 uid="uid://b20xexwhxflcp"]
+[gd_resource type="Environment" load_steps=3 format=3 uid="uid://qsko45wpxerg"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_8pwhp"]
 sun_angle_max = 120.35

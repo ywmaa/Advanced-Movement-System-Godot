@@ -1,4 +1,4 @@
-extends "res://Player/CharacterMovement_Base.gd"
+extends "res://Character/CharacterMovement_Base.gd"
 
 #####################################
 #Refrences
@@ -60,7 +60,12 @@ func _physics_process(delta):
 			AddMovementInput(direction, CurrentMovementData.Walk_Speed,CurrentMovementData.Walk_Acceleration)
 	else:
 		AddMovementInput(direction,0,CurrentMovementData.Walk_Acceleration)
-	
+		
+		
+	if RotationMode == Global.RotationMode.Aiming:
+		CameraRoot.Camera.fov = 60.0
+	if RotationMode == Global.RotationMode.VelocityDirection or DesiredRotationMode == Global.RotationMode.LookingDirection:
+		CameraRoot.Camera.fov = 90.0
 	
 	#------------------ Input Crouch ------------------#
 	if UsingCrouchToggle == false:
