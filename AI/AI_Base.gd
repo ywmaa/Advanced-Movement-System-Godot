@@ -18,7 +18,8 @@ func _ready():
 	
 func _physics_process(delta):
 	super._physics_process(delta)
-		
+	
+	
 	#------------------ Input Movement ------------------#
 	h_rotation = $CameraRoot.HObject.transform.basis.get_euler().y
 	v_rotation = $CameraRoot.VObject.transform.basis.get_euler().x

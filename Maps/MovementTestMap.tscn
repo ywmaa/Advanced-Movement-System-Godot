@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://bnwsqqtdmwhtu"]
+[gd_scene load_steps=11 format=3 uid="uid://bnwsqqtdmwhtu"]
 
 [ext_resource type="Environment" uid="uid://qsko45wpxerg" path="res://Maps/default_env.tres" id="1_7h7du"]
 [ext_resource type="Material" uid="uid://bf6te7t23qtp3" path="res://Maps/GridMat.tres" id="3_27oba"]
@@ -13,13 +13,18 @@
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cpp0l"]
 albedo_color = Color(1, 0.0235294, 0, 1)
 
+[sub_resource type="BoxMesh" id="BoxMesh_jwhxk"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_5twjj"]
+points = PackedVector3Array(1, 1, 1, 1, 1, -1, -1, 1, 1, 1, -1, 1, 1, -1, -1, -1, 1, -1, -1, -1, 1, -1, -1, -1)
+
 [node name="Node" type="Node"]
 
 [node name="StupidAI" parent="." instance=ExtResource( "5_k442x" )]
 transform = Transform3D(0.987165, 0, 0, 0, 0.987165, 0, 0, 0, 0.987165, 0.62685, 1.57356, -10.9001)
 
 [node name="Player" parent="." instance=ExtResource( "4_m0eur" )]
-transform = Transform3D(0.987165, 0, 0, 0, 0.987165, 0, 0, 0, 0.987165, 4.8819, 4.26859, 2.99229)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.8819, 4.26859, 4.29181)
 
 [node name="light" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.84419, 1.95787, 16.7421)
@@ -217,3 +222,63 @@ gi_mode = 2
 use_collision = true
 size = Vector3(0.392448, 0.135761, 14.107)
 material = ExtResource( "3_27oba" )
+
+[node name="RigidDynamicBody3D" type="RigidDynamicBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.53539, 3.76665, 13.5922)
+mass = 0.01
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RigidDynamicBody3D"]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+mesh = SubResource( "BoxMesh_jwhxk" )
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidDynamicBody3D"]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+shape = SubResource( "ConvexPolygonShape3D_5twjj" )
+
+[node name="RigidDynamicBody3D2" type="RigidDynamicBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.11323, 5.04718, 13.5922)
+mass = 0.01
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RigidDynamicBody3D2"]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+mesh = SubResource( "BoxMesh_jwhxk" )
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidDynamicBody3D2"]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+shape = SubResource( "ConvexPolygonShape3D_5twjj" )
+
+[node name="RigidDynamicBody3D3" type="RigidDynamicBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.89079, 5.04718, 13.7933)
+mass = 0.01
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RigidDynamicBody3D3"]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+mesh = SubResource( "BoxMesh_jwhxk" )
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidDynamicBody3D3"]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+shape = SubResource( "ConvexPolygonShape3D_5twjj" )
+
+[node name="RigidDynamicBody3D4" type="RigidDynamicBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.51824, 6.10535, 13.6351)
+mass = 0.01
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RigidDynamicBody3D4"]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+mesh = SubResource( "BoxMesh_jwhxk" )
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidDynamicBody3D4"]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+shape = SubResource( "ConvexPolygonShape3D_5twjj" )
+
+[node name="RigidDynamicBody3D5" type="RigidDynamicBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.85594, 6.10535, 13.6351)
+mass = 0.01
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RigidDynamicBody3D5"]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+mesh = SubResource( "BoxMesh_jwhxk" )
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidDynamicBody3D5"]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+shape = SubResource( "ConvexPolygonShape3D_5twjj" )

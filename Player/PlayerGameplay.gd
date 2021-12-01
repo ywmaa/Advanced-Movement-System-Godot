@@ -20,12 +20,14 @@ var direction := Vector3.FORWARD
 var PreviousRotationMode 
 func _ready():
 	super._ready()
-	
-	
+
+
+
 var timer := 0.2
 var StopTimer := true
 func _physics_process(delta):
 	super._physics_process(delta)
+	
 	if timer > 0.0:
 		timer -= delta
 	else:
@@ -87,7 +89,7 @@ func _physics_process(delta):
 	else:
 		if DesiredRotationMode == Global.RotationMode.Aiming:
 			DesiredRotationMode = PreviousRotationMode
-		#------------------ Jump ------------------#
+	#------------------ Jump ------------------#
 	if is_on_floor():
 		if !AnimRef.get("parameters/roll/active"):
 			if OnePressJump == true:
@@ -111,7 +113,14 @@ func _physics_process(delta):
 			IKLookAt(-$CameraRoot/SpringArm3D.transform.basis.z * 2.0 + Vector3(0.0,1.5,0.0))
 		Global.RotationMode.Aiming:
 			IKLookAt(-$CameraRoot/SpringArm3D.transform.basis.z * 2.0 + Vector3(0.0,1.5,0.0))
-			
+	#------------------ Interaction ------------------#
+	if Input.is_action_just_pressed("interaction"):
+		$CameraRoot/SpringArm3D/Camera/InteractionRaycast.Interact()
+
+
+
+
+
 func _input(event):
 	#------------------ Sprint ------------------#
 	if UsingSprintToggle:

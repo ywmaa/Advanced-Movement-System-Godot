@@ -3,26 +3,27 @@ extends RayCast3D
 var current_collider
 
 @onready var interaction_label = get_node("../../../../Status/InteractionLabel")
+var collider = get_collider()
 
 func _ready():
 	if interaction_label:
 		interaction_label.set_text("")
 
 func _process(_delta):
-	var collider = get_collider()
-	
+	collider = get_collider()
 	if is_colliding() and collider is Interactable:
 		if current_collider != collider:
 			set_interaction_text(collider.get_interaction_text())
 			current_collider = collider
 		
-		if Input.is_action_just_pressed("interaction"):
-			collider.interact()
-			set_interaction_text(collider.get_interaction_text())
 	elif current_collider:
 		current_collider = null
 		set_interaction_text("")
 
+func Interact():
+	if is_colliding() and collider is Interactable:
+		collider.interact()
+		set_interaction_text(collider.get_interaction_text())
 
 func set_interaction_text(text):
 	if interaction_label:

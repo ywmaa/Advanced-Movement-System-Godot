@@ -320,11 +320,11 @@ func _physics_process(delta):
 	if head_bonked:
 		vertical_velocity = -2
 	if Stance == Global.Stance.Crouching:
-		CollShapeRef.shape.height -= crouch_switch_speed * delta 
-		bonker.transform.origin.y -= crouch_switch_speed * delta 
-	elif not head_bonked:
-		CollShapeRef.shape.height += crouch_switch_speed * delta 
+		bonker.transform.origin.y -= crouch_switch_speed * delta
+		CollShapeRef.shape.height -= crouch_switch_speed * delta /2
+	elif Stance == Global.Stance.Standing and not head_bonked:
 		bonker.transform.origin.y += crouch_switch_speed * delta 
+		CollShapeRef.shape.height += crouch_switch_speed * delta /2
 		
 	bonker.transform.origin.y = clamp(bonker.transform.origin.y,0.5,1.0)
 	CollShapeRef.shape.height = clamp(CollShapeRef.shape.height,crouch_height,default_height)
