@@ -6,7 +6,7 @@
 ;   [section] ; section goes between []
 ;   param=value ; assign values to parameters
 
-config_version=4
+config_version=5
 
 _global_script_classes=[{
 "base": "Node",
@@ -23,6 +23,7 @@ _global_script_class_icons={
 config/name="AMSG"
 run/main_scene="res://Maps/MovementTestMap.tscn"
 config/icon="res://icon.png"
+config/features=PackedStringArray("4.0")
 
 [autoload]
 
@@ -30,7 +31,10 @@ Global="*res://Global.gd"
 
 [display]
 
-window/size/height=720
+window/size/width=1920
+window/size/height=1080
+window/dpi/allow_hidpi=true
+window/vsync/vsync_mode=0
 
 [gdnative]
 
@@ -102,8 +106,8 @@ ragdoll={
 
 [rendering]
 
-vulkan/rendering/back_end=1
-environment/glow/use_high_quality=true
-anti_aliasing/quality/msaa=3
+global_illumination/gi/use_half_resolution=true
+scaling_3d/mode=1
+scaling_3d/fsr_sharpness=2.0
 occlusion_culling/use_occlusion_culling=true
 environment/defaults/default_environment="res://Maps/default_env.tres"

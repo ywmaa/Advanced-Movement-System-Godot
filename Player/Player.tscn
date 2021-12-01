@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://cmh421lq6vho6"]
+[gd_scene load_steps=17 format=3 uid="uid://cmh421lq6vho6"]
 
 [ext_resource type="PackedScene" uid="uid://dvskyskj2hvfe" path="res://Character/Character.tscn" id="1_smt6h"]
 [ext_resource type="Script" path="res://Player/PlayerGameplay.gd" id="2_23qw2"]
@@ -7,9 +7,61 @@
 [ext_resource type="Texture2D" uid="uid://ijv6wr22hov8" path="res://Player/UI/Debug/direction.png" id="5_o3n0v"]
 [ext_resource type="Texture2D" uid="uid://ck5riwbh478s4" path="res://Player/UI/Debug/velocity.png" id="6_cyw7n"]
 
+[sub_resource type="SkeletonModification3DLookAt" id="SkeletonModification3DLookAt_dh58x"]
+bone_name = "Spine"
+bone_index = 1
+target_nodepath = NodePath("../../LookAtObject")
+additional_rotation = Vector3(90, 180, 0)
+
+[sub_resource type="SkeletonModificationStack3D" id="SkeletonModificationStack3D_6w7rv"]
+enabled = true
+strength = 0.25
+modification_count = 1
+modifications/0 = SubResource( "SkeletonModification3DLookAt_dh58x" )
+
+[sub_resource type="SkeletonModification3DStackHolder" id="SkeletonModification3DStackHolder_an4ye"]
+held_modification_stack = SubResource( "SkeletonModificationStack3D_6w7rv" )
+
+[sub_resource type="SkeletonModification3DLookAt" id="SkeletonModification3DLookAt_bc4vv"]
+bone_name = "Chest"
+bone_index = 2
+target_nodepath = NodePath("../../LookAtObject")
+additional_rotation = Vector3(90, 180, 0)
+
+[sub_resource type="SkeletonModificationStack3D" id="SkeletonModificationStack3D_fb2y0"]
+enabled = true
+strength = 0.3
+modification_count = 1
+modifications/0 = SubResource( "SkeletonModification3DLookAt_bc4vv" )
+
+[sub_resource type="SkeletonModification3DStackHolder" id="SkeletonModification3DStackHolder_cg8p7"]
+held_modification_stack = SubResource( "SkeletonModificationStack3D_fb2y0" )
+
+[sub_resource type="SkeletonModification3DLookAt" id="SkeletonModification3DLookAt_3t7ni"]
+bone_name = "Head"
+bone_index = 4
+target_nodepath = NodePath("../../LookAtObject")
+additional_rotation = Vector3(90, 180, 0)
+
+[sub_resource type="SkeletonModificationStack3D" id="SkeletonModificationStack3D_e2g61"]
+enabled = true
+strength = 0.5
+modification_count = 1
+modifications/0 = SubResource( "SkeletonModification3DLookAt_3t7ni" )
+
+[sub_resource type="SkeletonModification3DStackHolder" id="SkeletonModification3DStackHolder_4pg2v"]
+held_modification_stack = SubResource( "SkeletonModificationStack3D_e2g61" )
+
+[sub_resource type="SkeletonModificationStack3D" id="SkeletonModificationStack3D_o8hfl"]
+resource_local_to_scene = true
+enabled = true
+modification_count = 3
+modifications/0 = SubResource( "SkeletonModification3DStackHolder_an4ye" )
+modifications/1 = SubResource( "SkeletonModification3DStackHolder_cg8p7" )
+modifications/2 = SubResource( "SkeletonModification3DStackHolder_4pg2v" )
+
 [node name="Player" instance=ExtResource( "1_smt6h" )]
 script = ExtResource( "2_23qw2" )
-DesiredRotationMode = 1
 DesiredGait = 0
 DesiredStance = 0
 OnePressJump = true
@@ -17,36 +69,37 @@ UsingSprintToggle = false
 UsingCrouchToggle = true
 
 [node name="Skeleton3D" parent="Armature" index="0"]
-bones/0/position = Vector3(-1.32406e-10, 0.8582, 4.88223e-09)
-bones/0/rotation = Quaternion(0.0476157, -4.87012e-05, 3.44418e-06, 0.998866)
-bones/1/rotation = Quaternion(-0.0831294, 3.82135e-05, -2.2248e-06, 0.996539)
-bones/2/rotation = Quaternion(-0.0360646, 5.09889e-05, 3.10251e-06, 0.999349)
-bones/3/rotation = Quaternion(0.189491, -4.30498e-05, 4.0421e-06, 0.981883)
+bones/0/position = Vector3(-8.08151e-11, 0.861067, 4.83377e-09)
+bones/0/rotation = Quaternion(0.0476156, -9.6104e-05, 6.8082e-06, 0.998866)
+bones/1/rotation = Quaternion(-0.0831294, 7.52984e-05, -4.39565e-06, 0.996539)
+bones/2/rotation = Quaternion(-0.0360646, 0.000100759, 6.1336e-06, 0.99935)
+bones/3/rotation = Quaternion(0.189491, -8.49522e-05, 7.98176e-06, 0.981882)
 bones/4/rotation = Quaternion(-0.0456415, -6.40186e-08, 6.32553e-09, 0.998958)
-bones/5/rotation = Quaternion(0.065207, 0.00909745, -0.91641, 0.394789)
-bones/6/rotation = Quaternion(-0.0832451, -0.0233857, -0.305524, 0.94825)
-bones/7/rotation = Quaternion(0.0618965, -0.00249365, -0.0972959, 0.993326)
-bones/8/rotation = Quaternion(-0.0739853, 0.021743, 0.0866322, 0.993251)
-bones/10/rotation = Quaternion(0.056015, -0.0763979, -0.20225, 0.974741)
-bones/11/rotation = Quaternion(0.199423, -0.0576633, -0.137907, 0.968446)
-bones/13/rotation = Quaternion(0.0651736, -0.00902022, 0.916411, 0.394795)
-bones/14/rotation = Quaternion(-0.0831602, 0.0234032, 0.304263, 0.948663)
-bones/15/rotation = Quaternion(0.0622924, 0.00235303, 0.0973292, 0.993298)
-bones/16/rotation = Quaternion(-0.0733865, -0.0218837, -0.0866221, 0.993294)
-bones/18/rotation = Quaternion(0.0552791, 0.0780223, 0.210512, 0.972904)
-bones/19/rotation = Quaternion(0.199333, 0.0580664, 0.141049, 0.967988)
-bones/21/rotation = Quaternion(-0.002483, 0.189098, 0.981629, -0.025294)
-bones/22/rotation = Quaternion(-0.214924, -4.99062e-05, 0.00611799, 0.976612)
-bones/23/rotation = Quaternion(0.530337, 0.0186001, 0.2225, 0.817858)
-bones/24/rotation = Quaternion(0.148877, 0.510354, 0.22559, 0.816384)
-bones/25/rotation = Quaternion(0.00524963, 0.120867, 0.992156, 0.0314656)
-bones/26/rotation = Quaternion(-0.208342, 5.01177e-05, -0.00592077, 0.978038)
-bones/27/rotation = Quaternion(0.577172, -0.021087, -0.187398, 0.79455)
-bones/28/rotation = Quaternion(0.148846, -0.510369, -0.225556, 0.81639)
-bones/29/position = Vector3(0.13564, 0.0711368, 0.0320872)
-bones/29/rotation = Quaternion(-0.69838, 0.0638413, 0.062786, 0.710104)
-bones/31/position = Vector3(-0.146389, 0.0713627, -0.0768773)
-bones/31/rotation = Quaternion(-0.700974, -0.0352725, -0.0346897, 0.711469)
+bones/5/rotation = Quaternion(0.0652233, 0.00913514, -0.916409, 0.394787)
+bones/6/rotation = Quaternion(-0.083189, -0.0234703, -0.308546, 0.947274)
+bones/7/rotation = Quaternion(0.0617836, -0.00253371, -0.0972867, 0.993334)
+bones/8/rotation = Quaternion(-0.073747, 0.0217201, 0.0866434, 0.993269)
+bones/10/rotation = Quaternion(0.0582778, -0.0713074, -0.176449, 0.979992)
+bones/11/rotation = Quaternion(0.19927, -0.0583416, -0.143195, 0.967669)
+bones/13/rotation = Quaternion(0.0651574, -0.00898253, 0.916411, 0.394798)
+bones/14/rotation = Quaternion(-0.0829519, 0.023572, 0.307787, 0.947539)
+bones/15/rotation = Quaternion(0.0624051, 0.00231291, 0.0973388, 0.99329)
+bones/16/rotation = Quaternion(-0.0736212, -0.0218647, -0.0865326, 0.993284)
+bones/18/rotation = Quaternion(0.0578458, 0.0722905, 0.181422, 0.979037)
+bones/19/rotation = Quaternion(0.199214, 0.0585823, 0.145074, 0.967386)
+bones/21/rotation = Quaternion(-0.00226121, 0.180467, 0.983249, -0.0254624)
+bones/22/rotation = Quaternion(-0.198926, -5.00819e-05, 0.00566258, 0.979998)
+bones/23/rotation = Quaternion(0.52357, 0.0205275, 0.222632, 0.822124)
+bones/24/rotation = Quaternion(0.148578, 0.510537, 0.225177, 0.816439)
+bones/25/rotation = Quaternion(0.00505733, 0.112231, 0.993165, 0.0316405)
+bones/26/rotation = Quaternion(-0.191294, 5.02959e-05, -0.0054363, 0.981518)
+bones/27/rotation = Quaternion(0.571049, -0.0230212, -0.187516, 0.798881)
+bones/28/rotation = Quaternion(0.148881, -0.510347, -0.225605, 0.816384)
+bones/29/position = Vector3(0.13564, 0.0712318, 0.0324177)
+bones/29/rotation = Quaternion(-0.698356, 0.0638413, 0.062786, 0.710128)
+bones/31/position = Vector3(-0.146389, 0.0711897, -0.0765375)
+bones/31/rotation = Quaternion(-0.700202, -0.035269, -0.0346863, 0.71223)
+modification_stack = SubResource( "SkeletonModificationStack3D_o8hfl" )
 
 [node name="Status" type="Control" parent="." index="7"]
 anchor_right = 1.0

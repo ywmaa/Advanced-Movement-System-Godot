@@ -301,7 +301,7 @@ func _physics_process(delta):
 		Global.MovementState.In_Air:
 			#------------------ Rotate Character Mesh In Air ------------------#
 			match RotationMode:
-					Global.RotationMode.VelocityDirection:
+					Global.RotationMode.VelocityDirection: 
 						SmoothCharacterRotation(motion_velocity if ActualSpeed > 1.0 else  -$CameraRoot.HObject.transform.basis.z,5.0,delta)
 					Global.RotationMode.LookingDirection:
 						SmoothCharacterRotation(motion_velocity if ActualSpeed > 1.0 else  -$CameraRoot.HObject.transform.basis.z,5.0,delta)
@@ -319,7 +319,6 @@ func _physics_process(delta):
 	#------------------ Crouch ------------------#
 	if head_bonked:
 		vertical_velocity = -2
-	Stance = Stance
 	if Stance == Global.Stance.Crouching:
 		CollShapeRef.shape.height -= crouch_switch_speed * delta 
 		bonker.transform.origin.y -= crouch_switch_speed * delta 
