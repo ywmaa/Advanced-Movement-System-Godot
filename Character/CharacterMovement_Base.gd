@@ -21,8 +21,6 @@ extends CharacterBody3D
 
 @export var IsFlying := false
 @export var gravity := 9.8
-var air_time := 0.0
-const BONUS_GRAVITY := 2.0
 
 @export var Ragdoll := false :
 	get: return Ragdoll
@@ -202,7 +200,7 @@ var MovementData = {
 var ActualAcceleration :Vector3
 var InputAcceleration :Vector3
 
-var vertical_velocity := 0.0 
+var vertical_velocity :Vector3 
 
 var InputSpeed := 0.0
 var ActualSpeed := 0.0
@@ -317,8 +315,6 @@ func _physics_process(delta):
 	
 
 	#------------------ Crouch ------------------#
-	if head_bonked:
-		vertical_velocity = -2
 	if Stance == Global.Stance.Crouching:
 		bonker.transform.origin.y -= crouch_switch_speed * delta
 		CollShapeRef.shape.height -= crouch_switch_speed * delta /2
@@ -332,19 +328,18 @@ func _physics_process(delta):
 
 	#------------------ Gravity ------------------#
 	if IsFlying == false:
-		motion_velocity.y =  lerp(motion_velocity.y,vertical_velocity - get_floor_normal().y,delta * gravity)
+		motion_velocity.y =  lerp(motion_velocity.y,vertical_velocity.y - get_floor_normal().y,delta * gravity)
 		move_and_slide()
-	if !is_on_floor() and IsFlying == false:
-		MovementState = Global.MovementState.In_Air 
-		air_time += delta
-		vertical_velocity -= (gravity + gravity * air_time * BONUS_GRAVITY) * delta
-		#vertical_velocity -= gravity * delta * (5 if vertical_velocity > 0 else 1) | Another Formula (More Intense)
+		
+	if is_on_floor() and IsFlying == false:
+		MovementState = Global.MovementState.Grounded 
+		vertical_velocity = -get_floor_normal() * 10
 	else:
-		MovementState = Global.MovementState.Grounded
-		air_time = 0.0
+		MovementState = Global.MovementState.In_Air
+		vertical_velocity += Vector3.DOWN * gravity * delta
 #		if vertical_velocity < -20:
 #			roll()
-		vertical_velocity = 0
+
 	
 	#------------------ blend the animation with the velocity ------------------#
 	#https://www.desmos.com/calculator/wnajovy5pc Explains the linear equations here to blend the animation with the velocity
@@ -426,7 +421,7 @@ func MantleCheck():
 	pass
 
 func jump():
-	vertical_velocity = jump_magnitude
+	vertical_velocity = Vector3.UP * jump_magnitude
 
 func Debug():
 	pass
