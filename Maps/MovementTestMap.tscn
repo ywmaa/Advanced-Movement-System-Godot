@@ -1,10 +1,11 @@
-[gd_scene load_steps=11 format=3 uid="uid://bnwsqqtdmwhtu"]
+[gd_scene load_steps=12 format=3 uid="uid://bnwsqqtdmwhtu"]
 
 [ext_resource type="Environment" uid="uid://qsko45wpxerg" path="res://Maps/default_env.tres" id="1_7h7du"]
 [ext_resource type="Material" uid="uid://bf6te7t23qtp3" path="res://Maps/GridMat.tres" id="3_27oba"]
 [ext_resource type="Script" path="res://Interactable/Light/InteractableLight.gd" id="4_kyyln"]
 [ext_resource type="PackedScene" uid="uid://cmh421lq6vho6" path="res://Player/Player.tscn" id="4_m0eur"]
 [ext_resource type="PackedScene" uid="uid://bhuo8bjgjjhtv" path="res://AI/AI.tscn" id="5_k442x"]
+[ext_resource type="PackedScene" uid="uid://cstt3dvkbfulu" path="res://3DObjects/Apple/Apple.tscn" id="6_aiuj0"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_2afi4"]
 
@@ -282,3 +283,15 @@ mesh = SubResource( "BoxMesh_jwhxk" )
 [node name="CollisionShape3D" type="CollisionShape3D" parent="RigidDynamicBody3D5"]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
 shape = SubResource( "ConvexPolygonShape3D_5twjj" )
+
+[node name="Apple" parent="." instance=ExtResource( "6_aiuj0" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.07152, 4.14037, 7.15481)
+
+[node name="@Apple@40298" parent="." instance=ExtResource( "6_aiuj0" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5983, 4.14037, 7.57517)
+
+[node name="@Apple@40303" parent="." instance=ExtResource( "6_aiuj0" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.64226, 4.14037, 7.48438)
+
+[node name="@Apple@40308" parent="." instance=ExtResource( "6_aiuj0" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.31481, 4.14037, 7.25267)
