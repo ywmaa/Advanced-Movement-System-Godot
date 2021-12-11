@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://cmh421lq6vho6"]
+[gd_scene load_steps=20 format=3 uid="uid://cmh421lq6vho6"]
 
 [ext_resource type="PackedScene" uid="uid://dvskyskj2hvfe" path="res://Character/Character.tscn" id="1_smt6h"]
 [ext_resource type="Script" path="res://Player/PlayerGameplay.gd" id="2_23qw2"]
@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://dpkisrpco54qj" path="res://Player/UI/Debug/circle.png" id="4_wwpsv"]
 [ext_resource type="Texture2D" uid="uid://ijv6wr22hov8" path="res://Player/UI/Debug/direction.png" id="5_o3n0v"]
 [ext_resource type="Texture2D" uid="uid://ck5riwbh478s4" path="res://Player/UI/Debug/velocity.png" id="6_cyw7n"]
+[ext_resource type="AudioStream" uid="uid://cffn28kxpgkqi" path="res://Character/footstep_sound/footstep1.wav" id="8_rm8d6"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_br6ho"]
 resource_local_to_scene = true
@@ -79,39 +80,40 @@ UsingCrouchToggle = true
 shape = SubResource( "CapsuleShape3D_br6ho" )
 
 [node name="Skeleton3D" parent="Armature" index="0"]
-bones/0/position = Vector3(-5.96833e-11, 0.86198, 4.82397e-09)
-bones/0/rotation = Quaternion(0.0476156, -4.56492e-05, 3.22759e-06, 0.998866)
-bones/1/rotation = Quaternion(-0.0831294, 3.58258e-05, -2.08503e-06, 0.996539)
-bones/2/rotation = Quaternion(-0.0360646, 4.77845e-05, 2.90735e-06, 0.99935)
-bones/3/rotation = Quaternion(0.189491, -4.03519e-05, 3.78845e-06, 0.981882)
-bones/5/rotation = Quaternion(0.065206, 0.00909502, -0.91641, 0.394789)
-bones/6/rotation = Quaternion(-0.0830739, -0.0235472, -0.309646, 0.946923)
-bones/7/rotation = Quaternion(0.0619032, -0.00249128, -0.0972965, 0.993325)
-bones/8/rotation = Quaternion(-0.0739721, 0.0217451, 0.0866303, 0.993252)
-bones/10/rotation = Quaternion(0.0590934, -0.0694358, -0.166997, 0.981733)
-bones/11/rotation = Quaternion(0.199213, -0.0585888, -0.145124, 0.967378)
+bones/0/position = Vector3(-6.20818e-11, 0.862107, 4.82088e-09)
+bones/0/rotation = Quaternion(0.0476156, -4.56432e-05, 3.22716e-06, 0.998866)
+bones/1/rotation = Quaternion(-0.0831294, 3.58211e-05, -2.08475e-06, 0.996539)
+bones/2/rotation = Quaternion(-0.0360646, 4.77782e-05, 2.90697e-06, 0.99935)
+bones/3/rotation = Quaternion(0.189491, -4.03466e-05, 3.78795e-06, 0.981883)
+bones/4/rotation = Quaternion(-0.0456415, -6.40186e-08, 6.32553e-09, 0.998958)
+bones/5/rotation = Quaternion(0.065206, 0.00909502, -0.91641, 0.39479)
+bones/6/rotation = Quaternion(-0.0830612, -0.0235593, -0.309958, 0.946822)
+bones/7/rotation = Quaternion(0.0619668, -0.00246869, -0.0973017, 0.993321)
+bones/8/rotation = Quaternion(-0.0737255, 0.0217595, 0.0866059, 0.993273)
+bones/10/rotation = Quaternion(0.0591337, -0.0693429, -0.166528, 0.981816)
+bones/11/rotation = Quaternion(0.19921, -0.058601, -0.14522, 0.967364)
 bones/13/rotation = Quaternion(0.0651747, -0.00902265, 0.916411, 0.394795)
-bones/14/rotation = Quaternion(-0.08297, 0.0235873, 0.309076, 0.947118)
-bones/15/rotation = Quaternion(0.0622857, 0.0023554, 0.0973286, 0.993299)
-bones/16/rotation = Quaternion(-0.0733994, -0.0218798, -0.0866203, 0.993293)
-bones/18/rotation = Quaternion(0.0587697, 0.070181, 0.170759, 0.981052)
-bones/19/rotation = Quaternion(0.19917, 0.0587704, 0.146542, 0.967162)
-bones/21/rotation = Quaternion(-0.00222397, 0.177217, 0.983838, -0.0255224)
-bones/22/rotation = Quaternion(-0.193288, -5.01405e-05, 0.00550211, 0.981127)
-bones/23/rotation = Quaternion(0.521327, 0.0211481, 0.222704, 0.823513)
-bones/24/rotation = Quaternion(0.148874, 0.510356, 0.225586, 0.816385)
-bones/25/rotation = Quaternion(0.00495804, 0.109236, 0.993498, 0.0316945)
-bones/26/rotation = Quaternion(-0.185873, 5.03492e-05, -0.00528226, 0.98256)
-bones/27/rotation = Quaternion(0.568216, -0.0233136, -0.187593, 0.800872)
-bones/28/rotation = Quaternion(0.148843, -0.51037, -0.225552, 0.816391)
-bones/29/position = Vector3(0.13564, 0.0711367, 0.0320744)
-bones/29/rotation = Quaternion(-0.698376, 0.0638413, 0.062786, 0.710108)
-bones/31/position = Vector3(-0.146389, 0.0713674, -0.0768497)
-bones/31/rotation = Quaternion(-0.700963, -0.0352724, -0.0346896, 0.71148)
+bones/14/rotation = Quaternion(-0.0829552, 0.0236014, 0.309439, 0.947)
+bones/15/rotation = Quaternion(0.0622221, 0.002378, 0.0973232, 0.993303)
+bones/16/rotation = Quaternion(-0.0736426, -0.0218221, -0.0865646, 0.993281)
+bones/18/rotation = Quaternion(0.0588152, 0.0700763, 0.17023, 0.981148)
+bones/19/rotation = Quaternion(0.199158, 0.0588235, 0.146958, 0.967099)
+bones/21/rotation = Quaternion(-0.00224712, 0.176443, 0.983977, -0.0255353)
+bones/22/rotation = Quaternion(-0.193408, -5.01393e-05, 0.00550551, 0.981103)
+bones/23/rotation = Quaternion(0.520805, 0.0212701, 0.222741, 0.82383)
+bones/24/rotation = Quaternion(0.148483, 0.510594, 0.225046, 0.816456)
+bones/25/rotation = Quaternion(-0.00490727, -0.109238, -0.993498, -0.0316841)
+bones/26/rotation = Quaternion(-0.185136, 5.03564e-05, -0.00526131, 0.982699)
+bones/27/rotation = Quaternion(0.568376, -0.0236545, -0.187569, 0.800754)
+bones/28/rotation = Quaternion(0.148779, -0.51041, -0.225464, 0.816402)
+bones/29/position = Vector3(0.13564, 0.0713821, 0.0319848)
+bones/29/rotation = Quaternion(-0.698433, 0.0638414, 0.0627861, 0.710051)
+bones/31/position = Vector3(-0.146389, 0.071151, -0.0762253)
+bones/31/rotation = Quaternion(-0.700199, -0.035269, -0.0346863, 0.712232)
 modification_stack = SubResource( "SkeletonModificationStack3D_o8hfl" )
 
 [node name="BoneAttachment3D" type="BoneAttachment3D" parent="Armature/Skeleton3D" index="5"]
-transform = Transform3D(1, -5.23462e-06, 7.58669e-05, -5.65575e-06, 0.989746, 0.142838, -7.58367e-05, -0.142838, 0.989746, -1.24341e-06, 1.25739, 4.90118e-05)
+transform = Transform3D(1, -5.23393e-06, 7.58569e-05, -5.655e-06, 0.989746, 0.142838, -7.58267e-05, -0.142838, 0.989746, -1.24325e-06, 1.25752, 4.90118e-05)
 bone_name = "Chest"
 bone_idx = 2
 
@@ -280,3 +282,30 @@ vertical_alignment = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Status" index="7"]
+offset_left = 29.0
+offset_top = 354.0
+offset_right = 400.0
+offset_bottom = 803.0
+text = "                                      Controls
+(W,A,S,D) Move In The Four Directions
+
+(Shift) Sprint
+
+(C) Long Press : Switch First/Third Person View
+
+(C) One Press : Switch Camera Angle (Right Shoulder,Left Shoulder,Head(Center) )
+
+(Space) Jump
+
+(CTRL) Crouch/UnCrouch
+
+(Q) Run (Temporarily)
+
+(F) Interaction
+
+(L) Flashlight"
+
+[node name="FootstepSounds" parent="." index="8"]
+stream = ExtResource( "8_rm8d6" )
