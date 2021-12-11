@@ -339,28 +339,29 @@ func _physics_process(delta):
 		vertical_velocity += Vector3.DOWN * gravity * delta
 #		if vertical_velocity < -20:
 #			roll()
-
+	if is_on_ceiling():
+		vertical_velocity.y = 0
 	
 	#------------------ blend the animation with the velocity ------------------#
 	#https://www.desmos.com/calculator/wnajovy5pc Explains the linear equations here to blend the animation with the velocity
-#	var iw_blend = (ActualSpeed - CurrentMovementData.Walk_Speed) / CurrentMovementData.Walk_Speed
-#	var wr_blend = (ActualSpeed - CurrentMovementData.Walk_Speed) / (CurrentMovementData.Run_Speed - CurrentMovementData.Walk_Speed)
-#
-#	if ActualSpeed <= CurrentMovementData.Walk_Speed:
-#		AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_position" , iw_blend)
-#	else:
-#		AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_position" , wr_blend)
+	var iw_blend = (ActualSpeed - CurrentMovementData.Walk_Speed) / CurrentMovementData.Walk_Speed
+	var wr_blend = (ActualSpeed - CurrentMovementData.Walk_Speed) / (CurrentMovementData.Run_Speed - CurrentMovementData.Walk_Speed)
+
+	if ActualSpeed <= CurrentMovementData.Walk_Speed:
+		AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_position" , iw_blend)
+	else:
+		AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_position" , wr_blend)
 
 	## Currently using imediate switch because there is a bug in the animation blend
-	if InputSpeed > 0.0:
-		if Gait == Global.Gait.Sprinting :
-			AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_position" , 1)
-		elif Gait == Global.Gait.Running:
-			AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_position" , 1)
-		else:
-			AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_position" , 0)
-	else:
-		AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_position" , -1)
+#	if InputSpeed > 0.0:
+#		if Gait == Global.Gait.Sprinting :
+#			AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_position" , 1)
+#		elif Gait == Global.Gait.Running:
+#			AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_position" , 1)
+#		else:
+#			AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_position" , 0)
+#	else:
+#		AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_position" , -1)
 	
 	
 	

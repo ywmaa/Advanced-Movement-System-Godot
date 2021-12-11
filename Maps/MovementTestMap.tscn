@@ -25,7 +25,7 @@ points = PackedVector3Array(1, 1, 1, 1, 1, -1, -1, 1, 1, 1, -1, 1, 1, -1, -1, -1
 transform = Transform3D(0.987165, 0, 0, 0, 0.987165, 0, 0, 0, 0.987165, 0.62685, 1.57356, -10.9001)
 
 [node name="Player" parent="." instance=ExtResource( "4_m0eur" )]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.8819, 105.856, 4.29181)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.8819, 10.4203, 4.29181)
 
 [node name="light" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.84419, 1.95787, 16.7421)
@@ -226,7 +226,7 @@ material = ExtResource( "3_27oba" )
 
 [node name="RigidDynamicBody3D" type="RigidDynamicBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.53539, 3.76665, 13.5922)
-mass = 0.01
+gravity_scale = -0.07
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="RigidDynamicBody3D"]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)

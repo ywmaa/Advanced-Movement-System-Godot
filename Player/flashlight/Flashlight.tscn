@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://iv6qwdja1hb7"]
+
+[ext_resource type="Script" path="res://Player/flashlight/Flashlight.gd" id="1_2fd76"]
+
+[node name="Flashlight" type="SpotLight3D"]
+script = ExtResource( "1_2fd76" )
