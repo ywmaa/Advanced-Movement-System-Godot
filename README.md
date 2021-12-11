@@ -26,3 +26,5 @@ You may use it in any other camera type like RTS, but you will need to tweak it 
 (Q) Run (Temporarily)
 
 (F) Interaction
+
+(L) Flashlight
