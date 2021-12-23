@@ -1,55 +1,54 @@
 [gd_resource type="SkeletonModificationStack3D" load_steps=10 format=3 uid="uid://di76q7lrd8obs"]
 
-[sub_resource type="SkeletonModification3DLookAt" id="SkeletonModification3DLookAt_e14p0"]
+[sub_resource type="SkeletonModification3DLookAt" id="SkeletonModification3DLookAt_dh58x"]
 bone_name = "Spine"
 bone_index = 1
 target_nodepath = NodePath("../../LookAtObject")
-lock_rotation_to_plane = true
-lock_rotation_plane = 1
 additional_rotation = Vector3(90, 180, 0)
 
-[sub_resource type="SkeletonModificationStack3D" id="SkeletonModificationStack3D_ot820"]
+[sub_resource type="SkeletonModificationStack3D" id="SkeletonModificationStack3D_6w7rv"]
 enabled = true
 strength = 0.25
 modification_count = 1
-modifications/0 = SubResource( "SkeletonModification3DLookAt_e14p0" )
+modifications/0 = SubResource( "SkeletonModification3DLookAt_dh58x" )
 
-[sub_resource type="SkeletonModification3DStackHolder" id="SkeletonModification3DStackHolder_4mcdv"]
-held_modification_stack = SubResource( "SkeletonModificationStack3D_ot820" )
+[sub_resource type="SkeletonModification3DStackHolder" id="SkeletonModification3DStackHolder_an4ye"]
+held_modification_stack = SubResource( "SkeletonModificationStack3D_6w7rv" )
 
-[sub_resource type="SkeletonModification3DLookAt" id="SkeletonModification3DLookAt_k7ah3"]
+[sub_resource type="SkeletonModification3DLookAt" id="SkeletonModification3DLookAt_bc4vv"]
 bone_name = "Chest"
 bone_index = 2
 target_nodepath = NodePath("../../LookAtObject")
 additional_rotation = Vector3(90, 180, 0)
 
-[sub_resource type="SkeletonModificationStack3D" id="SkeletonModificationStack3D_wwxcs"]
+[sub_resource type="SkeletonModificationStack3D" id="SkeletonModificationStack3D_fb2y0"]
 enabled = true
 strength = 0.3
 modification_count = 1
-modifications/0 = SubResource( "SkeletonModification3DLookAt_k7ah3" )
+modifications/0 = SubResource( "SkeletonModification3DLookAt_bc4vv" )
 
-[sub_resource type="SkeletonModification3DStackHolder" id="SkeletonModification3DStackHolder_dp7ie"]
-held_modification_stack = SubResource( "SkeletonModificationStack3D_wwxcs" )
+[sub_resource type="SkeletonModification3DStackHolder" id="SkeletonModification3DStackHolder_cg8p7"]
+held_modification_stack = SubResource( "SkeletonModificationStack3D_fb2y0" )
 
-[sub_resource type="SkeletonModification3DLookAt" id="SkeletonModification3DLookAt_ar34l"]
+[sub_resource type="SkeletonModification3DLookAt" id="SkeletonModification3DLookAt_3t7ni"]
 bone_name = "Head"
 bone_index = 4
 target_nodepath = NodePath("../../LookAtObject")
 additional_rotation = Vector3(90, 180, 0)
 
-[sub_resource type="SkeletonModificationStack3D" id="SkeletonModificationStack3D_du3r0"]
+[sub_resource type="SkeletonModificationStack3D" id="SkeletonModificationStack3D_e2g61"]
 enabled = true
 strength = 0.5
 modification_count = 1
-modifications/0 = SubResource( "SkeletonModification3DLookAt_ar34l" )
+modifications/0 = SubResource( "SkeletonModification3DLookAt_3t7ni" )
 
-[sub_resource type="SkeletonModification3DStackHolder" id="SkeletonModification3DStackHolder_uaumm"]
-held_modification_stack = SubResource( "SkeletonModificationStack3D_du3r0" )
+[sub_resource type="SkeletonModification3DStackHolder" id="SkeletonModification3DStackHolder_4pg2v"]
+held_modification_stack = SubResource( "SkeletonModificationStack3D_e2g61" )
 
 [resource]
+resource_local_to_scene = true
 enabled = true
 modification_count = 3
-modifications/0 = SubResource( "SkeletonModification3DStackHolder_4mcdv" )
-modifications/1 = SubResource( "SkeletonModification3DStackHolder_dp7ie" )
-modifications/2 = SubResource( "SkeletonModification3DStackHolder_uaumm" )
+modifications/0 = SubResource( "SkeletonModification3DStackHolder_an4ye" )
+modifications/1 = SubResource( "SkeletonModification3DStackHolder_cg8p7" )
+modifications/2 = SubResource( "SkeletonModification3DStackHolder_4pg2v" )
