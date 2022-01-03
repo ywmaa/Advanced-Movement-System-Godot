@@ -266,7 +266,7 @@ node_connections = [&"output", 0, &"VelocityDirection"]
 [node name="Character" type="CharacterBody3D"]
 transform = Transform3D(0.987165, 0, 0, 0, 0.987165, 0, 0, 0, 0.987165, 0, 0, 0)
 script = ExtResource( "1_78um4" )
-DesiredRotationMode = 1
+RotationMode = 1
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)

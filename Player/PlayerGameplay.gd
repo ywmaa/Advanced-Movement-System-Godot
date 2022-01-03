@@ -27,7 +27,7 @@ var timer := 0.2
 var StopTimer := true
 func _physics_process(delta):
 	super._physics_process(delta)
-	
+	Debug()
 	if timer > 0.0:
 		timer -= delta
 	else:
@@ -61,47 +61,54 @@ func _physics_process(delta):
 		else:
 			AddMovementInput(direction, CurrentMovementData.Walk_Speed,CurrentMovementData.Walk_Acceleration)
 	else:
-		AddMovementInput(direction,0,CurrentMovementData.Walk_Acceleration)
 		
+		#On Stopped
+		if !(Input.is_action_pressed("forward") || Input.is_action_pressed("back") || Input.is_action_pressed("right") || Input.is_action_pressed("left")) and (Input.is_action_just_released("right") || Input.is_action_just_released("back") || Input.is_action_just_released("left") || Input.is_action_just_released("forward")):
+			CalculateStopLocation(position * delta,ActualSpeed,Deacceleration * direction)
+		
+		AddMovementInput(direction,0,Deacceleration)
+		
+	
+	
 		
 	if RotationMode == Global.RotationMode.Aiming:
 		CameraRoot.Camera.fov = 60.0
-	if RotationMode == Global.RotationMode.VelocityDirection or DesiredRotationMode == Global.RotationMode.LookingDirection:
+	if RotationMode == Global.RotationMode.VelocityDirection or RotationMode == Global.RotationMode.LookingDirection:
 		CameraRoot.Camera.fov = 90.0
 	
 	#------------------ Input Crouch ------------------#
 	if UsingCrouchToggle == false:
 		if Input.is_action_pressed("crouch"):
-			if DesiredStance != Global.Stance.Crouching:
-				DesiredStance = Global.Stance.Crouching
+			if Stance != Global.Stance.Crouching:
+				Stance = Global.Stance.Crouching
 		else:
-			if DesiredStance != Global.Stance.Standing:
-				DesiredStance = Global.Stance.Standing
+			if Stance != Global.Stance.Standing:
+				Stance = Global.Stance.Standing
 	else:
 		if Input.is_action_just_pressed("crouch"):
-			DesiredStance = Global.Stance.Standing if DesiredStance == Global.Stance.Crouching else Global.Stance.Crouching
+			Stance = Global.Stance.Standing if Stance == Global.Stance.Crouching else Global.Stance.Crouching
 	
 	#------------------ Input Aim ------------------#
 	if Input.is_action_pressed("aim"):
-		if DesiredRotationMode != Global.RotationMode.Aiming:
-			PreviousRotationMode = DesiredRotationMode
-			DesiredRotationMode = Global.RotationMode.Aiming
+		if RotationMode != Global.RotationMode.Aiming:
+			PreviousRotationMode = RotationMode
+			RotationMode = Global.RotationMode.Aiming
 	else:
-		if DesiredRotationMode == Global.RotationMode.Aiming:
-			DesiredRotationMode = PreviousRotationMode
+		if RotationMode == Global.RotationMode.Aiming:
+			RotationMode = PreviousRotationMode
 	#------------------ Jump ------------------#
 	if is_on_floor():
 		if !AnimRef.get("parameters/roll/active"):
 			if OnePressJump == true:
 				if Input.is_action_just_pressed("jump"):
-					if DesiredStance != Global.Stance.Standing:
-						DesiredStance = Global.Stance.Standing
+					if Stance != Global.Stance.Standing:
+						Stance = Global.Stance.Standing
 					elif not head_bonked:
 						jump()
 			else:
 				if Input.is_action_pressed("jump"):
-					if DesiredStance != Global.Stance.Standing:
-						DesiredStance = Global.Stance.Standing
+					if Stance != Global.Stance.Standing:
+						Stance = Global.Stance.Standing
 					elif not head_bonked:
 						jump()
 	#------------------ Look At ------------------#
@@ -125,14 +132,14 @@ func _input(event):
 	#------------------ Sprint ------------------#
 	if UsingSprintToggle:
 		if event.is_action_pressed("sprint"):
-			DesiredGait = Global.Gait.Walking if DesiredGait == Global.Gait.Sprinting else Global.Gait.Sprinting
+			Gait = Global.Gait.Walking if Gait == Global.Gait.Sprinting else Global.Gait.Sprinting
 	else:
 		if Input.is_action_pressed("sprint"):
-			DesiredGait = Global.Gait.Sprinting
+			Gait = Global.Gait.Sprinting
 		elif Input.is_action_pressed("run"):
-			DesiredGait = Global.Gait.Running 
+			Gait = Global.Gait.Running 
 		else:
-			DesiredGait = Global.Gait.Walking
+			Gait = Global.Gait.Walking
 	if event.is_action_pressed("ragdoll"):
 		Ragdoll = true
 
@@ -143,4 +150,6 @@ func _input(event):
 					CameraRef.ViewMode = Global.ViewMode.ThirdPerson
 					
 
-
+func Debug():
+	$Status/Label.text = "InputSpeed : %s" % InputSpeed.length()
+	$Status/Label2.text = "ActualSpeed : %s" % get_real_velocity().length()

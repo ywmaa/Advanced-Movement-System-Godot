@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://bnwsqqtdmwhtu"]
+[gd_scene load_steps=14 format=3 uid="uid://bnwsqqtdmwhtu"]
 
 [ext_resource type="Environment" uid="uid://qsko45wpxerg" path="res://Maps/default_env.tres" id="1_7h7du"]
 [ext_resource type="Material" uid="uid://bf6te7t23qtp3" path="res://Maps/GridMat.tres" id="3_27oba"]
@@ -6,6 +6,11 @@
 [ext_resource type="PackedScene" uid="uid://cmh421lq6vho6" path="res://Player/Player.tscn" id="4_m0eur"]
 [ext_resource type="PackedScene" uid="uid://bhuo8bjgjjhtv" path="res://AI/AI.tscn" id="5_k442x"]
 [ext_resource type="PackedScene" uid="uid://cstt3dvkbfulu" path="res://3DObjects/Apple/Apple.tscn" id="6_aiuj0"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_frhet"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tx2qg"]
+albedo_color = Color(1, 0.223529, 0.278431, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_2afi4"]
 
@@ -20,6 +25,11 @@ albedo_color = Color(1, 0.0235294, 0, 1)
 points = PackedVector3Array(1, 1, 1, 1, 1, -1, -1, 1, 1, 1, -1, 1, 1, -1, -1, -1, 1, -1, -1, -1, 1, -1, -1, -1)
 
 [node name="Node" type="Node"]
+
+[node name="StopLocation" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.309258, 0, 0, 0, 0.309258, 0, 0, 0, 0.309258, 0, 0, 0)
+mesh = SubResource( "SphereMesh_frhet" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_tx2qg" )
 
 [node name="StupidAI" parent="." instance=ExtResource( "5_k442x" )]
 transform = Transform3D(0.987165, 0, 0, 0, 0.987165, 0, 0, 0, 0.987165, 0.62685, 1.57356, -10.9001)

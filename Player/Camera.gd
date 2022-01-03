@@ -38,7 +38,7 @@ var CameraHOffset = 0.0
 				$SpringArm3D.spring_length = 1.75
 				VObject = $SpringArm3D
 	
-@export var MouseSensitvity = 0.01
+@export var MouseSensitvity : float = 0.01
 var camera_h = 0
 var camera_v = 0
 @export var camera_vertical_min = -90
