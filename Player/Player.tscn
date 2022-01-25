@@ -61,7 +61,6 @@ held_modification_stack = SubResource( "SkeletonModificationStack3D_e2g61" )
 
 [sub_resource type="SkeletonModificationStack3D" id="SkeletonModificationStack3D_8uhk7"]
 resource_local_to_scene = true
-enabled = true
 modification_count = 3
 modifications/0 = SubResource( "SkeletonModification3DStackHolder_an4ye" )
 modifications/1 = SubResource( "SkeletonModification3DStackHolder_cg8p7" )
@@ -101,7 +100,7 @@ transform = Transform3D(-1.013, 1.09344e-05, 0.000158173, 1.09344e-05, 1.013, -1
 light_energy = 20.0
 
 [node name="LookAtObject" parent="." index="6"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.836439, 2.16328, 1.04698)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.04557, 2.31669, 1.35543)
 
 [node name="Status" type="Control" parent="." index="7"]
 anchor_right = 1.0

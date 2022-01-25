@@ -262,6 +262,7 @@ var PrevAimRate_H :float
 var RotationDifference
 
 func _physics_process(delta):
+	
 	head_bonked = bonker.is_colliding()
 	#
 	AimRate_H = abs(($CameraRoot.HObject.rotation.y - PrevAimRate_H) / delta)

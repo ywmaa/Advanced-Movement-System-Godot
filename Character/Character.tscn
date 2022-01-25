@@ -62,7 +62,7 @@ modifications/0 = SubResource( "SkeletonModification3DLookAt_3t7ni" )
 [sub_resource type="SkeletonModification3DStackHolder" id="SkeletonModification3DStackHolder_4pg2v"]
 held_modification_stack = SubResource( "SkeletonModificationStack3D_e2g61" )
 
-[sub_resource type="SkeletonModificationStack3D" id="SkeletonModificationStack3D_o8hfl"]
+[sub_resource type="SkeletonModificationStack3D" id="SkeletonModificationStack3D_8uhk7"]
 resource_local_to_scene = true
 enabled = true
 modification_count = 3
@@ -651,7 +651,7 @@ bones/52/enabled = true
 bones/52/position = Vector3(-9.49503e-08, 1.747, 2.79856e-07)
 bones/52/rotation = Quaternion(-0.278258, -0.0175686, 0.00141525, 0.960345)
 bones/52/scale = Vector3(1, 1, 1)
-modification_stack = SubResource( "SkeletonModificationStack3D_o8hfl" )
+modification_stack = SubResource( "SkeletonModificationStack3D_8uhk7" )
 
 [node name="eyebrow001Mesh" type="MeshInstance3D" parent="Armature/Skeleton3D"]
 gi_mode = 1
@@ -730,7 +730,7 @@ wait_time = 0.2
 one_shot = true
 
 [node name="LookAtObject" type="Position3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.939312, 1.90006, 1.47931)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0310867, 2.2421, 1.64315)
 
 [node name="FootstepSounds" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource( "8_gwq64" )

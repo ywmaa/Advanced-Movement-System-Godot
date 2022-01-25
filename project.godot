@@ -31,10 +31,9 @@ Global="*res://Global.gd"
 
 [display]
 
+window/vsync/vsync_mode=0
 window/size/width=1920
 window/size/height=1080
-window/dpi/allow_hidpi=true
-window/vsync/vsync_mode=0
 
 [gdnative]
 

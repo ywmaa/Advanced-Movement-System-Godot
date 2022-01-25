@@ -241,7 +241,6 @@ gravity_scale = -0.07
 [node name="MeshInstance3D" type="MeshInstance3D" parent="RigidDynamicBody3D"]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
 mesh = SubResource( "BoxMesh_jwhxk" )
-surface_material_override/0 = null
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="RigidDynamicBody3D"]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
@@ -254,7 +253,6 @@ mass = 0.01
 [node name="MeshInstance3D" type="MeshInstance3D" parent="RigidDynamicBody3D2"]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
 mesh = SubResource( "BoxMesh_jwhxk" )
-surface_material_override/0 = null
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="RigidDynamicBody3D2"]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
@@ -267,7 +265,6 @@ mass = 0.01
 [node name="MeshInstance3D" type="MeshInstance3D" parent="RigidDynamicBody3D3"]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
 mesh = SubResource( "BoxMesh_jwhxk" )
-surface_material_override/0 = null
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="RigidDynamicBody3D3"]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
@@ -280,7 +277,6 @@ mass = 0.01
 [node name="MeshInstance3D" type="MeshInstance3D" parent="RigidDynamicBody3D4"]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
 mesh = SubResource( "BoxMesh_jwhxk" )
-surface_material_override/0 = null
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="RigidDynamicBody3D4"]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
@@ -293,7 +289,6 @@ mass = 0.01
 [node name="MeshInstance3D" type="MeshInstance3D" parent="RigidDynamicBody3D5"]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
 mesh = SubResource( "BoxMesh_jwhxk" )
-surface_material_override/0 = null
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="RigidDynamicBody3D5"]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
