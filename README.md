@@ -9,6 +9,15 @@ you can get Godot 4 Alpha 1 here : https://godotengine.org/article/dev-snapshot-
 # This project is a template for creating advanced Third/First Person movement in [GODOT](https://github.com/godotengine/godot)
 You may use it in any other camera type like RTS, but you will need to tweak it yourself.
 
+# For how to fix the armature wrong bones orientation and create a control rig for mixamo character in blender to animate the character :
+https://youtu.be/zfaskQ2BK1s .
+
+# Guide for combining animations from mixamo
+https://youtu.be/3NrsSdEUSWI .
+
+# Guide for importing animations from blender (If you don't have a ready game rig (Control Rig only)if you don't know what does that mean this will help : https://youtube.com/playlist?list=PLdcL5aF8ZcJvCyqWeCBYVGKbQgrQngen3)
+https://youtu.be/qwz9aPdVoFg .
+
 ## How to Move (Key Bindings) :
 
 (W,A,S,D) Move In The Four Directions

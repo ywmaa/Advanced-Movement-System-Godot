@@ -56,55 +56,55 @@ surface_material_override/0 = SubResource( "StandardMaterial3D_cpp0l" )
 [node name="CSGBox3D" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.21105, 0.573563, 2.89924)
 material_override = ExtResource( "3_27oba" )
-gi_mode = 2
+gi_mode = 1
 use_collision = true
 size = Vector3(50, 2, 50)
 
 [node name="CSGBox3D1" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.31349, 2.97282, -22.5958)
-gi_mode = 2
+gi_mode = 1
 use_collision = true
 size = Vector3(49.873, 3, 1)
 material = ExtResource( "3_27oba" )
 
 [node name="CSGBox3D2" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.31349, 2.97282, 28.4035)
-gi_mode = 2
+gi_mode = 1
 use_collision = true
 size = Vector3(49.873, 3, 1)
 material = ExtResource( "3_27oba" )
 
 [node name="CSGBox3D3" type="CSGBox3D" parent="."]
 transform = Transform3D(-0.00308923, 0, 0.999995, 0, 1, 0, -0.999995, 0, -0.00308923, 25.873, 2.97282, 2.67917)
-gi_mode = 2
+gi_mode = 1
 use_collision = true
 size = Vector3(55, 3, 1)
 material = ExtResource( "3_27oba" )
 
 [node name="CSGBox3D4" type="CSGBox3D" parent="."]
 transform = Transform3D(-0.00308923, 0, 0.999995, 0, 1, 0, -0.999995, 0, -0.00308923, -23.5016, 2.97282, 2.67917)
-gi_mode = 2
+gi_mode = 1
 use_collision = true
 size = Vector3(55, 3, 1)
 material = ExtResource( "3_27oba" )
 
 [node name="CSGBox3D5" type="CSGBox3D" parent="."]
-transform = Transform3D(-0.818495, -0.574491, -0.00505711, -0.57448, 0.818511, -0.00354945, 0.00617843, 0, -0.99998, 10.4155, 2.0374, 1.42876)
-gi_mode = 2
+transform = Transform3D(-0.843984, -0.536342, -0.0052146, -0.536332, 0.844001, -0.00331375, 0.00617843, -3.16889e-10, -0.99998, 10.3494, 1.99632, 1.41695)
+gi_mode = 1
 use_collision = true
 size = Vector3(4.60107, 0.502591, 14.107)
 material = ExtResource( "3_27oba" )
 
 [node name="CSGBox3D7" type="CSGBox3D" parent="."]
-transform = Transform3D(0.849607, 0.527317, -0.0102242, -0.527376, 0.849622, -0.004133, 0.00650729, 0.00890342, 0.999939, 18.5978, 2.07804, 1.42876)
-gi_mode = 2
+transform = Transform3D(0.849607, 0.527317, -0.0102242, -0.527376, 0.849622, -0.004133, 0.00650729, 0.00890342, 0.999939, 18.6499, 2.07674, 1.42846)
+gi_mode = 1
 use_collision = true
 size = Vector3(4.60107, 0.502591, 14.0192)
 material = ExtResource( "3_27oba" )
 
 [node name="CSGBox3D6" type="CSGBox3D" parent="."]
 transform = Transform3D(-0.999963, -0.00595152, -0.00617832, -0.0059514, 0.999982, -3.67712e-05, 0.00617843, 0, -0.99998, 14.4541, 3.1768, 1.38929)
-gi_mode = 2
+gi_mode = 1
 use_collision = true
 size = Vector3(4.60107, 0.502591, 14.107)
 material = ExtResource( "3_27oba" )
@@ -124,112 +124,112 @@ transform = Transform3D(1, 0, 0, 0, -0.996865, 0.0791203, 0, -0.0791203, -0.9968
 
 [node name="CSGBox3D8" type="CSGBox3D" parent="Stairs"]
 transform = Transform3D(-0.999963, -0.00595152, -0.00617832, -0.0059514, 0.999982, -3.67712e-05, 0.00617843, 0, -0.99998, -1.42272, 1.61775, 1.38929)
-gi_mode = 2
+gi_mode = 1
 use_collision = true
 size = Vector3(0.392448, 0.135761, 14.107)
 material = ExtResource( "3_27oba" )
 
 [node name="CSGBox3D9" type="CSGBox3D" parent="Stairs"]
 transform = Transform3D(-0.999963, -0.00595152, -0.00617832, -0.0059514, 0.999982, -3.67712e-05, 0.00617843, 0, -0.99998, -1.80449, 1.74329, 1.38929)
-gi_mode = 2
+gi_mode = 1
 use_collision = true
 size = Vector3(0.392448, 0.135761, 14.107)
 material = ExtResource( "3_27oba" )
 
 [node name="CSGBox3D10" type="CSGBox3D" parent="Stairs"]
 transform = Transform3D(-0.999963, -0.00595152, -0.00617832, -0.0059514, 0.999982, -3.67712e-05, 0.00617843, 0, -0.99998, -2.17758, 1.87023, 1.38929)
-gi_mode = 2
+gi_mode = 1
 use_collision = true
 size = Vector3(0.392448, 0.135761, 14.107)
 material = ExtResource( "3_27oba" )
 
 [node name="@CSGBox3D10@19582" type="CSGBox3D" parent="Stairs"]
 transform = Transform3D(-0.999963, -0.00595152, -0.00617832, -0.0059514, 0.999982, -3.67712e-05, 0.00617843, 0, -0.99998, -2.55936, 1.99577, 1.38929)
-gi_mode = 2
+gi_mode = 1
 use_collision = true
 size = Vector3(0.392448, 0.135761, 14.107)
 material = ExtResource( "3_27oba" )
 
 [node name="CSGBox3D11" type="CSGBox3D" parent="Stairs"]
 transform = Transform3D(-0.999963, -0.00595152, -0.00617832, -0.0059514, 0.999982, -3.67712e-05, 0.00617843, 0, -0.99998, -2.8971, 2.11789, 1.38929)
-gi_mode = 2
+gi_mode = 1
 use_collision = true
 size = Vector3(0.392448, 0.135761, 14.107)
 material = ExtResource( "3_27oba" )
 
 [node name="@CSGBox3D11@20746" type="CSGBox3D" parent="Stairs"]
 transform = Transform3D(-0.999963, -0.00595152, -0.00617832, -0.0059514, 0.999982, -3.67712e-05, 0.00617843, 0, -0.99998, -3.27887, 2.24343, 1.38929)
-gi_mode = 2
+gi_mode = 1
 use_collision = true
 size = Vector3(0.392448, 0.135761, 14.107)
 material = ExtResource( "3_27oba" )
 
 [node name="@CSGBox3D11@20747" type="CSGBox3D" parent="Stairs"]
 transform = Transform3D(-0.999963, -0.00595152, -0.00617832, -0.0059514, 0.999982, -3.67712e-05, 0.00617843, 0, -0.99998, -3.65196, 2.37037, 1.38929)
-gi_mode = 2
+gi_mode = 1
 use_collision = true
 size = Vector3(0.392448, 0.135761, 14.107)
 material = ExtResource( "3_27oba" )
 
 [node name="CSGBox3D1019582" type="CSGBox3D" parent="Stairs"]
 transform = Transform3D(-0.999963, -0.00595152, -0.00617832, -0.0059514, 0.999982, -3.67712e-05, 0.00617843, 0, -0.99998, -4.03373, 2.49591, 1.38929)
-gi_mode = 2
+gi_mode = 1
 use_collision = true
 size = Vector3(0.392448, 0.135761, 14.107)
 material = ExtResource( "3_27oba" )
 
 [node name="CSGBox3D12" type="CSGBox3D" parent="Stairs"]
 transform = Transform3D(-0.999963, -0.00595152, -0.00617832, -0.0059514, 0.999982, -3.67712e-05, 0.00617843, 0, -0.99998, -4.41911, 2.62279, 1.38929)
-gi_mode = 2
+gi_mode = 1
 use_collision = true
 size = Vector3(0.392448, 0.135761, 14.107)
 material = ExtResource( "3_27oba" )
 
 [node name="@CSGBox3D12@21676" type="CSGBox3D" parent="Stairs"]
 transform = Transform3D(-0.999963, -0.00595152, -0.00617832, -0.0059514, 0.999982, -3.67712e-05, 0.00617843, 0, -0.99998, -4.80088, 2.74833, 1.38929)
-gi_mode = 2
+gi_mode = 1
 use_collision = true
 size = Vector3(0.392448, 0.135761, 14.107)
 material = ExtResource( "3_27oba" )
 
 [node name="@CSGBox3D12@21677" type="CSGBox3D" parent="Stairs"]
 transform = Transform3D(-0.999963, -0.00595152, -0.00617832, -0.0059514, 0.999982, -3.67712e-05, 0.00617843, 0, -0.99998, -5.17397, 2.87527, 1.38929)
-gi_mode = 2
+gi_mode = 1
 use_collision = true
 size = Vector3(0.392448, 0.135761, 14.107)
 material = ExtResource( "3_27oba" )
 
 [node name="CSGBox3D1019583" type="CSGBox3D" parent="Stairs"]
 transform = Transform3D(-0.999963, -0.00595152, -0.00617832, -0.0059514, 0.999982, -3.67712e-05, 0.00617843, 0, -0.99998, -5.55574, 3.00081, 1.38929)
-gi_mode = 2
+gi_mode = 1
 use_collision = true
 size = Vector3(0.392448, 0.135761, 14.107)
 material = ExtResource( "3_27oba" )
 
 [node name="@CSGBox3D12@21678" type="CSGBox3D" parent="Stairs"]
 transform = Transform3D(-0.999963, -0.00595152, -0.00617832, -0.0059514, 0.999982, -3.67712e-05, 0.00617843, 0, -0.99998, -5.89349, 3.12293, 1.38929)
-gi_mode = 2
+gi_mode = 1
 use_collision = true
 size = Vector3(0.392448, 0.135761, 14.107)
 material = ExtResource( "3_27oba" )
 
 [node name="CSGBox3D1120746" type="CSGBox3D" parent="Stairs"]
 transform = Transform3D(-0.999963, -0.00595152, -0.00617832, -0.0059514, 0.999982, -3.67712e-05, 0.00617843, 0, -0.99998, -6.27526, 3.24847, 1.38929)
-gi_mode = 2
+gi_mode = 1
 use_collision = true
 size = Vector3(0.392448, 0.135761, 14.107)
 material = ExtResource( "3_27oba" )
 
 [node name="CSGBox3D1120747" type="CSGBox3D" parent="Stairs"]
 transform = Transform3D(-0.999963, -0.00595152, -0.00617832, -0.0059514, 0.999982, -3.67712e-05, 0.00617843, 0, -0.99998, -6.64835, 3.37541, 1.38929)
-gi_mode = 2
+gi_mode = 1
 use_collision = true
 size = Vector3(0.392448, 0.135761, 14.107)
 material = ExtResource( "3_27oba" )
 
 [node name="@CSGBox3D1019583@21679" type="CSGBox3D" parent="Stairs"]
 transform = Transform3D(-0.999963, -0.00595152, -0.00617832, -0.0059514, 0.999982, -3.67712e-05, 0.00617843, 0, -0.99998, -7.03012, 3.50095, 1.38929)
-gi_mode = 2
+gi_mode = 1
 use_collision = true
 size = Vector3(0.392448, 0.135761, 14.107)
 material = ExtResource( "3_27oba" )
@@ -240,6 +240,7 @@ gravity_scale = -0.07
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="RigidDynamicBody3D"]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+gi_mode = 2
 mesh = SubResource( "BoxMesh_jwhxk" )
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="RigidDynamicBody3D"]
@@ -252,6 +253,7 @@ mass = 0.01
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="RigidDynamicBody3D2"]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+gi_mode = 2
 mesh = SubResource( "BoxMesh_jwhxk" )
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="RigidDynamicBody3D2"]
@@ -264,6 +266,7 @@ mass = 0.01
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="RigidDynamicBody3D3"]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+gi_mode = 2
 mesh = SubResource( "BoxMesh_jwhxk" )
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="RigidDynamicBody3D3"]
@@ -276,6 +279,7 @@ mass = 0.01
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="RigidDynamicBody3D4"]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+gi_mode = 2
 mesh = SubResource( "BoxMesh_jwhxk" )
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="RigidDynamicBody3D4"]
@@ -288,6 +292,7 @@ mass = 0.01
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="RigidDynamicBody3D5"]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+gi_mode = 2
 mesh = SubResource( "BoxMesh_jwhxk" )
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="RigidDynamicBody3D5"]

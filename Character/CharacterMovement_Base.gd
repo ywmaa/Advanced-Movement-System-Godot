@@ -332,10 +332,10 @@ func _physics_process(delta):
 	
 	#------------------ blend the animation with the velocity ------------------#
 	#https://www.desmos.com/calculator/wnajovy5pc Explains the linear equations here to blend the animation with the velocity
-#	var iw_blend = (ActualSpeed - CurrentMovementData.Walk_Speed) / CurrentMovementData.Walk_Speed
-#	var wr_blend = (ActualSpeed - CurrentMovementData.Walk_Speed) / (CurrentMovementData.Run_Speed - CurrentMovementData.Walk_Speed)
+#	var iw_blend = (ActualSpeed.length() - CurrentMovementData.Walk_Speed) / CurrentMovementData.Walk_Speed
+#	var wr_blend = (ActualSpeed.length() - CurrentMovementData.Walk_Speed) / (CurrentMovementData.Run_Speed - CurrentMovementData.Walk_Speed)
 #
-#	if ActualSpeed <= CurrentMovementData.Walk_Speed:
+#	if ActualSpeed.length() <= CurrentMovementData.Walk_Speed:
 #		AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_position" , iw_blend)
 #	else:
 #		AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_position" , wr_blend)

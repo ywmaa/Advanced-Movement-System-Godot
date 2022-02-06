@@ -4,5 +4,6 @@
 
 [resource]
 albedo_texture = ExtResource( "1_bneee" )
+metallic_specular = 0.0
 uv1_triplanar = true
 uv1_world_triplanar = true
