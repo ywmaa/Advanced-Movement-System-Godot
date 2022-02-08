@@ -275,7 +275,7 @@ func _physics_process(delta):
 		Global.MovementState.None:
 			pass
 		Global.MovementState.Grounded:
-			
+			AnimRef.set("parameters/InAir/blend_amount" , 0)
 			#------------------ Rotate Character Mesh ------------------#
 			match MovementAction:
 				Global.MovementAction.None:
@@ -297,6 +297,7 @@ func _physics_process(delta):
 		Global.MovementState.In_Air:
 			#------------------ Rotate Character Mesh In Air ------------------#
 			StopRotatingInPlace()
+			AnimRef.set("parameters/InAir/blend_amount" , 1)
 			match RotationMode:
 					Global.RotationMode.VelocityDirection: 
 						SmoothCharacterRotation(motion_velocity if ActualVelocity.length() > 1.0 else  -$CameraRoot.HObject.transform.basis.z,5.0,delta)
@@ -490,7 +491,7 @@ func CalculateStopLocation(Velocity:Vector3,Acceleration:Vector3):
 	# return stopping distance from player position in previous frame
 
 	
-	get_tree().get_root().get_node("Node/StopLocation").transform.origin = transform.origin + CurrentVelocityDirection * StoppingDistance + Vector3(0.0,0.75,0.0) #For Debug
+	#get_tree().get_root().get_node("Node/StopLocation").transform.origin = transform.origin + CurrentVelocityDirection * StoppingDistance + Vector3(0.0,0.75,0.0) #For Debug
 	return transform.origin * get_physics_process_delta_time() + CurrentVelocityDirection * StoppingDistance
 
 
