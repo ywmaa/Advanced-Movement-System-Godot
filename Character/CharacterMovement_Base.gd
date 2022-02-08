@@ -181,8 +181,8 @@ var InputAcceleration :Vector3
 
 var vertical_velocity :Vector3 
 
-var InputSpeed :Vector3
-var ActualSpeed :Vector3
+var InputVelocity :Vector3
+var ActualVelocity :Vector3
 
 var tiltVector : Vector3
 
@@ -190,6 +190,9 @@ var IsMoving := false
 var InputIsMoving := false
 
 var head_bonked := false
+
+
+
 
 var AimRate_H :float
 
@@ -260,7 +263,6 @@ func UpdateCharacterMovement():
 
 var PrevAimRate_H :float
 var RotationDifference
-
 func _physics_process(delta):
 	
 	head_bonked = bonker.is_colliding()
@@ -277,8 +279,16 @@ func _physics_process(delta):
 			#------------------ Rotate Character Mesh ------------------#
 			match MovementAction:
 				Global.MovementAction.None:
-					if (IsMoving and InputIsMoving) or ActualSpeed.length() > 1.5:
+					if (IsMoving and InputIsMoving) or ActualVelocity.length() > 1.5:
+						StopRotatingInPlace()
 						SmoothCharacterRotation(motion_velocity,CalcGroundedRotationRate(),delta)
+					else:
+						var CameraAngle = rad2deg($CameraRoot.HObject.rotation.y) +180
+						var MeshAngle = rad2deg(MeshRef.rotation.y)
+						
+						if abs(CameraAngle - MeshAngle) > 90.0:
+							if IsRotating == false:
+								RotateInPlace(CameraAngle,MeshAngle)
 				Global.MovementAction.Rolling:
 					if InputIsMoving == true:
 						SmoothCharacterRotation(InputAcceleration ,2.0,delta)
@@ -286,11 +296,12 @@ func _physics_process(delta):
 		
 		Global.MovementState.In_Air:
 			#------------------ Rotate Character Mesh In Air ------------------#
+			StopRotatingInPlace()
 			match RotationMode:
 					Global.RotationMode.VelocityDirection: 
-						SmoothCharacterRotation(motion_velocity if ActualSpeed.length() > 1.0 else  -$CameraRoot.HObject.transform.basis.z,5.0,delta)
+						SmoothCharacterRotation(motion_velocity if ActualVelocity.length() > 1.0 else  -$CameraRoot.HObject.transform.basis.z,5.0,delta)
 					Global.RotationMode.LookingDirection:
-						SmoothCharacterRotation(motion_velocity if ActualSpeed.length() > 1.0 else  -$CameraRoot.HObject.transform.basis.z,5.0,delta)
+						SmoothCharacterRotation(motion_velocity if ActualVelocity.length() > 1.0 else  -$CameraRoot.HObject.transform.basis.z,5.0,delta)
 					Global.RotationMode.Aiming:
 						SmoothCharacterRotation(-$CameraRoot.HObject.transform.basis.z ,15.0,delta)
 			#------------------ Mantle Check ------------------#
@@ -332,16 +343,16 @@ func _physics_process(delta):
 	
 	#------------------ blend the animation with the velocity ------------------#
 	#https://www.desmos.com/calculator/wnajovy5pc Explains the linear equations here to blend the animation with the velocity
-#	var iw_blend = (ActualSpeed.length() - CurrentMovementData.Walk_Speed) / CurrentMovementData.Walk_Speed
-#	var wr_blend = (ActualSpeed.length() - CurrentMovementData.Walk_Speed) / (CurrentMovementData.Run_Speed - CurrentMovementData.Walk_Speed)
+#	var iw_blend = (ActualVelocity.length() - CurrentMovementData.Walk_Speed) / CurrentMovementData.Walk_Speed
+#	var wr_blend = (ActualVelocity.length() - CurrentMovementData.Walk_Speed) / (CurrentMovementData.Run_Speed - CurrentMovementData.Walk_Speed)
 #
-#	if ActualSpeed.length() <= CurrentMovementData.Walk_Speed:
+#	if ActualVelocity.length() <= CurrentMovementData.Walk_Speed:
 #		AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_position" , iw_blend)
 #	else:
 #		AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_position" , wr_blend)
 
 	## Currently using imediate switch because there is a bug in the animation blend
-	if InputSpeed.length() > 0.0:
+	if InputVelocity.length() > 0.0:
 		if Gait == Global.Gait.Sprinting :
 			AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_position" , 1)
 		elif Gait == Global.Gait.Running:
@@ -362,20 +373,39 @@ func _physics_process(delta):
 func SmoothCharacterRotation(Target:Vector3,nodelerpspeed,delta):
 	MeshRef.rotation.y = lerp_angle(MeshRef.rotation.y, atan2(Target.x,Target.z) , delta * nodelerpspeed)
 	
+
 func CalcGroundedRotationRate():
 	
 	if InputIsMoving == true:
 		match Gait:
 			Global.Gait.Walking:
-				return lerp(CurrentMovementData.idle_Rotation_Rate,CurrentMovementData.Walk_Rotation_Rate, Global.MapRangeClamped(ActualSpeed.length(),0.0,CurrentMovementData.Walk_Speed,0.0,1.0)) * clamp(AimRate_H,1.0,3.0)
+				return lerp(CurrentMovementData.idle_Rotation_Rate,CurrentMovementData.Walk_Rotation_Rate, Global.MapRangeClamped(ActualVelocity.length(),0.0,CurrentMovementData.Walk_Speed,0.0,1.0)) * clamp(AimRate_H,1.0,3.0)
 			Global.Gait.Running:
-				return lerp(CurrentMovementData.Walk_Rotation_Rate,CurrentMovementData.Run_Rotation_Rate, Global.MapRangeClamped(ActualSpeed.length(),CurrentMovementData.Walk_Speed,CurrentMovementData.Run_Speed,1.0,2.0)) * clamp(AimRate_H,1.0,3.0)
+				return lerp(CurrentMovementData.Walk_Rotation_Rate,CurrentMovementData.Run_Rotation_Rate, Global.MapRangeClamped(ActualVelocity.length(),CurrentMovementData.Walk_Speed,CurrentMovementData.Run_Speed,1.0,2.0)) * clamp(AimRate_H,1.0,3.0)
 			Global.Gait.Sprinting:
-				return lerp(CurrentMovementData.Run_Rotation_Rate,CurrentMovementData.Sprint_Rotation_Rate,  Global.MapRangeClamped(ActualSpeed.length(),CurrentMovementData.Run_Speed,CurrentMovementData.Sprint_Speed,2.0,3.0)) * clamp(AimRate_H,1.0,2.5)
+				return lerp(CurrentMovementData.Run_Rotation_Rate,CurrentMovementData.Sprint_Rotation_Rate,  Global.MapRangeClamped(ActualVelocity.length(),CurrentMovementData.Run_Speed,CurrentMovementData.Sprint_Speed,2.0,3.0)) * clamp(AimRate_H,1.0,2.5)
 	else:
 		return CurrentMovementData.idle_Rotation_Rate * clamp(AimRate_H,1.0,3.0)
 
-
+var IsRotating = false :
+	set(New):
+		IsRotating = New
+		if IsRotating:
+			AnimRef.set("parameters/Turn/blend_amount" , 1)
+		else:
+			AnimRef.set("parameters/Turn/blend_amount" , 0)
+	get: return IsRotating
+func RotateInPlace(CameraAngle,MeshAngle):
+	if abs(CameraAngle - MeshAngle) > 90:
+		IsRotating = true
+		var RotatingTween := create_tween()
+		var NewRotation = MeshRef.rotation.y + deg2rad(90 if CameraAngle - MeshAngle > 0 else -90)
+		AnimRef.set("parameters/RightOrLeft/blend_amount" ,0 if CameraAngle - MeshAngle > 0 else 1)
+		if IsRotating:
+			RotatingTween.tween_property(MeshRef,"rotation",Vector3(MeshRef.rotation.x,NewRotation,MeshRef.rotation.z),1.0667).set_ease(Tween.EASE_IN_OUT)
+		RotatingTween.tween_callback(StopRotatingInPlace)
+func StopRotatingInPlace():
+	IsRotating = false
 
 func IKLookAt(position: Vector3):
 	if $LookAtObject:
@@ -390,7 +420,7 @@ func AddMovementInput(direction: Vector3, Speed: float , Acceleration: float):
 	else:
 		set_motion_velocity(get_motion_velocity().lerp(direction * Speed, Acceleration * get_physics_process_delta_time()))
 		move_and_slide()
-	InputSpeed = Speed * direction
+	InputVelocity = Speed * direction
 	InputIsMoving = Speed > 0.0
 	InputAcceleration = Acceleration * direction
 	#
@@ -398,10 +428,10 @@ func AddMovementInput(direction: Vector3, Speed: float , Acceleration: float):
 	PrevVelocity = motion_velocity
 	#
 	#
-	ActualSpeed = (get_real_velocity() * Vector3(1.0,0.0,1.0))
+	ActualVelocity = (get_real_velocity() * Vector3(1.0,0.0,1.0))
 	#
 	
-		#TiltCharacterMesh
+	#TiltCharacterMesh
 #	if Tilt == true:
 #
 #		tiltVector = (ActualAcceleration * direction).cross(Vector3.UP)
@@ -422,7 +452,7 @@ func jump():
 
 
 #For Predicting Stop Location
-func CalculateStopLocation(CurrentLocation:Vector3,Velocity:Vector3,Acceleration:Vector3):
+func CalculateStopLocation(Velocity:Vector3,Acceleration:Vector3):
 	#I didn't write the algorithm myself , you can find it here https://answers.unrealengine.com/questions/531204/predict-stop-position-of-character-ahead-in-time.html
 
 	# Small number break loop when velocity is less than this value

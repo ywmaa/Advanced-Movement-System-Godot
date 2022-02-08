@@ -64,7 +64,7 @@ func _physics_process(delta):
 		
 		#On Stopped
 		if !(Input.is_action_pressed("forward") || Input.is_action_pressed("back") || Input.is_action_pressed("right") || Input.is_action_pressed("left")) and (Input.is_action_just_released("right") || Input.is_action_just_released("back") || Input.is_action_just_released("left") || Input.is_action_just_released("forward")):
-			CalculateStopLocation(position * delta,ActualSpeed,Deacceleration * direction)
+			CalculateStopLocation(ActualVelocity,Deacceleration * direction)
 		
 		AddMovementInput(direction,0,Deacceleration)
 		
@@ -151,5 +151,5 @@ func _input(event):
 					
 
 func Debug():
-	$Status/Label.text = "InputSpeed : %s" % InputSpeed.length()
+	$Status/Label.text = "InputSpeed : %s" % InputVelocity.length()
 	$Status/Label2.text = "ActualSpeed : %s" % get_real_velocity().length()
