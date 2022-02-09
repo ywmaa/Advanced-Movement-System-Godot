@@ -23,28 +23,10 @@ func _ready():
 
 
 
-var timer := 0.2
-var StopTimer := true
 func _physics_process(delta):
 	super._physics_process(delta)
 	Debug()
-	if timer > 0.0:
-		timer -= delta
-	else:
-		timer = 0.0
 	
-	if Input.is_action_just_released("SwitchCameraView"):
-		if timer > 0.0:
-			$CameraRoot.ViewAngle = $CameraRoot.ViewAngle + 1 if $CameraRoot.ViewAngle < 2 else 0
-	if Input.is_action_just_pressed("SwitchCameraView"):
-		timer = 0.2
-		StopTimer = false
-	if Input.is_action_pressed("SwitchCameraView") and timer <= 0.0:
-		if StopTimer == false:
-			$CameraRoot.ViewMode = $CameraRoot.ViewMode + 1 if $CameraRoot.ViewMode < 1 else 0
-			StopTimer = true
-		
-		
 	#------------------ Input Movement ------------------#
 	h_rotation = $CameraRoot.HObject.transform.basis.get_euler().y
 	v_rotation = $CameraRoot.VObject.transform.basis.get_euler().x
@@ -87,7 +69,28 @@ func _physics_process(delta):
 	else:
 		if Input.is_action_just_pressed("crouch"):
 			Stance = Global.Stance.Standing if Stance == Global.Stance.Crouching else Global.Stance.Crouching
-	
+	#------------------ Sprint ------------------#
+	if UsingSprintToggle:
+		if Input.is_action_just_pressed("sprint"):
+			if Gait == Global.Gait.Walking:
+				Gait = Global.Gait.Running  
+			elif Gait == Global.Gait.Running:
+				Gait = Global.Gait.Sprinting
+			elif Gait == Global.Gait.Sprinting:
+				Gait = Global.Gait.Walking
+	else:
+		if Input.is_action_just_pressed("sprint"):
+			if Gait == Global.Gait.Walking:
+				Gait = Global.Gait.Running
+			elif Gait == Global.Gait.Running:
+				Gait = Global.Gait.Sprinting
+		if Input.is_action_just_released("sprint"):
+			if Gait == Global.Gait.Sprinting or Gait == Global.Gait.Walking:
+				Gait = Global.Gait.Walking
+			elif Gait == Global.Gait.Running:
+				await get_tree().create_timer(0.4).timeout
+				if Gait == Global.Gait.Running:
+					Gait = Global.Gait.Walking
 	#------------------ Input Aim ------------------#
 	if Input.is_action_pressed("aim"):
 		if RotationMode != Global.RotationMode.Aiming:
@@ -127,19 +130,24 @@ func _physics_process(delta):
 
 
 
-
+var ViewChangedRecently = false
 func _input(event):
-	#------------------ Sprint ------------------#
-	if UsingSprintToggle:
-		if event.is_action_pressed("sprint"):
-			Gait = Global.Gait.Walking if Gait == Global.Gait.Sprinting else Global.Gait.Sprinting
-	else:
-		if Input.is_action_pressed("sprint"):
-			Gait = Global.Gait.Sprinting
-		elif Input.is_action_pressed("run"):
-			Gait = Global.Gait.Running 
+	#------------------ Change Camera View ------------------#
+	if Input.is_action_just_released("SwitchCameraView"):
+		if ViewChangedRecently == false:
+			ViewChangedRecently = true
+			$CameraRoot.ViewAngle = $CameraRoot.ViewAngle + 1 if $CameraRoot.ViewAngle < 2 else 0
+			await get_tree().create_timer(0.3).timeout
+			ViewChangedRecently = false
 		else:
-			Gait = Global.Gait.Walking
+			ViewChangedRecently = false
+	if Input.is_action_just_pressed("SwitchCameraView"):
+		await get_tree().create_timer(0.2).timeout
+		if ViewChangedRecently == false:
+			$CameraRoot.ViewMode = $CameraRoot.ViewMode + 1 if $CameraRoot.ViewMode < 1 else 0
+			ViewChangedRecently = true
+
+
 	if event.is_action_pressed("ragdoll"):
 		Ragdoll = true
 

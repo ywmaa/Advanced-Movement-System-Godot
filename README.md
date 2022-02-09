@@ -22,8 +22,9 @@ https://youtu.be/qwz9aPdVoFg .
 
 (W,A,S,D) Move In The Four Directions
 
-(Shift) Sprint
+(Shift) Run
 
+(Shift) Sprint (Press Shift Again before the character returns to walking (0.4 second))
 
 (C) Long Press : Switch First/Third Person View
 
@@ -34,7 +35,7 @@ https://youtu.be/qwz9aPdVoFg .
 
 (CTRL) Crouch/UnCrouch
 
-(Q) Run (Temporarily)
+
 
 (F) Interaction
 

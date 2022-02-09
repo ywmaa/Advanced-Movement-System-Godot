@@ -36,6 +36,7 @@ transform = Transform3D(0.987165, 0, 0, 0, 0.987165, 0, 0, 0, 0.987165, 0.62685,
 
 [node name="Player" parent="." instance=ExtResource( "4_m0eur" )]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.8819, 10.4203, 4.29181)
+RotationMode = 0
 
 [node name="light" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.84419, 1.95787, 16.7421)

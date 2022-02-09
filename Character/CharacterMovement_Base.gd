@@ -235,6 +235,8 @@ var MovementAction = Global.MovementAction.None
 func UpdateCharacterMovement():
 	match RotationMode:
 		Global.RotationMode.VelocityDirection:
+			if SkeletonRef:
+				SkeletonRef.modification_stack.enabled = false
 			Tilt = false
 			match Stance:
 				Global.Stance.Standing:
@@ -244,6 +246,8 @@ func UpdateCharacterMovement():
 					
 					
 		Global.RotationMode.LookingDirection:
+			if SkeletonRef:
+				SkeletonRef.modification_stack.enabled = false #Change to true when Godot fixes the bug.
 			Tilt = true
 			match Stance:
 				Global.Stance.Standing:
@@ -288,21 +292,25 @@ func _physics_process(delta):
 									StopRotatingInPlace() #Moving so stop the rotate in place
 									SmoothCharacterRotation(-$CameraRoot.HObject.transform.basis.z if Gait != Global.Gait.Sprinting else motion_velocity,CalcGroundedRotationRate(),delta)
 								else:
-									var CameraAngle = rad2deg($CameraRoot.HObject.rotation.y) +180
-									var MeshAngle = rad2deg(MeshRef.rotation.y)
-									if abs(CameraAngle - MeshAngle) > 90.0:
-										if IsRotating == false:
-											RotateInPlace(CameraAngle,MeshAngle)
+									if InputIsMoving == false:
+										var CameraAngle = rad2deg($CameraRoot.HObject.rotation.y) +180
+										var MeshAngle = rad2deg(MeshRef.rotation.y)
+										if abs(CameraAngle - MeshAngle) > 90.0:
+											if IsRotating == false:
+												RotateInPlace(CameraAngle,MeshAngle)
 							Global.RotationMode.Aiming:
+								if Gait == Global.Gait.Sprinting: # character can't sprint while aiming
+									Gait = Global.Gait.Running
 								if (IsMoving and InputIsMoving) or ActualVelocity.length() > 0.5:
 									StopRotatingInPlace() #Moving so stop the rotate in place
 									SmoothCharacterRotation(-$CameraRoot.HObject.transform.basis.z,CalcGroundedRotationRate(),delta)
 								else:
-									var CameraAngle = rad2deg($CameraRoot.HObject.rotation.y) +180
-									var MeshAngle = rad2deg(MeshRef.rotation.y)
-									if abs(CameraAngle - MeshAngle) > 90.0:
-										if IsRotating == false:
-											RotateInPlace(CameraAngle,MeshAngle)
+									if InputIsMoving == false:
+										var CameraAngle = rad2deg($CameraRoot.HObject.rotation.y) +180
+										var MeshAngle = rad2deg(MeshRef.rotation.y)
+										if abs(CameraAngle - MeshAngle) > 90.0:
+											if IsRotating == false:
+												RotateInPlace(CameraAngle,MeshAngle)
 				Global.MovementAction.Rolling:
 					if InputIsMoving == true:
 						SmoothCharacterRotation(InputAcceleration ,2.0,delta)
@@ -355,47 +363,54 @@ func _physics_process(delta):
 #			roll()
 	if is_on_ceiling():
 		vertical_velocity.y = 0
-	#------------------ Update Movement Values ------------------#
 #	#------------------ blend the animation with the velocity ------------------#
-#	#https://www.desmos.com/calculator/wnajovy5pc Explains the linear equations here to blend the animation with the velocity
-#	var iw_blend = (ActualVelocity.length() - CurrentMovementData.Walk_Speed) / CurrentMovementData.Walk_Speed
-#	var wr_blend = (ActualVelocity.length() - CurrentMovementData.Walk_Speed) / (CurrentMovementData.Run_Speed - CurrentMovementData.Walk_Speed)
-#
-#	if ActualVelocity.length() <= CurrentMovementData.Walk_Speed:
-#		AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_position" , iw_blend)
-#	else:
-#		AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_position" , wr_blend)
 	#Blend Animations with Movement
-	match RotationMode:
-		Global.RotationMode.VelocityDirection:
-			AnimRef.set("parameters/VelocityOrLooking/blend_amount" ,0)
-			## Currently using imediate switch because there is a bug in the animation blend
-			if InputVelocity.length() > 0.0:
-				if Gait == Global.Gait.Sprinting :
-					AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_position" , 1)
-				elif Gait == Global.Gait.Running:
-					AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_position" , 1)
-				else:
-					AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_position" , 0)
+	if RotationMode == Global.RotationMode.VelocityDirection:
+		AnimRef.set("parameters/VelocityOrLooking/blend_amount" ,0)
+		## Currently using imediate switch because there is a bug in the animation blend
+		
+		#Speed
+		#https://www.desmos.com/calculator/wnajovy5pc Explains the linear equations here to blend the animation with the velocity
+#		var iw_blend = (ActualVelocity.length() - CurrentMovementData.Walk_Speed) / CurrentMovementData.Walk_Speed
+#		var wr_blend = (ActualVelocity.length() - CurrentMovementData.Walk_Speed) / (CurrentMovementData.Run_Speed - CurrentMovementData.Walk_Speed)
+#		var rs_blend = (ActualVelocity.length() - CurrentMovementData.Walk_Speed) / (CurrentMovementData.Sprint_Speed - CurrentMovementData.Run_Speed)
+		
+		#Blend
+		if InputVelocity.length() > 0.0:
+			if Gait == Global.Gait.Sprinting :
+				AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_position" , 2)
+			elif Gait == Global.Gait.Running:
+				AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_position" , 1)
 			else:
-				AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_position" , -1)
-		Global.RotationMode.LookingDirection:
-			AnimRef.set("parameters/VelocityOrLooking/blend_amount" ,1)
-			## Currently using imediate switch because there is a bug in the animation blend
-			var MovementDirectionRelativeToCamera = motion_velocity.rotated(Vector3.UP,-$CameraRoot.HObject.transform.basis.get_euler().y).x
-			var IsMovingBackwardRelativeToCamera = false if -motion_velocity.rotated(Vector3.UP,-$CameraRoot.HObject.transform.basis.get_euler().y).z >= -0.1 else true
-			
-			if InputVelocity.length() > 0.0:
-				if Gait == Global.Gait.Sprinting :
-					AnimRef.set("parameters/LookingDirection/LookingDirectionBlend/blend_position" , Vector2(0,3))
-				elif Gait == Global.Gait.Running:
-					AnimRef.set("parameters/LookingDirection/LookingDirectionBlend/blend_position" ,  Vector2(MovementDirectionRelativeToCamera,-2 if IsMovingBackwardRelativeToCamera else 2))
-				else:
-					AnimRef.set("parameters/LookingDirection/LookingDirectionBlend/blend_position" ,  Vector2(MovementDirectionRelativeToCamera,-1 if IsMovingBackwardRelativeToCamera else 1))
-			else:
-				AnimRef.set("parameters/LookingDirection/LookingDirectionBlend/blend_position" , Vector2(MovementDirectionRelativeToCamera,0))
-		Global.RotationMode.Aiming:
-			pass
+				AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_position" , 0)
+		else:
+			AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_position" , -1)
+	else: #Animation blend for Both looking direction mode and aiming mode
+		AnimRef.set("parameters/VelocityOrLooking/blend_amount" ,1)
+		
+		#Speed
+#		var iw_blend = ActualVelocity.length() / CurrentMovementData.Walk_Speed
+#		var wr_blend = ActualVelocity.length() / (CurrentMovementData.Run_Speed - CurrentMovementData.Walk_Speed)
+#		var rs_blend = ActualVelocity.length() / (CurrentMovementData.Sprint_Speed - CurrentMovementData.Run_Speed)
+		
+		#Direction
+		var MovementDirectionRelativeToCamera = get_real_velocity().normalized().rotated(Vector3.UP,-$CameraRoot.HObject.transform.basis.get_euler().y)
+		MovementDirectionRelativeToCamera = MovementDirectionRelativeToCamera.x * -MovementDirectionRelativeToCamera.z if abs(MovementDirectionRelativeToCamera.z) > 0.1 else MovementDirectionRelativeToCamera.x #I tried comparing with 0.0 but because of me using a physically calc velocity it will most of the time give value bigger than 0.0 so compare with 0.1 instead
+		var IsMovingBackwardRelativeToCamera = false if -get_real_velocity().rotated(Vector3.UP,-$CameraRoot.HObject.transform.basis.get_euler().y).z >= -0.1 else true
+		if IsMovingBackwardRelativeToCamera:
+			MovementDirectionRelativeToCamera = MovementDirectionRelativeToCamera * -1
+		
+		
+		#Blend
+		if InputVelocity.length() > 0.0:
+			if ActualVelocity.length() <= CurrentMovementData.Walk_Speed :
+				AnimRef.set("parameters/LookingDirection/LookingDirectionBlend/blend_position" , Vector2(MovementDirectionRelativeToCamera,-1 if IsMovingBackwardRelativeToCamera else 1))
+			elif ActualVelocity.length() <= CurrentMovementData.Run_Speed:
+				AnimRef.set("parameters/LookingDirection/LookingDirectionBlend/blend_position" ,  Vector2(MovementDirectionRelativeToCamera,-2 if IsMovingBackwardRelativeToCamera else 2))
+			elif ActualVelocity.length() <= CurrentMovementData.Sprint_Speed:
+				AnimRef.set("parameters/LookingDirection/LookingDirectionBlend/blend_position" ,  Vector2(0,3))
+		else:
+			AnimRef.set("parameters/LookingDirection/LookingDirectionBlend/blend_position" ,  Vector2(0,0))
 
 
 
