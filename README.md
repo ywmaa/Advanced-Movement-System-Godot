@@ -2,7 +2,7 @@
 
 The Project is made using [Godot](https://github.com/godotengine/godot) 4 (alpha)
 
-you can get Godot 4 Alpha 1 here : https://godotengine.org/article/dev-snapshot-godot-4-0-alpha-1
+you can get Godot 4 Alpha 2 here : https://godotengine.org/article/dev-snapshot-godot-4-0-alpha-2
 
 #(Note) The System Isn't ready A lot features crucial Like "Animations" not working, For More About what is working and what is not, go to [WIKI](https://github.com/ywmaa/Advanced-Movement-System-Godot/wiki)  
 

@@ -240,7 +240,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.53539, 3.76665, 13.5922)
 gravity_scale = -0.07
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="RigidDynamicBody3D"]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
 gi_mode = 2
 mesh = SubResource( "BoxMesh_jwhxk" )
 
@@ -253,7 +252,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.11323, 5.04718, 13.5922)
 mass = 0.01
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="RigidDynamicBody3D2"]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
 gi_mode = 2
 mesh = SubResource( "BoxMesh_jwhxk" )
 
@@ -266,7 +264,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.89079, 5.04718, 13.7933)
 mass = 0.01
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="RigidDynamicBody3D3"]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
 gi_mode = 2
 mesh = SubResource( "BoxMesh_jwhxk" )
 
@@ -279,7 +276,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.51824, 6.10535, 13.6351)
 mass = 0.01
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="RigidDynamicBody3D4"]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
 gi_mode = 2
 mesh = SubResource( "BoxMesh_jwhxk" )
 
@@ -292,7 +288,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.85594, 6.10535, 13.6351)
 mass = 0.01
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="RigidDynamicBody3D5"]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
 gi_mode = 2
 mesh = SubResource( "BoxMesh_jwhxk" )
 
