@@ -8,18 +8,14 @@ sky_material = SubResource( "ProceduralSkyMaterial_8pwhp" )
 
 [resource]
 background_mode = 2
-background_energy = 2.0
 sky = SubResource( "1" )
-tonemap_mode = 2
+tonemap_mode = 3
 auto_exposure_enabled = true
 sdfgi_use_occlusion = true
-sdfgi_read_sky_light = true
-sdfgi_cascades = 4
-sdfgi_max_distance = 204.8
 glow_normalized = true
-glow_bloom = 0.1
-glow_blend_mode = 0
+glow_bloom = 0.05
 fog_light_color = Color(0.447059, 0.678431, 0.807843, 1)
 fog_light_energy = 0.75
-volumetric_fog_enabled = true
 volumetric_fog_density = 0.01
+adjustment_enabled = true
+adjustment_saturation = 1.1
