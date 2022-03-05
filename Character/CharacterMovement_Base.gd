@@ -278,7 +278,6 @@ func _physics_process(delta):
 		Global.MovementState.None:
 			pass
 		Global.MovementState.Grounded:
-			AnimRef.set("parameters/InAir/blend_amount" , 0)
 			#------------------ Rotate Character Mesh ------------------#
 			match MovementAction:
 				Global.MovementAction.None:
@@ -319,7 +318,6 @@ func _physics_process(delta):
 		Global.MovementState.In_Air:
 			#------------------ Rotate Character Mesh In Air ------------------#
 			StopRotatingInPlace()
-			AnimRef.set("parameters/InAir/blend_amount" , 1)
 			match RotationMode:
 					Global.RotationMode.VelocityDirection: 
 						SmoothCharacterRotation(motion_velocity if ActualVelocity.length() > 1.0 else  -$CameraRoot.HObject.transform.basis.z,5.0,delta)
@@ -363,54 +361,6 @@ func _physics_process(delta):
 #			roll()
 	if is_on_ceiling():
 		vertical_velocity.y = 0
-#	#------------------ blend the animation with the velocity ------------------#
-	#Blend Animations with Movement
-	if RotationMode == Global.RotationMode.VelocityDirection:
-		AnimRef.set("parameters/VelocityOrLooking/blend_amount" ,0)
-		## Currently using imediate switch because there is a bug in the animation blend
-		
-		#Speed
-		#https://www.desmos.com/calculator/wnajovy5pc Explains the linear equations here to blend the animation with the velocity
-#		var iw_blend = (ActualVelocity.length() - CurrentMovementData.Walk_Speed) / CurrentMovementData.Walk_Speed
-#		var wr_blend = (ActualVelocity.length() - CurrentMovementData.Walk_Speed) / (CurrentMovementData.Run_Speed - CurrentMovementData.Walk_Speed)
-#		var rs_blend = (ActualVelocity.length() - CurrentMovementData.Walk_Speed) / (CurrentMovementData.Sprint_Speed - CurrentMovementData.Run_Speed)
-		
-		#Blend
-		if InputVelocity.length() > 0.0:
-			if Gait == Global.Gait.Sprinting :
-				AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_position" , 2)
-			elif Gait == Global.Gait.Running:
-				AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_position" , 1)
-			else:
-				AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_position" , 0)
-		else:
-			AnimRef.set("parameters/VelocityDirection/IWR_Blend/blend_position" , -1)
-	else: #Animation blend for Both looking direction mode and aiming mode
-		AnimRef.set("parameters/VelocityOrLooking/blend_amount" ,1)
-		
-		#Speed
-#		var iw_blend = ActualVelocity.length() / CurrentMovementData.Walk_Speed
-#		var wr_blend = ActualVelocity.length() / (CurrentMovementData.Run_Speed - CurrentMovementData.Walk_Speed)
-#		var rs_blend = ActualVelocity.length() / (CurrentMovementData.Sprint_Speed - CurrentMovementData.Run_Speed)
-		
-		#Direction
-		var MovementDirectionRelativeToCamera = get_real_velocity().normalized().rotated(Vector3.UP,-$CameraRoot.HObject.transform.basis.get_euler().y)
-		MovementDirectionRelativeToCamera = MovementDirectionRelativeToCamera.x * -MovementDirectionRelativeToCamera.z if abs(MovementDirectionRelativeToCamera.z) > 0.1 else MovementDirectionRelativeToCamera.x #I tried comparing with 0.0 but because of me using a physically calc velocity it will most of the time give value bigger than 0.0 so compare with 0.1 instead
-		var IsMovingBackwardRelativeToCamera = false if -get_real_velocity().rotated(Vector3.UP,-$CameraRoot.HObject.transform.basis.get_euler().y).z >= -0.1 else true
-		if IsMovingBackwardRelativeToCamera:
-			MovementDirectionRelativeToCamera = MovementDirectionRelativeToCamera * -1
-		
-		
-		#Blend
-		if InputVelocity.length() > 0.0:
-			if ActualVelocity.length() <= CurrentMovementData.Walk_Speed :
-				AnimRef.set("parameters/LookingDirection/LookingDirectionBlend/blend_position" , Vector2(MovementDirectionRelativeToCamera,-1 if IsMovingBackwardRelativeToCamera else 1))
-			elif ActualVelocity.length() <= CurrentMovementData.Run_Speed:
-				AnimRef.set("parameters/LookingDirection/LookingDirectionBlend/blend_position" ,  Vector2(MovementDirectionRelativeToCamera,-2 if IsMovingBackwardRelativeToCamera else 2))
-			elif ActualVelocity.length() <= CurrentMovementData.Sprint_Speed:
-				AnimRef.set("parameters/LookingDirection/LookingDirectionBlend/blend_position" ,  Vector2(0,3))
-		else:
-			AnimRef.set("parameters/LookingDirection/LookingDirectionBlend/blend_position" ,  Vector2(0,0))
 
 
 
@@ -493,49 +443,5 @@ func MantleCheck():
 func jump():
 	vertical_velocity = Vector3.UP * jump_magnitude
 
-
-
-
-#For Predicting Stop Location
-func CalculateStopLocation(Velocity:Vector3,Acceleration:Vector3):
-	#I didn't write the algorithm myself , you can find it here https://answers.unrealengine.com/questions/531204/predict-stop-position-of-character-ahead-in-time.html
-
-	# Small number break loop when velocity is less than this value
-	var SmallVelocity = 0.0
-
-	# Current velocity at current frame in unit/frame
-	var CurrentVelocityInFrame = Velocity * get_physics_process_delta_time()
-
-	# Store velocity direction for later use
-	var CurrentVelocityDirection = (Velocity*Vector3(1.0,0.0,1.0)).normalized() 
-
-	# Current deacceleration at current frame in unit/frame^1.5
-	var CurrentDeaccelerationInFrame = Acceleration.length() * pow(get_physics_process_delta_time(),1.5)
-
-	# Calculate number of frames needed to reach zero velocity and gets its int value
-	var StopFrameCount = CurrentVelocityInFrame.length() / CurrentDeaccelerationInFrame
-
-	# float variable use to store distance to targeted stop location
-	var StoppingDistance := 0.0
-
-	#Do Stop calculation go through all frames and calculate stop distance in each frame and stack them
-	
-	for i in StopFrameCount:
-		#Update velocity
-		CurrentVelocityInFrame.lerp(Vector3.ZERO,CurrentDeaccelerationInFrame) 
-		
-		# Calculate distance travel in current frame and add to previous distance
-		StoppingDistance += (CurrentVelocityInFrame*Vector3(1.0,0.0,1.0)).length() 
-		
-		#if velocity in XY plane is small break loop for safety
-		if ((CurrentVelocityInFrame*Vector3(1.0,0.0,1.0)).length() <= SmallVelocity):
-			break
-
-
-	# return stopping distance from player position in previous frame
-
-	
-	#get_tree().get_root().get_node("Node/StopLocation").transform.origin = transform.origin + CurrentVelocityDirection * StoppingDistance + Vector3(0.0,0.75,0.0) #For Debug
-	return transform.origin * get_physics_process_delta_time() + CurrentVelocityDirection * StoppingDistance
 
 

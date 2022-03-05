@@ -13,9 +13,15 @@ _global_script_classes=[{
 "class": &"Interactable",
 "language": &"GDScript",
 "path": "res://Interactable/Interactable.gd"
+}, {
+"base": "Node",
+"class": &"distance_matching",
+"language": &"GDScript",
+"path": "res://addons/DistanceMatching/DistanceMatching.gd"
 }]
 _global_script_class_icons={
-"Interactable": ""
+"Interactable": "",
+"distance_matching": ""
 }
 
 [application]
@@ -36,6 +42,10 @@ window/size/viewport_height=1080
 window/vsync/vsync_mode=0
 window/size/width=1920
 window/size/height=1080
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/DistanceMatching/plugin.cfg")
 
 [gdnative]
 
@@ -104,10 +114,14 @@ flashlight={
 "events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"store_command":true,"alt_pressed":false,"shift_pressed":false,"meta_pressed":false,"command_pressed":false,"pressed":false,"keycode":76,"physical_keycode":0,"unicode":0,"echo":false,"script":null)
 ]
 }
+EnableSDFGI={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"store_command":true,"alt_pressed":false,"shift_pressed":false,"meta_pressed":false,"command_pressed":false,"pressed":false,"keycode":71,"physical_keycode":0,"unicode":0,"echo":false,"script":null)
+]
+}
 
 [rendering]
 
-global_illumination/gi/use_half_resolution=true
 scaling_3d/mode=1
 scaling_3d/fsr_sharpness=2.0
 occlusion_culling/use_occlusion_culling=true

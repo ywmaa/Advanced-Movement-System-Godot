@@ -110,9 +110,6 @@ use_collision = true
 size = Vector3(4.60107, 0.502591, 14.107)
 material = ExtResource( "3_27oba" )
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = ExtResource( "1_7h7du" )
-
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.998819, 0.0194639, 0.0445193, -0.0467522, 0.634491, 0.771515, -0.0132304, -0.772685, 0.634652, -0.531392, 8.38026, -2.80088)
 layers = 0
@@ -306,3 +303,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.64226, 4.14037, 7.48438)
 
 [node name="@Apple@40308" parent="." instance=ExtResource( "6_aiuj0" )]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.31481, 4.14037, 7.25267)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = ExtResource( "1_7h7du" )

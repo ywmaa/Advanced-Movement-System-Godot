@@ -44,9 +44,7 @@ func _physics_process(delta):
 			AddMovementInput(direction, CurrentMovementData.Walk_Speed,CurrentMovementData.Walk_Acceleration)
 	else:
 		
-		#On Stopped
-		if !(Input.is_action_pressed("forward") || Input.is_action_pressed("back") || Input.is_action_pressed("right") || Input.is_action_pressed("left")) and (Input.is_action_just_released("right") || Input.is_action_just_released("back") || Input.is_action_just_released("left") || Input.is_action_just_released("forward")):
-			CalculateStopLocation(ActualVelocity,Deacceleration * direction)
+
 		
 		AddMovementInput(direction,0,Deacceleration)
 		
@@ -147,7 +145,8 @@ func _input(event):
 			$CameraRoot.ViewMode = $CameraRoot.ViewMode + 1 if $CameraRoot.ViewMode < 1 else 0
 			ViewChangedRecently = true
 
-
+	if event.is_action_pressed("EnableSDFGI"):
+		get_node("../WorldEnvironment").environment.sdfgi_enabled = not get_node("../WorldEnvironment").environment.sdfgi_enabled
 	if event.is_action_pressed("ragdoll"):
 		Ragdoll = true
 
