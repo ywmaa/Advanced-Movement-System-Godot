@@ -1,4 +1,4 @@
-extends "res://Character/CharacterMovement_Base.gd"
+extends CharacterMovement
 
 #####################################
 #Refrences
@@ -146,7 +146,8 @@ func _input(event):
 			ViewChangedRecently = true
 
 	if event.is_action_pressed("EnableSDFGI"):
-		get_node("../WorldEnvironment").environment.sdfgi_enabled = not get_node("../WorldEnvironment").environment.sdfgi_enabled
+		var postprocess = preload("res://Maps/default_env.tres")
+		postprocess.sdfgi_enabled = not postprocess.sdfgi_enabled
 	if event.is_action_pressed("ragdoll"):
 		Ragdoll = true
 

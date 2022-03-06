@@ -7,35 +7,32 @@ extends AnimationTree
 func _physics_process(delta):
 #	#------------------ blend the animation with the velocity ------------------#
 
-	#Blend Animations with Movement
+	#Blend Animations with Movement4
+	#Speed
+	var iw_blend :float = movement_script.ActualVelocity.length() / movement_script.CurrentMovementData.Walk_Speed
+	var wr_blend :float = movement_script.ActualVelocity.length() / movement_script.CurrentMovementData.Run_Speed * 2
+	var rs_blend :float = movement_script.ActualVelocity.length() / movement_script.CurrentMovementData.Sprint_Speed * 3
+	
 	if movement_script:
 		if movement_script.RotationMode == Global.RotationMode.VelocityDirection:
 			set("parameters/VelocityOrLooking/blend_amount" ,0)
 			## Currently using imediate switch because there is a bug in the animation blend
 			
-			#Speed
-			#https://www.desmos.com/calculator/wnajovy5pc Explains the linear equations here to blend the animation with the velocity
-	#		var iw_blend = (ActualVelocity.length() - CurrentMovementData.Walk_Speed) / CurrentMovementData.Walk_Speed
-	#		var wr_blend = (ActualVelocity.length() - CurrentMovementData.Walk_Speed) / (CurrentMovementData.Run_Speed - CurrentMovementData.Walk_Speed)
-	#		var rs_blend = (ActualVelocity.length() - CurrentMovementData.Walk_Speed) / (CurrentMovementData.Sprint_Speed - CurrentMovementData.Run_Speed)
 			
 			#Blend
-			if movement_script.InputVelocity.length() > 0.0:
-				if movement_script.Gait == Global.Gait.Sprinting :
-					set("parameters/VelocityDirection/IWR_Blend/blend_position" , 2)
+			if movement_script.InputIsMoving:
+				if  movement_script.Gait == Global.Gait.Sprinting:
+					set("parameters/VelocityDirection/IWR_Blend/blend_position" , rs_blend)
 				elif movement_script.Gait == Global.Gait.Running:
-					set("parameters/VelocityDirection/IWR_Blend/blend_position" , 1)
-				else:
-					set("parameters/VelocityDirection/IWR_Blend/blend_position" , 0)
+					print(wr_blend)
+					set("parameters/VelocityDirection/IWR_Blend/blend_position" , wr_blend)
+				elif movement_script.Gait == Global.Gait.Walking:
+					set("parameters/VelocityDirection/IWR_Blend/blend_position" , iw_blend)
 			else:
-				set("parameters/VelocityDirection/IWR_Blend/blend_position" , -1)
+				set("parameters/VelocityDirection/IWR_Blend/blend_position" , 0)
 		else: #Animation blend for Both looking direction mode and aiming mode
 			set("parameters/VelocityOrLooking/blend_amount" ,1)
 			
-			#Speed
-	#		var iw_blend = ActualVelocity.length() / CurrentMovementData.Walk_Speed
-	#		var wr_blend = ActualVelocity.length() / (CurrentMovementData.Run_Speed - CurrentMovementData.Walk_Speed)
-	#		var rs_blend = ActualVelocity.length() / (CurrentMovementData.Sprint_Speed - CurrentMovementData.Run_Speed)
 			
 			#Direction
 			var MovementDirectionRelativeToCamera = movement_script.get_real_velocity().normalized().rotated(Vector3.UP,-CameraRoot.HObject.transform.basis.get_euler().y)
@@ -47,12 +44,12 @@ func _physics_process(delta):
 			
 			#Blend
 			if movement_script.InputVelocity.length() > 0.0:
-				if movement_script.ActualVelocity.length() <= movement_script.CurrentMovementData.Walk_Speed :
-					set("parameters/LookingDirection/LookingDirectionBlend/blend_position" , Vector2(MovementDirectionRelativeToCamera,-1 if IsMovingBackwardRelativeToCamera else 1))
-				elif movement_script.ActualVelocity.length() <= movement_script.CurrentMovementData.Run_Speed:
-					set("parameters/LookingDirection/LookingDirectionBlend/blend_position" ,  Vector2(MovementDirectionRelativeToCamera,-2 if IsMovingBackwardRelativeToCamera else 2))
-				elif movement_script.ActualVelocity.length() <= movement_script.CurrentMovementData.Sprint_Speed:
-					set("parameters/LookingDirection/LookingDirectionBlend/blend_position" ,  Vector2(0,3))
+				if movement_script.ActualVelocity.length() <= movement_script.CurrentMovementData.Walk_Speed and movement_script.Gait == Global.Gait.Walking: 
+					set("parameters/LookingDirection/LookingDirectionBlend/blend_position" , Vector2(MovementDirectionRelativeToCamera,-iw_blend if IsMovingBackwardRelativeToCamera else iw_blend))
+				elif movement_script.ActualVelocity.length() <= movement_script.CurrentMovementData.Run_Speed and movement_script.Gait == Global.Gait.Running:
+					set("parameters/LookingDirection/LookingDirectionBlend/blend_position" ,  Vector2(MovementDirectionRelativeToCamera,-wr_blend if IsMovingBackwardRelativeToCamera else wr_blend))
+				elif movement_script.ActualVelocity.length() <= movement_script.CurrentMovementData.Sprint_Speed and movement_script.Gait == Global.Gait.Sprinting:
+					set("parameters/LookingDirection/LookingDirectionBlend/blend_position" ,  Vector2(0,rs_blend))
 			else:
 				set("parameters/LookingDirection/LookingDirectionBlend/blend_position" ,  Vector2(0,0))
 		

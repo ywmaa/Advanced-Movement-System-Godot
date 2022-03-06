@@ -1,5 +1,5 @@
-extends "res://Character/CharacterMovement_Base.gd"
-
+extends CharacterMovement
+class_name AI
 #####################################
 #Refrences
 @onready var CameraRef = $CameraRoot

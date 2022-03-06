@@ -1,5 +1,5 @@
 extends CharacterBody3D
-
+class_name CharacterMovement
 
 
 
@@ -29,9 +29,11 @@ extends CharacterBody3D
 	set(NewRagdoll):
 		Ragdoll = NewRagdoll
 		if Ragdoll == true:
-			SkeletonRef.physical_bones_start_simulation()
+			if SkeletonRef:
+				SkeletonRef.physical_bones_start_simulation()
 		else:
-			pass#			SkeletonRef.physical_bones_stop_simulation()
+			if SkeletonRef:
+				SkeletonRef.physical_bones_stop_simulation()
 
 
 @export var jump_magnitude := 5.0
@@ -47,7 +49,7 @@ var crouch_height := 1.0
 #you could play with the values to achieve different movement settings
 var Deacceleration := 10.0
 var accelerationReducer := 3
-var MovementData = {
+@export var MovementData = {
 	Normal = {
 		LookingDirection = {
 			Standing = {

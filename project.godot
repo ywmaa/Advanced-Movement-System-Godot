@@ -9,6 +9,16 @@
 config_version=5
 
 _global_script_classes=[{
+"base": "CharacterMovement",
+"class": &"AI",
+"language": &"GDScript",
+"path": "res://AI/AI_Base.gd"
+}, {
+"base": "CharacterBody3D",
+"class": &"CharacterMovement",
+"language": &"GDScript",
+"path": "res://Character/CharacterMovement_Base.gd"
+}, {
 "base": "Node",
 "class": &"Interactable",
 "language": &"GDScript",
@@ -17,9 +27,11 @@ _global_script_classes=[{
 "base": "Node",
 "class": &"distance_matching",
 "language": &"GDScript",
-"path": "res://addons/DistanceMatching/DistanceMatching.gd"
+"path": "res://addons/DistanceMatching/DistanceMatchingFunctions.gd"
 }]
 _global_script_class_icons={
+"AI": "",
+"CharacterMovement": "",
 "Interactable": "",
 "distance_matching": ""
 }
