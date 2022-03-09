@@ -1,10 +1,10 @@
 [remap]
 
 importer="texture"
-type="StreamTexture2D"
+type="CompressedTexture2D"
 uid="uid://cmywka21r5j5a"
-path.s3tc="res://.godot/imported/Grid.png-d3b4078feda624922ee1d62b4c6d6f82.s3tc.stex"
-path.etc2="res://.godot/imported/Grid.png-d3b4078feda624922ee1d62b4c6d6f82.etc2.stex"
+path.s3tc="res://.godot/imported/Grid.png-d3b4078feda624922ee1d62b4c6d6f82.s3tc.ctex"
+path.etc2="res://.godot/imported/Grid.png-d3b4078feda624922ee1d62b4c6d6f82.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc", "etc2"],
 "vram_texture": true
@@ -13,7 +13,7 @@ metadata={
 [deps]
 
 source_file="res://Maps/Grid.png"
-dest_files=["res://.godot/imported/Grid.png-d3b4078feda624922ee1d62b4c6d6f82.s3tc.stex", "res://.godot/imported/Grid.png-d3b4078feda624922ee1d62b4c6d6f82.etc2.stex"]
+dest_files=["res://.godot/imported/Grid.png-d3b4078feda624922ee1d62b4c6d6f82.s3tc.ctex", "res://.godot/imported/Grid.png-d3b4078feda624922ee1d62b4c6d6f82.etc2.ctex"]
 
 [params]
 

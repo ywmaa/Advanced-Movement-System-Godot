@@ -116,7 +116,7 @@ func _physics_process(delta):
 	match RotationMode:
 		Global.RotationMode.VelocityDirection:
 			if InputIsMoving:
-				IKLookAt(motion_velocity + Vector3(0.0,1.0,0.0))
+				IKLookAt(velocity + Vector3(0.0,1.0,0.0))
 		Global.RotationMode.LookingDirection:
 			IKLookAt(-$CameraRoot/SpringArm3D.transform.basis.z * 2.0 + Vector3(0.0,1.5,0.0))
 		Global.RotationMode.Aiming:

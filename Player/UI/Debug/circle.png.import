@@ -1,9 +1,9 @@
 [remap]
 
 importer="texture"
-type="StreamTexture2D"
+type="CompressedTexture2D"
 uid="uid://dpkisrpco54qj"
-path="res://.godot/imported/circle.png-804d47b9c6ea278f9c9a60b4f15f0960.stex"
+path="res://.godot/imported/circle.png-804d47b9c6ea278f9c9a60b4f15f0960.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://Player/UI/Debug/circle.png"
-dest_files=["res://.godot/imported/circle.png-804d47b9c6ea278f9c9a60b4f15f0960.stex"]
+dest_files=["res://.godot/imported/circle.png-804d47b9c6ea278f9c9a60b4f15f0960.ctex"]
 
 [params]
 

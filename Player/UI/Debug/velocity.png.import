@@ -1,9 +1,9 @@
 [remap]
 
 importer="texture"
-type="StreamTexture2D"
+type="CompressedTexture2D"
 uid="uid://ck5riwbh478s4"
-path="res://.godot/imported/velocity.png-d2eaab8729fa4bc793d4cbcc390a23c6.stex"
+path="res://.godot/imported/velocity.png-d2eaab8729fa4bc793d4cbcc390a23c6.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://Player/UI/Debug/velocity.png"
-dest_files=["res://.godot/imported/velocity.png-d2eaab8729fa4bc793d4cbcc390a23c6.stex"]
+dest_files=["res://.godot/imported/velocity.png-d2eaab8729fa4bc793d4cbcc390a23c6.ctex"]
 
 [params]
 

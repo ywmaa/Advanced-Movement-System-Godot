@@ -184,7 +184,6 @@ var InputAcceleration :Vector3
 var vertical_velocity :Vector3 
 
 var InputVelocity :Vector3
-var ActualVelocity :Vector3
 
 var tiltVector : Vector3
 
@@ -269,7 +268,6 @@ func UpdateCharacterMovement():
 var PrevAimRate_H :float
 var RotationDifference
 func _physics_process(delta):
-	
 	head_bonked = bonker.is_colliding()
 	#
 	AimRate_H = abs(($CameraRoot.HObject.rotation.y - PrevAimRate_H) / delta)
@@ -285,13 +283,13 @@ func _physics_process(delta):
 				Global.MovementAction.None:
 					match RotationMode:
 							Global.RotationMode.VelocityDirection: 
-								if (IsMoving and InputIsMoving) or ActualVelocity.length() > 0.5:
+								if (IsMoving and InputIsMoving) or (get_real_velocity() * Vector3(1.0,0.0,1.0)).length() > 0.5:
 									StopRotatingInPlace() #Moving so stop the rotate in place
-									SmoothCharacterRotation(motion_velocity,CalcGroundedRotationRate(),delta)
+									SmoothCharacterRotation(velocity,CalcGroundedRotationRate(),delta)
 							Global.RotationMode.LookingDirection:
-								if (IsMoving and InputIsMoving) or ActualVelocity.length() > 0.5:
+								if (IsMoving and InputIsMoving) or (get_real_velocity() * Vector3(1.0,0.0,1.0)).length() > 0.5:
 									StopRotatingInPlace() #Moving so stop the rotate in place
-									SmoothCharacterRotation(-$CameraRoot.HObject.transform.basis.z if Gait != Global.Gait.Sprinting else motion_velocity,CalcGroundedRotationRate(),delta)
+									SmoothCharacterRotation(-$CameraRoot.HObject.transform.basis.z if Gait != Global.Gait.Sprinting else velocity,CalcGroundedRotationRate(),delta)
 								else:
 									if InputIsMoving == false:
 										var CameraAngle = rad2deg($CameraRoot.HObject.rotation.y) +180
@@ -302,7 +300,7 @@ func _physics_process(delta):
 							Global.RotationMode.Aiming:
 								if Gait == Global.Gait.Sprinting: # character can't sprint while aiming
 									Gait = Global.Gait.Running
-								if (IsMoving and InputIsMoving) or ActualVelocity.length() > 0.5:
+								if (IsMoving and InputIsMoving) or (get_real_velocity() * Vector3(1.0,0.0,1.0)).length() > 0.5:
 									StopRotatingInPlace() #Moving so stop the rotate in place
 									SmoothCharacterRotation(-$CameraRoot.HObject.transform.basis.z,CalcGroundedRotationRate(),delta)
 								else:
@@ -322,9 +320,9 @@ func _physics_process(delta):
 			StopRotatingInPlace()
 			match RotationMode:
 					Global.RotationMode.VelocityDirection: 
-						SmoothCharacterRotation(motion_velocity if ActualVelocity.length() > 1.0 else  -$CameraRoot.HObject.transform.basis.z,5.0,delta)
+						SmoothCharacterRotation(velocity if (get_real_velocity() * Vector3(1.0,0.0,1.0)).length() > 1.0 else  -$CameraRoot.HObject.transform.basis.z,5.0,delta)
 					Global.RotationMode.LookingDirection:
-						SmoothCharacterRotation(motion_velocity if ActualVelocity.length() > 1.0 else  -$CameraRoot.HObject.transform.basis.z,5.0,delta)
+						SmoothCharacterRotation(velocity if (get_real_velocity() * Vector3(1.0,0.0,1.0)).length() > 1.0 else  -$CameraRoot.HObject.transform.basis.z,5.0,delta)
 					Global.RotationMode.Aiming:
 						SmoothCharacterRotation(-$CameraRoot.HObject.transform.basis.z ,15.0,delta)
 			#------------------ Mantle Check ------------------#
@@ -350,7 +348,7 @@ func _physics_process(delta):
 
 	#------------------ Gravity ------------------#
 	if IsFlying == false:
-		motion_velocity.y =  lerp(motion_velocity.y,vertical_velocity.y - get_floor_normal().y,delta * gravity)
+		velocity.y =  lerp(velocity.y,vertical_velocity.y - get_floor_normal().y,delta * gravity)
 		move_and_slide()
 		
 	if is_on_floor() and IsFlying == false:
@@ -376,11 +374,11 @@ func CalcGroundedRotationRate():
 	if InputIsMoving == true:
 		match Gait:
 			Global.Gait.Walking:
-				return lerp(CurrentMovementData.idle_Rotation_Rate,CurrentMovementData.Walk_Rotation_Rate, Global.MapRangeClamped(ActualVelocity.length(),0.0,CurrentMovementData.Walk_Speed,0.0,1.0)) * clamp(AimRate_H,1.0,3.0)
+				return lerp(CurrentMovementData.idle_Rotation_Rate,CurrentMovementData.Walk_Rotation_Rate, Global.MapRangeClamped((get_real_velocity() * Vector3(1.0,0.0,1.0)).length(),0.0,CurrentMovementData.Walk_Speed,0.0,1.0)) * clamp(AimRate_H,1.0,3.0)
 			Global.Gait.Running:
-				return lerp(CurrentMovementData.Walk_Rotation_Rate,CurrentMovementData.Run_Rotation_Rate, Global.MapRangeClamped(ActualVelocity.length(),CurrentMovementData.Walk_Speed,CurrentMovementData.Run_Speed,1.0,2.0)) * clamp(AimRate_H,1.0,3.0)
+				return lerp(CurrentMovementData.Walk_Rotation_Rate,CurrentMovementData.Run_Rotation_Rate, Global.MapRangeClamped((get_real_velocity() * Vector3(1.0,0.0,1.0)).length(),CurrentMovementData.Walk_Speed,CurrentMovementData.Run_Speed,1.0,2.0)) * clamp(AimRate_H,1.0,3.0)
 			Global.Gait.Sprinting:
-				return lerp(CurrentMovementData.Run_Rotation_Rate,CurrentMovementData.Sprint_Rotation_Rate,  Global.MapRangeClamped(ActualVelocity.length(),CurrentMovementData.Run_Speed,CurrentMovementData.Sprint_Speed,2.0,3.0)) * clamp(AimRate_H,1.0,2.5)
+				return lerp(CurrentMovementData.Run_Rotation_Rate,CurrentMovementData.Sprint_Rotation_Rate,  Global.MapRangeClamped((get_real_velocity() * Vector3(1.0,0.0,1.0)).length(),CurrentMovementData.Run_Speed,CurrentMovementData.Sprint_Speed,2.0,3.0)) * clamp(AimRate_H,1.0,2.5)
 	else:
 		return CurrentMovementData.idle_Rotation_Rate * clamp(AimRate_H,1.0,3.0)
 
@@ -412,20 +410,17 @@ func IKLookAt(position: Vector3):
 var PrevVelocity :Vector3
 func AddMovementInput(direction: Vector3, Speed: float , Acceleration: float):
 	if IsFlying == false:
-		motion_velocity.x = lerp(motion_velocity.x, direction.x * Speed, Acceleration * get_physics_process_delta_time())
-		motion_velocity.z = lerp(motion_velocity.z, direction.z * Speed, Acceleration * get_physics_process_delta_time())
+		velocity.x = lerp(velocity.x, direction.x * Speed, Acceleration * get_physics_process_delta_time())
+		velocity.z = lerp(velocity.z, direction.z * Speed, Acceleration * get_physics_process_delta_time())
 	else:
-		set_motion_velocity(get_motion_velocity().lerp(direction * Speed, Acceleration * get_physics_process_delta_time()))
+		set_velocity(get_velocity().lerp(direction * Speed, Acceleration * get_physics_process_delta_time()))
 		move_and_slide()
 	InputVelocity = Speed * direction
 	InputIsMoving = Speed > 0.0
 	InputAcceleration = Acceleration * direction
 	#
-	ActualAcceleration = (motion_velocity - PrevVelocity) / (Acceleration * get_physics_process_delta_time())
-	PrevVelocity = motion_velocity
-	#
-	#
-	ActualVelocity = (get_real_velocity() * Vector3(1.0,0.0,1.0))
+	ActualAcceleration = (velocity - PrevVelocity) / (Acceleration * get_physics_process_delta_time())
+	PrevVelocity = velocity
 	#
 	
 	#TiltCharacterMesh

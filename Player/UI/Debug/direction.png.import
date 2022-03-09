@@ -1,9 +1,9 @@
 [remap]
 
 importer="texture"
-type="StreamTexture2D"
+type="CompressedTexture2D"
 uid="uid://ijv6wr22hov8"
-path="res://.godot/imported/direction.png-977f99b8e58ae3fe085d410a2071dfd9.stex"
+path="res://.godot/imported/direction.png-977f99b8e58ae3fe085d410a2071dfd9.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://Player/UI/Debug/direction.png"
-dest_files=["res://.godot/imported/direction.png-977f99b8e58ae3fe085d410a2071dfd9.stex"]
+dest_files=["res://.godot/imported/direction.png-977f99b8e58ae3fe085d410a2071dfd9.ctex"]
 
 [params]
 
