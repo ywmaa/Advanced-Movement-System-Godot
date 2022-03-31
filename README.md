@@ -40,3 +40,5 @@ https://youtu.be/qwz9aPdVoFg .
 (F) Interaction
 
 (L) Flashlight
+
+(G) To toggle SDFGI (Global illumination)

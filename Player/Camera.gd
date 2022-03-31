@@ -9,36 +9,36 @@ extends Node3D
 @onready var VObject = $SpringArm3D
 #####################################
 var CameraHOffset = 0.0
-@export var ViewAngle = Global.ViewAngle :
-	get: return ViewAngle
-	set(NewViewAngle):
-		ViewAngle = NewViewAngle
+@export var view_angle = Global.view_angle :
+	get: return view_angle
+	set(Newview_angle):
+		view_angle = Newview_angle
 		if Camera:
-			if NewViewAngle == Global.ViewAngle.RightShoulder and ViewMode != Global.ViewMode.FirstPerson:
+			if Newview_angle == Global.view_angle.right_shoulder and view_mode != Global.view_mode.first_person:
 				CameraHOffset = 0.45
-			elif NewViewAngle == Global.ViewAngle.LeftShoulder and ViewMode != Global.ViewMode.FirstPerson:
+			elif Newview_angle == Global.view_angle.left_shoulder and view_mode != Global.view_mode.first_person:
 				CameraHOffset = -0.45
-			elif NewViewAngle == Global.ViewAngle.Head:
+			elif Newview_angle == Global.view_angle.head:
 				CameraHOffset = 0.0
 			
-@export var ViewMode = Global.ViewMode :
-	get: return ViewMode
-	set(NewViewMode):
-		ViewMode = NewViewMode
+@export var view_mode = Global.view_mode :
+	get: return view_mode
+	set(Newview_mode):
+		view_mode = Newview_mode
 		if VObject:
 			VObject.rotation.x = 0.0
 		if SpringArm:
-			if ViewMode == Global.ViewMode.FirstPerson:
-				ViewAngle = Global.ViewAngle.Head
+			if view_mode == Global.view_mode.first_person:
+				view_angle = Global.view_angle.head
 				$SpringArm3D.spring_length = -0.4
 				VObject = $SpringArm3D/Camera
-				if PlayerRef.RotationMode == Global.RotationMode.VelocityDirection:
-					PlayerRef.RotationMode = Global.RotationMode.LookingDirection
-			elif ViewMode == Global.ViewMode.ThirdPerson:
+				if PlayerRef.rotation_mode == Global.rotation_mode.velocity_direction:
+					PlayerRef.rotation_mode = Global.rotation_mode.looking_direction
+			elif view_mode == Global.view_mode.third_person:
 				$SpringArm3D.spring_length = 1.75
 				VObject = $SpringArm3D
 	
-@export var MouseSensitvity : float = 0.01
+@export var mouse_sensitvity : float = 0.01
 var camera_h = 0
 var camera_v = 0
 @export var camera_vertical_min = -90
@@ -51,8 +51,8 @@ func _ready():
 
 func _input(event):
 	if event is InputEventMouseMotion:
-		camera_h += -event.relative.x * MouseSensitvity
-		camera_v += -event.relative.y * MouseSensitvity
+		camera_h += -event.relative.x * mouse_sensitvity
+		camera_v += -event.relative.y * mouse_sensitvity
 		
 	
 		

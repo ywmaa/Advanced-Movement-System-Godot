@@ -17,7 +17,7 @@ var v_rotation :float
 
 var direction := Vector3.FORWARD
 
-var PreviousRotationMode 
+var previous_rotation_mode 
 func _ready():
 	super._ready()
 
@@ -33,94 +33,94 @@ func _physics_process(delta):
 
 	if Input.is_action_pressed("forward") || Input.is_action_pressed("back") || Input.is_action_pressed("right") || Input.is_action_pressed("left") :
 		direction = Vector3(Input.get_action_strength("right") - Input.get_action_strength("left"),
-			v_rotation * (Input.get_action_strength("back") - Input.get_action_strength("forward")) if IsFlying == true else 0.0,
+			v_rotation * (Input.get_action_strength("back") - Input.get_action_strength("forward")) if is_flying == true else 0.0,
 			Input.get_action_strength("back") - Input.get_action_strength("forward"))
 		direction = direction.rotated(Vector3.UP,h_rotation).normalized()
-		if Gait == Global.Gait.Sprinting :
-			AddMovementInput(direction, CurrentMovementData.Sprint_Speed,CurrentMovementData.Sprint_Acceleration)
-		elif Gait == Global.Gait.Running:
-			AddMovementInput(direction, CurrentMovementData.Run_Speed,CurrentMovementData.Run_Acceleration)
+		if gait == Global.gait.sprinting :
+			add_movement_input(direction, current_movement_data.sprint_speed,current_movement_data.sprint_acceleration)
+		elif gait == Global.gait.running:
+			add_movement_input(direction, current_movement_data.run_speed,current_movement_data.run_acceleration)
 		else:
-			AddMovementInput(direction, CurrentMovementData.Walk_Speed,CurrentMovementData.Walk_Acceleration)
+			add_movement_input(direction, current_movement_data.walk_speed,current_movement_data.walk_acceleration)
 	else:
 		
 
 		
-		AddMovementInput(direction,0,Deacceleration)
+		add_movement_input(direction,0,deacceleration)
 		
 	
 	
 		
-	if RotationMode == Global.RotationMode.Aiming:
-		CameraRoot.Camera.fov = 60.0
-	if RotationMode == Global.RotationMode.VelocityDirection or RotationMode == Global.RotationMode.LookingDirection:
-		CameraRoot.Camera.fov = 90.0
+	if rotation_mode == Global.rotation_mode.aiming:
+		camera_root.Camera.fov = 60.0
+	if rotation_mode == Global.rotation_mode.velocity_direction or rotation_mode == Global.rotation_mode.looking_direction:
+		camera_root.Camera.fov = 90.0
 	
 	#------------------ Input Crouch ------------------#
 	if UsingCrouchToggle == false:
 		if Input.is_action_pressed("crouch"):
-			if Stance != Global.Stance.Crouching:
-				Stance = Global.Stance.Crouching
+			if stance != Global.stance.crouching:
+				stance = Global.stance.crouching
 		else:
-			if Stance != Global.Stance.Standing:
-				Stance = Global.Stance.Standing
+			if stance != Global.stance.standing:
+				stance = Global.stance.standing
 	else:
 		if Input.is_action_just_pressed("crouch"):
-			Stance = Global.Stance.Standing if Stance == Global.Stance.Crouching else Global.Stance.Crouching
+			stance = Global.stance.standing if stance == Global.stance.crouching else Global.stance.crouching
 	#------------------ Sprint ------------------#
 	if UsingSprintToggle:
 		if Input.is_action_just_pressed("sprint"):
-			if Gait == Global.Gait.Walking:
-				Gait = Global.Gait.Running  
-			elif Gait == Global.Gait.Running:
-				Gait = Global.Gait.Sprinting
-			elif Gait == Global.Gait.Sprinting:
-				Gait = Global.Gait.Walking
+			if gait == Global.gait.walking:
+				gait = Global.gait.running  
+			elif gait == Global.gait.running:
+				gait = Global.gait.sprinting
+			elif gait == Global.gait.sprinting:
+				gait = Global.gait.walking
 	else:
 		if Input.is_action_just_pressed("sprint"):
-			if Gait == Global.Gait.Walking:
-				Gait = Global.Gait.Running
-			elif Gait == Global.Gait.Running:
-				Gait = Global.Gait.Sprinting
+			if gait == Global.gait.walking:
+				gait = Global.gait.running
+			elif gait == Global.gait.running:
+				gait = Global.gait.sprinting
 		if Input.is_action_just_released("sprint"):
-			if Gait == Global.Gait.Sprinting or Gait == Global.Gait.Walking:
-				Gait = Global.Gait.Walking
-			elif Gait == Global.Gait.Running:
+			if gait == Global.gait.sprinting or gait == Global.gait.walking:
+				gait = Global.gait.walking
+			elif gait == Global.gait.running:
 				await get_tree().create_timer(0.4).timeout
-				if Gait == Global.Gait.Running:
-					Gait = Global.Gait.Walking
+				if gait == Global.gait.running:
+					gait = Global.gait.walking
 	#------------------ Input Aim ------------------#
 	if Input.is_action_pressed("aim"):
-		if RotationMode != Global.RotationMode.Aiming:
-			PreviousRotationMode = RotationMode
-			RotationMode = Global.RotationMode.Aiming
+		if rotation_mode != Global.rotation_mode.aiming:
+			previous_rotation_mode = rotation_mode
+			rotation_mode = Global.rotation_mode.aiming
 	else:
-		if RotationMode == Global.RotationMode.Aiming:
-			RotationMode = PreviousRotationMode
+		if rotation_mode == Global.rotation_mode.aiming:
+			rotation_mode = previous_rotation_mode
 	#------------------ Jump ------------------#
 	if is_on_floor():
-		if !AnimRef.get("parameters/roll/active"):
+		if !anim_ref.get("parameters/roll/active"):
 			if OnePressJump == true:
 				if Input.is_action_just_pressed("jump"):
-					if Stance != Global.Stance.Standing:
-						Stance = Global.Stance.Standing
+					if stance != Global.stance.standing:
+						stance = Global.stance.standing
 					elif not head_bonked:
 						jump()
 			else:
 				if Input.is_action_pressed("jump"):
-					if Stance != Global.Stance.Standing:
-						Stance = Global.Stance.Standing
+					if stance != Global.stance.standing:
+						stance = Global.stance.standing
 					elif not head_bonked:
 						jump()
 	#------------------ Look At ------------------#
-	match RotationMode:
-		Global.RotationMode.VelocityDirection:
+	match rotation_mode:
+		Global.rotation_mode.velocity_direction:
 			if InputIsMoving:
-				IKLookAt(velocity + Vector3(0.0,1.0,0.0))
-		Global.RotationMode.LookingDirection:
-			IKLookAt(-$CameraRoot/SpringArm3D.transform.basis.z * 2.0 + Vector3(0.0,1.5,0.0))
-		Global.RotationMode.Aiming:
-			IKLookAt(-$CameraRoot/SpringArm3D.transform.basis.z * 2.0 + Vector3(0.0,1.5,0.0))
+				ik_look_at(velocity + Vector3(0.0,1.0,0.0))
+		Global.rotation_mode.looking_direction:
+			ik_look_at(-$CameraRoot/SpringArm3D.transform.basis.z * 2.0 + Vector3(0.0,1.5,0.0))
+		Global.rotation_mode.aiming:
+			ik_look_at(-$CameraRoot/SpringArm3D.transform.basis.z * 2.0 + Vector3(0.0,1.5,0.0))
 	#------------------ Interaction ------------------#
 	if Input.is_action_just_pressed("interaction"):
 		$CameraRoot/SpringArm3D/Camera/InteractionRaycast.Interact()
@@ -128,34 +128,34 @@ func _physics_process(delta):
 
 
 
-var ViewChangedRecently = false
+var view_changed_recently = false
 func _input(event):
 	#------------------ Change Camera View ------------------#
-	if Input.is_action_just_released("SwitchCameraView"):
-		if ViewChangedRecently == false:
-			ViewChangedRecently = true
-			$CameraRoot.ViewAngle = $CameraRoot.ViewAngle + 1 if $CameraRoot.ViewAngle < 2 else 0
+	if Input.is_action_just_released("switch_camera_view"):
+		if view_changed_recently == false:
+			view_changed_recently = true
+			$CameraRoot.view_angle = $CameraRoot.view_angle + 1 if $CameraRoot.view_angle < 2 else 0
 			await get_tree().create_timer(0.3).timeout
-			ViewChangedRecently = false
+			view_changed_recently = false
 		else:
-			ViewChangedRecently = false
-	if Input.is_action_just_pressed("SwitchCameraView"):
+			view_changed_recently = false
+	if Input.is_action_just_pressed("switch_camera_view"):
 		await get_tree().create_timer(0.2).timeout
-		if ViewChangedRecently == false:
-			$CameraRoot.ViewMode = $CameraRoot.ViewMode + 1 if $CameraRoot.ViewMode < 1 else 0
-			ViewChangedRecently = true
+		if view_changed_recently == false:
+			$CameraRoot.view_mode = $CameraRoot.view_mode + 1 if $CameraRoot.view_mode < 1 else 0
+			view_changed_recently = true
 
 	if event.is_action_pressed("EnableSDFGI"):
 		var postprocess = preload("res://Maps/default_env.tres")
 		postprocess.sdfgi_enabled = not postprocess.sdfgi_enabled
 	if event.is_action_pressed("ragdoll"):
-		Ragdoll = true
+		ragdoll = true
 
 
-		if RotationMode == Global.RotationMode.VelocityDirection:
+		if rotation_mode == Global.rotation_mode.velocity_direction:
 			if CameraRef != null:
-				if CameraRef.ViewMode == Global.ViewMode.FirstPerson:
-					CameraRef.ViewMode = Global.ViewMode.ThirdPerson
+				if CameraRef.view_mode == Global.view_mode.first_person:
+					CameraRef.view_mode = Global.view_mode.third_person
 					
 
 func Debug():
