@@ -1,5 +1,5 @@
 extends Node3D
-
+class_name CameraRoot
 #####################################
 #Refrences
 @onready var SpringArm = $SpringArm3D

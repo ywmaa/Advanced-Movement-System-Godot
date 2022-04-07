@@ -33,6 +33,7 @@ surface_material_override/0 = SubResource( "StandardMaterial3D_tx2qg" )
 
 [node name="Player" parent="." instance=ExtResource( "4_m0eur" )]
 transform = Transform3D(0.987165, 0, 0, 0, 0.987165, 0, 0, 0, 0.987165, 5.75852, 3.2457, 0)
+UsingSprintToggle = false
 
 [node name="AI" parent="." instance=ExtResource( "5_k442x" )]
 transform = Transform3D(0.987165, 0, 0, 0, 0.987165, 0, 0, 0, 0.987165, 0, 2.64708, -3.81751)

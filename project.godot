@@ -14,6 +14,16 @@ _global_script_classes=[{
 "language": &"GDScript",
 "path": "res://AI/AI_Base.gd"
 }, {
+"base": "AnimationTree",
+"class": &"AnimBlend",
+"language": &"GDScript",
+"path": "res://Character/AnimationBlend.gd"
+}, {
+"base": "Node3D",
+"class": &"CameraRoot",
+"language": &"GDScript",
+"path": "res://Player/Camera.gd"
+}, {
 "base": "CharacterBody3D",
 "class": &"CharacterMovement",
 "language": &"GDScript",
@@ -31,6 +41,8 @@ _global_script_classes=[{
 }]
 _global_script_class_icons={
 "AI": "",
+"AnimBlend": "",
+"CameraRoot": "",
 "CharacterMovement": "",
 "Interactable": "",
 "distance_matching": ""

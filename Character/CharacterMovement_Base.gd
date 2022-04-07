@@ -2,15 +2,15 @@ extends CharacterBody3D
 class_name CharacterMovement
 
 
-
 #####################################
+@export var mesh_path : NodePath
 #Refrences
-@onready var anim_ref = $AnimationTree
-@onready var mesh_ref = $Armature
-@onready var skeleton_ref = $Armature/Skeleton3D
+@onready var mesh_ref = get_node(mesh_path)
+@onready var anim_ref : AnimBlend = mesh_ref.get_node("AnimationTree")
+@onready var skeleton_ref : Skeleton3D = anim_ref.skeleton_ref
 @onready var collision_shape_ref = $CollisionShape3D
 @onready var bonker = $CollisionShape3D/HeadBonker
-@onready var camera_root = $CameraRoot
+@onready var camera_root : CameraRoot = $CameraRoot
 #####################################
 
 
@@ -47,8 +47,8 @@ var crouch_height := 1.0
 
 #Movement Values Settings
 #you could play with the values to achieve different movement settings
-var deacceleration := 10.0
-var acceleration_reducer := 3.0
+var deacceleration := 4.0
+var acceleration_reducer := 6.0
 var movement_data = {
 	normal = {
 		looking_direction = {
@@ -178,24 +178,24 @@ var movement_data = {
 
 #####################################
 #for logic #it is better not to change it if you don't want to break the system / only change it if you want to redesign the system
-var ActualAcceleration :Vector3
-var InputAcceleration :Vector3
+var actual_acceleration :Vector3
+var input_acceleration :Vector3
 
 var vertical_velocity :Vector3 
 
-var InputVelocity :Vector3
+var input_velocity :Vector3
 
 var tiltVector : Vector3
 
-var IsMoving := false
-var InputIsMoving := false
+var is_moving := false
+var input_is_moving := false
 
 var head_bonked := false
 
 
 
 
-var AimRate_H :float
+var aim_rate_h :float
 
 
 var current_movement_data = {
@@ -223,17 +223,17 @@ var movement_action = Global.movement_action.none
 	get: return rotation_mode
 	set(Newrotation_mode):
 		rotation_mode = Newrotation_mode
-		UpdateCharacterMovement()
+		update_character_movement()
 		
 @export var gait = Global.gait :
 	get: return gait
 	set(Newgait):
 		gait = Newgait
-		UpdateCharacterMovement()
+		update_character_movement()
 @export var stance = Global.stance
 @export var overlay_state = Global.overlay_state
 
-func UpdateCharacterMovement():
+func update_character_movement():
 	match rotation_mode:
 		Global.rotation_mode.velocity_direction:
 			if skeleton_ref:
@@ -265,13 +265,14 @@ func UpdateCharacterMovement():
 					current_movement_data = movement_data.normal.aiming.crouching
 #####################################
 
-var PrevAimRate_H :float
-var RotationDifference
+var previous_vaim_rate_h :float
+var rotation_difference
 func _physics_process(delta):
+	
 	head_bonked = bonker.is_colliding()
 	#
-	AimRate_H = abs(($CameraRoot.HObject.rotation.y - PrevAimRate_H) / delta)
-	PrevAimRate_H = $CameraRoot.HObject.rotation.y
+	aim_rate_h = abs(($CameraRoot.HObject.rotation.y - previous_vaim_rate_h) / delta)
+	previous_vaim_rate_h = $CameraRoot.HObject.rotation.y
 	#
 	#Debug()
 	match movement_state:
@@ -283,36 +284,36 @@ func _physics_process(delta):
 				Global.movement_action.none:
 					match rotation_mode:
 							Global.rotation_mode.velocity_direction: 
-								if (IsMoving and InputIsMoving) or (get_real_velocity() * Vector3(1.0,0.0,1.0)).length() > 0.5:
+								if (is_moving and input_is_moving) or (get_real_velocity() * Vector3(1.0,0.0,1.0)).length() > 0.5:
 									stop_rotating_in_place() #Moving so stop the rotate in place
 									smooth_character_rotation(velocity,calc_grounded_rotation_rate(),delta)
 							Global.rotation_mode.looking_direction:
-								if (IsMoving and InputIsMoving) or (get_real_velocity() * Vector3(1.0,0.0,1.0)).length() > 0.5:
+								if (is_moving and input_is_moving) or (get_real_velocity() * Vector3(1.0,0.0,1.0)).length() > 0.5:
 									stop_rotating_in_place() #Moving so stop the rotate in place
 									smooth_character_rotation(-$CameraRoot.HObject.transform.basis.z if gait != Global.gait.sprinting else velocity,calc_grounded_rotation_rate(),delta)
 								else:
-									if InputIsMoving == false:
+									if input_is_moving == false:
 										var CameraAngle = rad2deg($CameraRoot.HObject.rotation.y) +180
 										var MeshAngle = rad2deg(mesh_ref.rotation.y)
 										if abs(CameraAngle - MeshAngle) > 90.0:
-											if IsRotating == false:
+											if is_rotating == false:
 												rotate_in_place(CameraAngle,MeshAngle)
 							Global.rotation_mode.aiming:
 								if gait == Global.gait.sprinting: # character can't sprint while aiming
 									gait = Global.gait.running
-								if (IsMoving and InputIsMoving) or (get_real_velocity() * Vector3(1.0,0.0,1.0)).length() > 0.5:
+								if (is_moving and input_is_moving) or (get_real_velocity() * Vector3(1.0,0.0,1.0)).length() > 0.5:
 									stop_rotating_in_place() #Moving so stop the rotate in place
 									smooth_character_rotation(-$CameraRoot.HObject.transform.basis.z,calc_grounded_rotation_rate(),delta)
 								else:
-									if InputIsMoving == false:
+									if input_is_moving == false:
 										var CameraAngle = rad2deg($CameraRoot.HObject.rotation.y) +180
 										var MeshAngle = rad2deg(mesh_ref.rotation.y)
 										if abs(CameraAngle - MeshAngle) > 90.0:
-											if IsRotating == false:
+											if is_rotating == false:
 												rotate_in_place(CameraAngle,MeshAngle)
 				Global.movement_action.rolling:
-					if InputIsMoving == true:
-						smooth_character_rotation(InputAcceleration ,2.0,delta)
+					if input_is_moving == true:
+						smooth_character_rotation(input_acceleration ,2.0,delta)
 						
 		
 		Global.movement_state.in_air:
@@ -326,7 +327,7 @@ func _physics_process(delta):
 					Global.rotation_mode.aiming:
 						smooth_character_rotation(-$CameraRoot.HObject.transform.basis.z ,15.0,delta)
 			#------------------ Mantle Check ------------------#
-			if InputIsMoving == true:
+			if input_is_moving == true:
 				mantle_check()
 		Global.movement_state.mantling:
 			pass
@@ -371,36 +372,36 @@ func smooth_character_rotation(Target:Vector3,nodelerpspeed,delta):
 
 func calc_grounded_rotation_rate():
 	
-	if InputIsMoving == true:
+	if input_is_moving == true:
 		match gait:
 			Global.gait.walking:
-				return lerp(current_movement_data.idle_rotation_rate,current_movement_data.walk_rotation_rate, Global.map_range_clamped((get_real_velocity() * Vector3(1.0,0.0,1.0)).length(),0.0,current_movement_data.walk_speed,0.0,1.0)) * clamp(AimRate_H,1.0,3.0)
+				return lerp(current_movement_data.idle_rotation_rate,current_movement_data.walk_rotation_rate, Global.map_range_clamped((get_real_velocity() * Vector3(1.0,0.0,1.0)).length(),0.0,current_movement_data.walk_speed,0.0,1.0)) * clamp(aim_rate_h,1.0,3.0)
 			Global.gait.running:
-				return lerp(current_movement_data.walk_rotation_rate,current_movement_data.run_rotation_rate, Global.map_range_clamped((get_real_velocity() * Vector3(1.0,0.0,1.0)).length(),current_movement_data.walk_speed,current_movement_data.run_speed,1.0,2.0)) * clamp(AimRate_H,1.0,3.0)
+				return lerp(current_movement_data.walk_rotation_rate,current_movement_data.run_rotation_rate, Global.map_range_clamped((get_real_velocity() * Vector3(1.0,0.0,1.0)).length(),current_movement_data.walk_speed,current_movement_data.run_speed,1.0,2.0)) * clamp(aim_rate_h,1.0,3.0)
 			Global.gait.sprinting:
-				return lerp(current_movement_data.run_rotation_rate,current_movement_data.sprint_rotation_rate,  Global.map_range_clamped((get_real_velocity() * Vector3(1.0,0.0,1.0)).length(),current_movement_data.run_speed,current_movement_data.sprint_speed,2.0,3.0)) * clamp(AimRate_H,1.0,2.5)
+				return lerp(current_movement_data.run_rotation_rate,current_movement_data.sprint_rotation_rate,  Global.map_range_clamped((get_real_velocity() * Vector3(1.0,0.0,1.0)).length(),current_movement_data.run_speed,current_movement_data.sprint_speed,2.0,3.0)) * clamp(aim_rate_h,1.0,2.5)
 	else:
-		return current_movement_data.idle_rotation_rate * clamp(AimRate_H,1.0,3.0)
+		return current_movement_data.idle_rotation_rate * clamp(aim_rate_h,1.0,3.0)
 
-var IsRotating = false :
+var is_rotating = false :
 	set(New):
-		IsRotating = New
-		if IsRotating:
+		is_rotating = New
+		if is_rotating:
 			anim_ref.set("parameters/Turn/blend_amount" , 1)
 		else:
 			anim_ref.set("parameters/Turn/blend_amount" , 0)
-	get: return IsRotating
+	get: return is_rotating
 func rotate_in_place(CameraAngle,MeshAngle):
 	if abs(CameraAngle - MeshAngle) > 90:
-		IsRotating = true
+		is_rotating = true
 		var RotatingTween := create_tween()
 		var NewRotation = mesh_ref.rotation.y + deg2rad(90 if CameraAngle - MeshAngle > 0 else -90)
 		anim_ref.set("parameters/RightOrLeft/blend_amount" ,0 if CameraAngle - MeshAngle > 0 else 1)
-		if IsRotating:
+		if is_rotating:
 			RotatingTween.tween_property(mesh_ref,"rotation",Vector3(mesh_ref.rotation.x,NewRotation,mesh_ref.rotation.z),1.0667).set_ease(Tween.EASE_IN_OUT)
 		RotatingTween.tween_callback(stop_rotating_in_place)
 func stop_rotating_in_place():
-	IsRotating = false
+	is_rotating = false
 
 func ik_look_at(position: Vector3):
 	if $LookAtObject:
@@ -415,18 +416,18 @@ func add_movement_input(direction: Vector3, Speed: float , Acceleration: float):
 	else:
 		set_velocity(get_velocity().lerp(direction * Speed, Acceleration * get_physics_process_delta_time()))
 		move_and_slide()
-	InputVelocity = Speed * direction
-	InputIsMoving = Speed > 0.0
-	InputAcceleration = Acceleration * direction
+	input_velocity = Speed * direction
+	input_is_moving = Speed > 0.0
+	input_acceleration = Acceleration * direction
 	#
-	ActualAcceleration = (velocity - PrevVelocity) / (Acceleration * get_physics_process_delta_time())
+	actual_acceleration = (velocity - PrevVelocity) / (Acceleration * get_physics_process_delta_time())
 	PrevVelocity = velocity
 	#
 	
 	#tiltCharacterMesh
 #	if tilt == true:
 #
-#		tiltVector = (ActualAcceleration * direction).cross(Vector3.UP)
+#		tiltVector = (actual_acceleration * direction).cross(Vector3.UP)
 #		print(direction)
 #		#mesh_ref.rotation.x = lerp(mesh_ref.rotation.x,tiltVector.x/5,Acceleration * get_physics_process_delta_time())
 #		mesh_ref.rotation.z = lerp(mesh_ref.rotation.z,tiltVector.z/5,Acceleration * get_physics_process_delta_time())

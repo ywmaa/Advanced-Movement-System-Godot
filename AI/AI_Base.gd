@@ -1,9 +1,5 @@
 extends CharacterMovement
 class_name AI
-#####################################
-#Refrences
-@onready var CameraRef = $CameraRoot
-#####################################
 
 
 var h_rotation :float
@@ -30,7 +26,7 @@ func _physics_process(delta):
 	#------------------ Look At ------------------#
 	match rotation_mode:
 		Global.rotation_mode.velocity_direction:
-			if InputIsMoving:
+			if input_is_moving:
 				ik_look_at(velocity + Vector3(0.0,1.0,0.0))
 		Global.rotation_mode.looking_direction:
 			ik_look_at(-$CameraRoot/SpringArm3D.transform.basis.z * 2.0 + Vector3(0.0,1.5,0.0))

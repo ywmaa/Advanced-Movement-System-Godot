@@ -1,11 +1,6 @@
 extends CharacterMovement
 
 #####################################
-#Refrences
-@onready var CameraRef = $CameraRoot
-#####################################
-
-#####################################
 #Controls Settings
 @export var OnePressJump := false
 @export var UsingSprintToggle := false
@@ -28,8 +23,8 @@ func _physics_process(delta):
 	Debug()
 	
 	#------------------ Input Movement ------------------#
-	h_rotation = $CameraRoot.HObject.transform.basis.get_euler().y
-	v_rotation = $CameraRoot.VObject.transform.basis.get_euler().x
+	h_rotation = camera_root.HObject.transform.basis.get_euler().y
+	v_rotation = camera_root.VObject.transform.basis.get_euler().x
 
 	if Input.is_action_pressed("forward") || Input.is_action_pressed("back") || Input.is_action_pressed("right") || Input.is_action_pressed("left") :
 		direction = Vector3(Input.get_action_strength("right") - Input.get_action_strength("left"),
@@ -115,7 +110,7 @@ func _physics_process(delta):
 	#------------------ Look At ------------------#
 	match rotation_mode:
 		Global.rotation_mode.velocity_direction:
-			if InputIsMoving:
+			if input_is_moving:
 				ik_look_at(velocity + Vector3(0.0,1.0,0.0))
 		Global.rotation_mode.looking_direction:
 			ik_look_at(-$CameraRoot/SpringArm3D.transform.basis.z * 2.0 + Vector3(0.0,1.5,0.0))
@@ -153,11 +148,11 @@ func _input(event):
 
 
 		if rotation_mode == Global.rotation_mode.velocity_direction:
-			if CameraRef != null:
-				if CameraRef.view_mode == Global.view_mode.first_person:
-					CameraRef.view_mode = Global.view_mode.third_person
+			if camera_root != null:
+				if camera_root.view_mode == Global.view_mode.first_person:
+					camera_root.view_mode = Global.view_mode.third_person
 					
 
 func Debug():
-	$Status/Label.text = "InputSpeed : %s" % InputVelocity.length()
+	$Status/Label.text = "InputSpeed : %s" % input_velocity.length()
 	$Status/Label2.text = "ActualSpeed : %s" % get_real_velocity().length()
