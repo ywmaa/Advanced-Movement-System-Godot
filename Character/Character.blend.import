@@ -3,7 +3,7 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://dinffgf5qumx3"
+uid="uid://bx10yas7uh1q3"
 path="res://.godot/imported/Character.blend-2b58ef5a70a0fc6867545ea8dd8a7b2e.scn"
 
 [deps]
@@ -29,11 +29,13 @@ _subresources={
 "meshes": {
 "Character-2b58ef5a70a0fc6867545ea8dd8a7b2e_Alpha_Joints": {
 "save_to_file/enabled": true,
-"save_to_file/path": "res://Character/Mesh/.res"
+"save_to_file/make_streamable": true,
+"save_to_file/path": "res://Character/Mesh/joints_mat.res"
 },
 "Character-2b58ef5a70a0fc6867545ea8dd8a7b2e_Alpha_Surface": {
 "save_to_file/enabled": true,
-"save_to_file/path": "res://Character/Mesh/.res"
+"save_to_file/make_streamable": true,
+"save_to_file/path": "res://Character/Mesh/mesh_mat.res"
 }
 }
 }
@@ -42,7 +44,7 @@ blender/nodes/punctual_lights=false
 blender/nodes/cameras=false
 blender/nodes/custom_properties=true
 blender/nodes/modifiers=1
-blender/meshes/colors=false
+blender/meshes/colors=true
 blender/meshes/uvs=true
 blender/meshes/normals=true
 blender/meshes/tangents=true
