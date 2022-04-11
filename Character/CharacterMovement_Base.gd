@@ -269,7 +269,6 @@ func update_character_movement():
 var previous_vaim_rate_h :float
 var rotation_difference
 func _physics_process(delta):
-	
 	head_bonked = bonker.is_colliding()
 	#
 	aim_rate_h = abs(($CameraRoot.HObject.rotation.y - previous_vaim_rate_h) / delta)
