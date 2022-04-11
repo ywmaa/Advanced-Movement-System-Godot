@@ -23,6 +23,7 @@ class_name CharacterMovement
 @export var gravity := 9.8
 
 @export var tilt := true
+@export var tilt_power := 1.0
 
 @export var ragdoll := false :
 	get: return ragdoll
@@ -36,7 +37,7 @@ class_name CharacterMovement
 				skeleton_ref.physical_bones_stop_simulation()
 
 
-@export var jump_magnitude := 5.0
+@export var jump_magnitude := 10.0
 @export var roll_magnitude := 17.0
 
 var default_height := 2.0
@@ -47,8 +48,8 @@ var crouch_height := 1.0
 
 #Movement Values Settings
 #you could play with the values to achieve different movement settings
-var deacceleration := 4.0
-var acceleration_reducer := 6.0
+var deacceleration := 10.0
+var acceleration_reducer := 4.0
 var movement_data = {
 	normal = {
 		looking_direction = {
@@ -409,7 +410,7 @@ func ik_look_at(position: Vector3):
 
 
 var PrevVelocity :Vector3
-func add_movement_input(direction: Vector3, Speed: float , Acceleration: float):
+func add_movement_input(direction: Vector3, Speed: float , Acceleration: float) -> void:
 	if is_flying == false:
 		velocity.x = lerp(velocity.x, direction.x * Speed, Acceleration * get_physics_process_delta_time())
 		velocity.z = lerp(velocity.z, direction.z * Speed, Acceleration * get_physics_process_delta_time())
@@ -420,17 +421,20 @@ func add_movement_input(direction: Vector3, Speed: float , Acceleration: float):
 	input_is_moving = Speed > 0.0
 	input_acceleration = Acceleration * direction
 	#
-	actual_acceleration = (velocity - PrevVelocity) / (Acceleration * get_physics_process_delta_time())
+	actual_acceleration = (velocity - PrevVelocity)  / (Acceleration * get_physics_process_delta_time())
 	PrevVelocity = velocity
 	#
 	
 	#tiltCharacterMesh
-#	if tilt == true:
-#
-#		tiltVector = (actual_acceleration * direction).cross(Vector3.UP)
-#		print(direction)
-#		#mesh_ref.rotation.x = lerp(mesh_ref.rotation.x,tiltVector.x/5,Acceleration * get_physics_process_delta_time())
-#		mesh_ref.rotation.z = lerp(mesh_ref.rotation.z,tiltVector.z/5,Acceleration * get_physics_process_delta_time())
+	if tilt == true:
+		var MovementDirectionRelativeToCamera = input_velocity.normalized().rotated(Vector3.UP,-camera_root.HObject.transform.basis.get_euler().y)
+		var IsMovingBackwardRelativeToCamera = false if input_velocity.rotated(Vector3.UP,-camera_root.HObject.transform.basis.get_euler().y).z >= -0.1 else true
+		if IsMovingBackwardRelativeToCamera:
+			MovementDirectionRelativeToCamera.x = MovementDirectionRelativeToCamera.x * -1
+
+		tiltVector = (MovementDirectionRelativeToCamera).rotated(Vector3.UP,-PI/2) / (8.0/tilt_power)
+		mesh_ref.rotation.x = lerp(mesh_ref.rotation.x,tiltVector.x,Acceleration * get_physics_process_delta_time())
+		mesh_ref.rotation.z = lerp(mesh_ref.rotation.z,tiltVector.z,Acceleration * get_physics_process_delta_time())
 	#
 
 
@@ -438,7 +442,7 @@ func add_movement_input(direction: Vector3, Speed: float , Acceleration: float):
 func mantle_check():
 	pass
 
-func jump():
+func jump() -> void:
 	vertical_velocity = Vector3.UP * jump_magnitude
 
 

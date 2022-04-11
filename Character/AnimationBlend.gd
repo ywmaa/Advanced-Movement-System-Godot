@@ -4,15 +4,20 @@ class_name AnimBlend
 @onready var movement_script : CharacterMovement = get_parent().get_parent() # I use this to get variables from main movement script
 @onready var camera_root : CameraRoot = movement_script.get_node("CameraRoot")
 @onready var skeleton_ref : Skeleton3D = get_node(skeleton_path)
-# Called every frame. 'delta' is the elapsed time since the previous frame.
+
+
+
+var iw_blend :float
+var wr_blend :float
+var rs_blend :float
 func _physics_process(delta):
 #	#------------------ blend the animation with the velocity ------------------#
 	
 	#Blend Animations with Movement4
 	#Speed
-	var iw_blend :float = (movement_script.get_real_velocity() * Vector3(1.0,0.0,1.0)).length() / movement_script.current_movement_data.walk_speed
-	var wr_blend :float = (movement_script.get_real_velocity() * Vector3(1.0,0.0,1.0)).length() / movement_script.current_movement_data.run_speed * 2
-	var rs_blend :float = (movement_script.get_real_velocity() * Vector3(1.0,0.0,1.0)).length() / movement_script.current_movement_data.sprint_speed * 3
+	iw_blend = (movement_script.get_real_velocity() * Vector3(1.0,0.0,1.0)).length() / movement_script.current_movement_data.walk_speed
+	wr_blend = (movement_script.get_real_velocity() * Vector3(1.0,0.0,1.0)).length() / movement_script.current_movement_data.run_speed * 2
+	rs_blend = (movement_script.get_real_velocity() * Vector3(1.0,0.0,1.0)).length() / movement_script.current_movement_data.sprint_speed * 3
 	
 	if movement_script:
 		if movement_script.rotation_mode == Global.rotation_mode.velocity_direction:
