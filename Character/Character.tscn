@@ -42,7 +42,6 @@ margin = 0.2
 
 [node name="Camera" type="Camera3D" parent="CameraRoot/SpringArm3D"]
 transform = Transform3D(1.013, 0, 7.10543e-15, 0, 1.013, 0, -7.10543e-15, 0, 1.013, 0, 0, 0)
-current = true
 fov = 90.0
 
 [node name="InteractionRaycast" type="RayCast3D" parent="CameraRoot/SpringArm3D/Camera"]

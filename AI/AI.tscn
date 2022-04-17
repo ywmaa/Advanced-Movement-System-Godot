@@ -9,12 +9,8 @@ radius = 0.375
 
 [node name="AI" instance=ExtResource( "1_btv7d" )]
 script = ExtResource( "2_7v0jn" )
-mesh_path = NodePath("Character")
 AI = true
 rotation_mode = 0
 
 [node name="CollisionShape3D" parent="." index="0"]
 shape = SubResource( "CapsuleShape3D_wdcjq" )
-
-[node name="Camera" parent="CameraRoot/SpringArm3D" index="0"]
-current = false

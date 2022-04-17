@@ -11,6 +11,8 @@ var iw_blend :float
 var wr_blend :float
 var rs_blend :float
 func _physics_process(delta):
+
+
 #	#------------------ blend the animation with the velocity ------------------#
 	
 	#Blend Animations with Movement4

@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://cmh421lq6vho6"]
+[gd_scene load_steps=11 format=3 uid="uid://cmh421lq6vho6"]
 
 [ext_resource type="PackedScene" uid="uid://dvskyskj2hvfe" path="res://Character/Character.tscn" id="1_smt6h"]
 [ext_resource type="Script" path="res://Player/PlayerGameplay.gd" id="2_23qw2"]
@@ -6,11 +6,44 @@
 [ext_resource type="Texture2D" uid="uid://dpkisrpco54qj" path="res://Player/UI/Debug/circle.png" id="4_wwpsv"]
 [ext_resource type="Texture2D" uid="uid://ijv6wr22hov8" path="res://Player/UI/Debug/direction.png" id="5_o3n0v"]
 [ext_resource type="Texture2D" uid="uid://ck5riwbh478s4" path="res://Player/UI/Debug/velocity.png" id="6_cyw7n"]
+[ext_resource type="Script" path="res://Character/player_networking.gd" id="8_811pj"]
 [ext_resource type="AudioStream" uid="uid://cffn28kxpgkqi" path="res://Character/footstep_sound/footstep1.wav" id="8_k2nvr"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_br6ho"]
 resource_local_to_scene = true
 radius = 0.375
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_6or0h"]
+properties/0/path = NodePath(":sync_direction")
+properties/0/spawn = true
+properties/0/sync = true
+properties/1/path = NodePath(":sync_gait")
+properties/1/spawn = true
+properties/1/sync = true
+properties/2/path = NodePath(":sync_rotation_mode")
+properties/2/spawn = true
+properties/2/sync = true
+properties/3/path = NodePath(":sync_stance")
+properties/3/spawn = true
+properties/3/sync = true
+properties/4/path = NodePath(":sync_input_is_moving")
+properties/4/spawn = true
+properties/4/sync = true
+properties/5/path = NodePath(":sync_camera_transform")
+properties/5/spawn = true
+properties/5/sync = true
+properties/6/path = NodePath(":sync_movement_state")
+properties/6/spawn = true
+properties/6/sync = true
+properties/7/path = NodePath(":sync_movement_action")
+properties/7/spawn = true
+properties/7/sync = true
+properties/8/path = NodePath(":sync_position")
+properties/8/spawn = true
+properties/8/sync = true
+properties/9/path = NodePath(":sync_mesh_rotation")
+properties/9/spawn = true
+properties/9/sync = true
 
 [node name="Player" instance=ExtResource( "1_smt6h" )]
 script = ExtResource( "2_23qw2" )
@@ -29,7 +62,15 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.084224, 0.23971, 1.92731)
 [node name="FootstepSounds" parent="." index="5"]
 stream = ExtResource( "8_k2nvr" )
 
-[node name="Status" type="Control" parent="." index="6"]
+[node name="Networking" type="Node" parent="." index="6"]
+script = ExtResource( "8_811pj" )
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="Networking" index="0"]
+root_path = NodePath("..")
+resource = SubResource( "SceneReplicationConfig_6or0h" )
+
+[node name="Status" type="Control" parent="." index="7"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( "3_xc4yu" )

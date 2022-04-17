@@ -220,6 +220,7 @@ var current_movement_data = {
 #status
 var movement_state = Global.movement_state.grounded
 var movement_action = Global.movement_action.none
+
 @export var rotation_mode = Global.rotation_mode :
 	get: return rotation_mode
 	set(Newrotation_mode):
@@ -234,6 +235,12 @@ var movement_action = Global.movement_action.none
 @export var stance = Global.stance
 @export var overlay_state = Global.overlay_state
 
+@export var AnimTurnLeft : String = "TurnLeft"
+@export var AnimTurnRight : String = "TurnRight"
+func update_animations():
+#	var anim_player : AnimationPlayer = anim_ref.get_node(anim_ref.anim_player)
+	anim_ref.tree_root.get_node("AnimTurnLeft").animation = AnimTurnLeft
+	anim_ref.tree_root.get_node("AnimTurnRight").animation = AnimTurnRight
 func update_character_movement():
 	match rotation_mode:
 		Global.rotation_mode.velocity_direction:
@@ -268,7 +275,14 @@ func update_character_movement():
 
 var previous_vaim_rate_h :float
 var rotation_difference
+
+func _ready():
+	update_animations()
+	
+	
 func _physics_process(delta):
+	
+	
 	head_bonked = bonker.is_colliding()
 	#
 	aim_rate_h = abs(($CameraRoot.HObject.rotation.y - previous_vaim_rate_h) / delta)
