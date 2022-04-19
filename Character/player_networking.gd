@@ -1,6 +1,9 @@
 extends Node
 
-var sync_camera_transform : Transform3D
+var sync_camera_h_transform : Transform3D
+var sync_camera_v_transform : Transform3D
+var sync_view_mode :  Global.view_mode
+var sync_CameraHOffset : float
 var sync_position : Vector3:
 	set(value):
 		sync_position = value

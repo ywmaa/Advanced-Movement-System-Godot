@@ -8,7 +8,7 @@ class_name CameraRoot
 @onready var HObject = $SpringArm3D
 @onready var VObject = $SpringArm3D
 #####################################
-var CameraHOffset = 0.0
+var CameraHOffset := 0.0
 @export var view_angle = Global.view_angle :
 	get: return view_angle
 	set(Newview_angle):

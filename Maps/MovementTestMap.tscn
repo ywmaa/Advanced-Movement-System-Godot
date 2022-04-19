@@ -26,6 +26,7 @@ points = PackedVector3Array(1, 1, 1, 1, 1, -1, -1, 1, 1, 1, -1, 1, 1, -1, -1, -1
 
 [node name="Node" type="Node"]
 script = ExtResource( "1_rvsng" )
+peer_to_peer = false
 
 [node name="Server" type="Button" parent="."]
 anchor_left = 0.5
@@ -70,7 +71,7 @@ text = "Singleplayer
 "
 
 [node name="PlayerSpawnLocation" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.03314, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.91311, 7.03314, 0)
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 replication = [ExtResource( "4_m0eur" )]

@@ -277,7 +277,8 @@ func update_character_movement():
 var previous_aim_rate_h :float
 
 func _ready():
-	update_animations()
+	pass
+#	update_animations()
 	
 	
 func _physics_process(delta):
@@ -298,16 +299,17 @@ func _physics_process(delta):
 				Global.movement_action.none:
 					match rotation_mode:
 							Global.rotation_mode.velocity_direction: 
-								if (is_moving and input_is_moving) or (get_real_velocity() * Vector3(1.0,0.0,1.0)).length() > 0.5:
+								if (is_moving and input_is_moving) or (get_velocity() * Vector3(1.0,0.0,1.0)).length() > 0.5:
 									smooth_character_rotation(velocity,calc_grounded_rotation_rate(),delta)
+								is_rotating_in_place = false
 							Global.rotation_mode.looking_direction:
-								if (is_moving and input_is_moving) or (get_real_velocity() * Vector3(1.0,0.0,1.0)).length() > 0.5:
+								if (is_moving and input_is_moving) or (get_velocity() * Vector3(1.0,0.0,1.0)).length() > 0.5:
 									smooth_character_rotation(-$CameraRoot.HObject.transform.basis.z if gait != Global.gait.sprinting else velocity,calc_grounded_rotation_rate(),delta)
 								rotate_in_place_check()
 							Global.rotation_mode.aiming:
 								if gait == Global.gait.sprinting: # character can't sprint while aiming
 									gait = Global.gait.running
-								if (is_moving and input_is_moving) or (get_real_velocity() * Vector3(1.0,0.0,1.0)).length() > 0.5:
+								if (is_moving and input_is_moving) or (get_velocity() * Vector3(1.0,0.0,1.0)).length() > 0.5:
 									smooth_character_rotation(-$CameraRoot.HObject.transform.basis.z,calc_grounded_rotation_rate(),delta)
 								rotate_in_place_check()
 				Global.movement_action.rolling:
@@ -319,9 +321,9 @@ func _physics_process(delta):
 			#------------------ Rotate Character Mesh In Air ------------------#
 			match rotation_mode:
 					Global.rotation_mode.velocity_direction: 
-						smooth_character_rotation(velocity if (get_real_velocity() * Vector3(1.0,0.0,1.0)).length() > 1.0 else  -$CameraRoot.HObject.transform.basis.z,5.0,delta)
+						smooth_character_rotation(velocity if (get_velocity() * Vector3(1.0,0.0,1.0)).length() > 1.0 else  -$CameraRoot.HObject.transform.basis.z,5.0,delta)
 					Global.rotation_mode.looking_direction:
-						smooth_character_rotation(velocity if (get_real_velocity() * Vector3(1.0,0.0,1.0)).length() > 1.0 else  -$CameraRoot.HObject.transform.basis.z,5.0,delta)
+						smooth_character_rotation(velocity if (get_velocity() * Vector3(1.0,0.0,1.0)).length() > 1.0 else  -$CameraRoot.HObject.transform.basis.z,5.0,delta)
 					Global.rotation_mode.aiming:
 						smooth_character_rotation(-$CameraRoot.HObject.transform.basis.z ,15.0,delta)
 			#------------------ Mantle Check ------------------#
@@ -373,11 +375,11 @@ func calc_grounded_rotation_rate():
 	if input_is_moving == true:
 		match gait:
 			Global.gait.walking:
-				return lerp(current_movement_data.idle_rotation_rate,current_movement_data.walk_rotation_rate, Global.map_range_clamped((get_real_velocity() * Vector3(1.0,0.0,1.0)).length(),0.0,current_movement_data.walk_speed,0.0,1.0)) * clamp(aim_rate_h,1.0,3.0)
+				return lerp(current_movement_data.idle_rotation_rate,current_movement_data.walk_rotation_rate, Global.map_range_clamped((get_velocity() * Vector3(1.0,0.0,1.0)).length(),0.0,current_movement_data.walk_speed,0.0,1.0)) * clamp(aim_rate_h,1.0,3.0)
 			Global.gait.running:
-				return lerp(current_movement_data.walk_rotation_rate,current_movement_data.run_rotation_rate, Global.map_range_clamped((get_real_velocity() * Vector3(1.0,0.0,1.0)).length(),current_movement_data.walk_speed,current_movement_data.run_speed,1.0,2.0)) * clamp(aim_rate_h,1.0,3.0)
+				return lerp(current_movement_data.walk_rotation_rate,current_movement_data.run_rotation_rate, Global.map_range_clamped((get_velocity() * Vector3(1.0,0.0,1.0)).length(),current_movement_data.walk_speed,current_movement_data.run_speed,1.0,2.0)) * clamp(aim_rate_h,1.0,3.0)
 			Global.gait.sprinting:
-				return lerp(current_movement_data.run_rotation_rate,current_movement_data.sprint_rotation_rate,  Global.map_range_clamped((get_real_velocity() * Vector3(1.0,0.0,1.0)).length(),current_movement_data.run_speed,current_movement_data.sprint_speed,2.0,3.0)) * clamp(aim_rate_h,1.0,2.5)
+				return lerp(current_movement_data.run_rotation_rate,current_movement_data.sprint_rotation_rate,  Global.map_range_clamped((get_velocity() * Vector3(1.0,0.0,1.0)).length(),current_movement_data.run_speed,current_movement_data.sprint_speed,2.0,3.0)) * clamp(aim_rate_h,1.0,2.5)
 	else:
 		return current_movement_data.idle_rotation_rate * clamp(aim_rate_h,1.0,3.0)
 
@@ -390,7 +392,8 @@ func rotate_in_place_check():
 		rotation_difference_camera_mesh = rad2deg(MeshAngle.angle_to(CameraAngle) - PI)
 		if (CameraAngle.dot(MeshAngle)) > 0:
 			rotation_difference_camera_mesh *= -1
-		if abs(rotation_difference_camera_mesh) > rotation_in_place_min_angle:
+		
+		if floor(abs(rotation_difference_camera_mesh)) > rotation_in_place_min_angle:
 			is_rotating_in_place = true
 			smooth_character_rotation(-$CameraRoot.HObject.transform.basis.z,calc_grounded_rotation_rate(),get_physics_process_delta_time()) 
 		else:

@@ -1,7 +1,8 @@
 extends Node
-
+@export var port := 8313
+@export var ip_address_to_connect := "localhost"
 @export var PlayerCharacter = preload("res://Player/Player.tscn")
-@export var peer_to_peer := true #is it is peer to peer the server will also have a playable character 
+@export var peer_to_peer := true #if it is peer to peer the server will also have a playable character 
 # Called when the node enters the scene tree for the first time.
 func _enter_tree():
 	# Start the server if Godot is passed the "--server" argument,
@@ -30,12 +31,12 @@ func start_network(server:bool) -> void:
 		#listen to peer disconnections, and destroy their players
 		multiplayer.peer_disconnected.connect(self.destroy_player)
 		
-		peer.create_server(8313)
+		peer.create_server(port)
 #		if peer_to_peer:
 #			create_player(get_multiplayer_authority())
-		print("server listening on localhost 8313")
+		print("server listening on localhost %" %port)
 	else:
-		peer.create_client("localhost",8313)
+		peer.create_client(ip_address_to_connect,port)
 	
 	multiplayer.set_multiplayer_peer(peer)
 func create_player(id: int) -> void:

@@ -32,7 +32,10 @@ func _physics_process(delta):
 		gait = $Networking.sync_gait
 		stance = $Networking.sync_stance
 		rotation_mode = $Networking.sync_rotation_mode 
-		$CameraRoot.HObject.transform = $Networking.sync_camera_transform
+		$CameraRoot.VObject.transform = $Networking.sync_camera_v_transform
+		$CameraRoot.HObject.transform = $Networking.sync_camera_h_transform
+		$CameraRoot.view_mode = $Networking.sync_CameraHOffset
+		$CameraRoot.CameraHOffset = $Networking.sync_CameraHOffset
 		movement_state = $Networking.sync_movement_state
 		movement_action = $Networking.sync_movement_action
 		
@@ -154,10 +157,13 @@ func _physics_process(delta):
 	$Networking.sync_gait = gait
 	$Networking.sync_stance = stance
 	$Networking.sync_rotation_mode = rotation_mode
-	$Networking.sync_camera_transform = $CameraRoot.HObject.transform
+	$Networking.sync_camera_h_transform = $CameraRoot.HObject.transform
+	$Networking.sync_camera_v_transform = $CameraRoot.VObject.transform
 	$Networking.sync_movement_state = movement_state
 	$Networking.sync_movement_action = movement_action
 	$Networking.sync_input_is_moving = input_is_moving
+	$Networking.sync_view_mode = $CameraRoot.view_mode
+	$Networking.sync_CameraHOffset = $CameraRoot.CameraHOffset
 
 
 
@@ -194,4 +200,4 @@ func _input(event):
 
 func Debug():
 	$Status/Label.text = "InputSpeed : %s" % input_velocity.length()
-	$Status/Label2.text = "ActualSpeed : %s" % get_real_velocity().length()
+	$Status/Label2.text = "ActualSpeed : %s" % get_velocity().length()
