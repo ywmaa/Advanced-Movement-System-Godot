@@ -26,20 +26,33 @@ points = PackedVector3Array(1, 1, 1, 1, 1, -1, -1, 1, 1, 1, -1, 1, 1, -1, -1, -1
 
 [node name="Node" type="Node"]
 script = ExtResource( "1_rvsng" )
-peer_to_peer = false
 
-[node name="Server" type="Button" parent="."]
+[node name="ListenServer" type="Button" parent="."]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -110.0
+offset_left = -144.0
 offset_top = -23.0
-offset_right = -8.0
+offset_right = -4.0
 offset_bottom = 24.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
-text = "Start Server
+text = "Listen Server
+"
+
+[node name="DServer" type="Button" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -144.0
+offset_top = 29.0
+offset_right = -4.0
+offset_bottom = 76.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "Dedicated Server
 "
 
 [node name="Client" type="Button" parent="."]
@@ -56,6 +69,14 @@ size_flags_vertical = 4
 text = "Client
 "
 
+[node name="IP_address" type="TextEdit" parent="Client"]
+offset_top = 48.0
+offset_right = 144.0
+offset_bottom = 100.0
+placeholder_text = "localhost"
+metadata/_edit_layout_mode = 0
+metadata/_edit_use_custom_anchors = false
+
 [node name="Singleplayer" type="Button" parent="."]
 anchor_left = 0.5
 anchor_top = 0.5
@@ -69,6 +90,17 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 text = "Singleplayer
 "
+
+[node name="MainMenu" type="Button" parent="."]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -143.0
+offset_top = -47.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "Main Menu"
 
 [node name="PlayerSpawnLocation" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.91311, 7.03314, 0)
@@ -352,6 +384,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.31481, 4.14037, 7.25267)
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = ExtResource( "1_7h7du" )
 
-[connection signal="pressed" from="Server" to="." method="_on_server_pressed"]
+[connection signal="pressed" from="ListenServer" to="." method="_on_server_pressed"]
+[connection signal="pressed" from="DServer" to="." method="_on_d_server_pressed"]
 [connection signal="pressed" from="Client" to="." method="_on_client_pressed"]
+[connection signal="text_changed" from="Client/IP_address" to="." method="_on_ip_address_text_changed"]
 [connection signal="pressed" from="Singleplayer" to="." method="_on_singleplayer_pressed"]
+[connection signal="pressed" from="MainMenu" to="." method="_on_main_menu_pressed"]
