@@ -307,11 +307,7 @@ func _physics_process(delta):
 									smooth_character_rotation(-$CameraRoot.HObject.transform.basis.z if gait != Global.gait.sprinting else velocity,calc_grounded_rotation_rate(),delta)
 								else:
 									if input_is_moving == false:
-										var CameraAngle = rad2deg($CameraRoot.HObject.rotation.y) +180
-										var MeshAngle = rad2deg(mesh_ref.rotation.y)
-										if abs(CameraAngle - MeshAngle) > 90.0:
-											if is_rotating == false:
-												rotate_in_place(CameraAngle,MeshAngle)
+										rotate_in_place()
 							Global.rotation_mode.aiming:
 								if gait == Global.gait.sprinting: # character can't sprint while aiming
 									gait = Global.gait.running
@@ -320,11 +316,7 @@ func _physics_process(delta):
 									smooth_character_rotation(-$CameraRoot.HObject.transform.basis.z,calc_grounded_rotation_rate(),delta)
 								else:
 									if input_is_moving == false:
-										var CameraAngle = rad2deg($CameraRoot.HObject.rotation.y) +180
-										var MeshAngle = rad2deg(mesh_ref.rotation.y)
-										if abs(CameraAngle - MeshAngle) > 90.0:
-											if is_rotating == false:
-												rotate_in_place(CameraAngle,MeshAngle)
+										rotate_in_place()
 				Global.movement_action.rolling:
 					if input_is_moving == true:
 						smooth_character_rotation(input_acceleration ,2.0,delta)
@@ -397,25 +389,27 @@ func calc_grounded_rotation_rate():
 	else:
 		return current_movement_data.idle_rotation_rate * clamp(aim_rate_h,1.0,3.0)
 
-var is_rotating = false :
-	set(New):
-		is_rotating = New
-		if is_rotating:
-			anim_ref.set("parameters/Turn/blend_amount" , 1)
-		else:
-			anim_ref.set("parameters/Turn/blend_amount" , 0)
-	get: return is_rotating
-func rotate_in_place(CameraAngle,MeshAngle):
-	if abs(CameraAngle - MeshAngle) > 90:
-		is_rotating = true
-		var RotatingTween := create_tween()
-		var NewRotation = mesh_ref.rotation.y + deg2rad(90 if CameraAngle - MeshAngle > 0 else -90)
-		anim_ref.set("parameters/RightOrLeft/blend_amount" ,0 if CameraAngle - MeshAngle > 0 else 1)
-		if is_rotating:
-			RotatingTween.tween_property(mesh_ref,"rotation",Vector3(mesh_ref.rotation.x,NewRotation,mesh_ref.rotation.z),1.0667).set_ease(Tween.EASE_IN_OUT)
-		RotatingTween.tween_callback(stop_rotating_in_place)
+
+
+func rotate_in_place():
+	var CameraAngle = Quaternion(Vector3(0,$CameraRoot.HObject.rotation.y,0)) 
+	var MeshAngle = Quaternion(Vector3(0,mesh_ref.rotation.y,0)) 
+	var rotation_difference = rad2deg(MeshAngle.angle_to(CameraAngle) - PI)
+	if (CameraAngle.dot(MeshAngle)) > 0:
+		rotation_difference *= -1
+	if abs(rotation_difference) > 90:
+		anim_ref.set("parameters/Turn/blend_amount" , 1)
+#		var NewRotation = mesh_ref.rotation + Vector3(0,PI/2,0) if rotation_difference > 0 else mesh_ref.rotation - Vector3(0,PI/2,0)
+		anim_ref.set("parameters/RightOrLeft/blend_amount" ,0 if rotation_difference > 0 else 1)
+		smooth_character_rotation(-$CameraRoot.HObject.transform.basis.z,calc_grounded_rotation_rate(),get_physics_process_delta_time()) 
+		
+#		var final_rotation = MeshAngle.slerp(NewRotation,get_physics_process_delta_time())
+#		mesh_ref.transform.basis = Basis(final_rotation)
+	else:
+		anim_ref.set("parameters/Turn/blend_amount" , 0)
+
 func stop_rotating_in_place():
-	is_rotating = false
+	anim_ref.set("parameters/Turn/blend_amount" , 0)
 
 func ik_look_at(position: Vector3):
 	if $LookAtObject:

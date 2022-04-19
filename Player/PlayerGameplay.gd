@@ -45,6 +45,7 @@ func _physics_process(delta):
 				add_movement_input(direction, current_movement_data.walk_speed,current_movement_data.walk_acceleration)
 		else:
 			add_movement_input(direction,0,deacceleration)
+
 		return
 	
 	
@@ -157,7 +158,7 @@ func _physics_process(delta):
 	$Networking.sync_movement_state = movement_state
 	$Networking.sync_movement_action = movement_action
 	$Networking.sync_input_is_moving = input_is_moving
-	
+
 
 
 

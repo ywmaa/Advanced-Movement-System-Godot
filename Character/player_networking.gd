@@ -19,4 +19,7 @@ func _ready():
 	$MultiplayerSynchronizer.set_multiplayer_authority(str(get_parent().name).to_int())
 
 func is_local_authority() -> bool:
-	return $MultiplayerSynchronizer.get_multiplayer_authority() == multiplayer.get_unique_id()
+	if !multiplayer.has_multiplayer_peer():
+		return true
+	else:
+		return $MultiplayerSynchronizer.get_multiplayer_authority() == multiplayer.get_unique_id()
