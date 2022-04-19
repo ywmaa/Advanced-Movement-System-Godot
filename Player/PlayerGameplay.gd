@@ -15,12 +15,39 @@ var direction := Vector3.FORWARD
 var previous_rotation_mode 
 func _ready():
 	super._ready()
+	$CameraRoot/SpringArm3D/Camera.current = $Networking.is_local_authority()
+	$Status.visible = $Networking.is_local_authority()
 
 
 
 func _physics_process(delta):
 	super._physics_process(delta)
 	Debug()
+	if !$Networking.is_local_authority():
+		if not $Networking.processed_position:
+			position = $Networking.sync_position
+			$Networking.processed_position = true
+		mesh_ref.rotation = $Networking.sync_mesh_rotation
+		direction = $Networking.sync_direction
+		gait = $Networking.sync_gait
+		stance = $Networking.sync_stance
+		rotation_mode = $Networking.sync_rotation_mode 
+		$CameraRoot.HObject.transform = $Networking.sync_camera_transform
+		movement_state = $Networking.sync_movement_state
+		movement_action = $Networking.sync_movement_action
+		
+		if $Networking.sync_input_is_moving:
+			if gait == Global.gait.sprinting:
+				add_movement_input(direction, current_movement_data.sprint_speed,current_movement_data.sprint_acceleration)
+			elif gait == Global.gait.running:
+				add_movement_input(direction, current_movement_data.run_speed,current_movement_data.run_acceleration)
+			else:
+				add_movement_input(direction, current_movement_data.walk_speed,current_movement_data.walk_acceleration)
+		else:
+			add_movement_input(direction,0,deacceleration)
+
+		return
+	
 	
 	#------------------ Input Movement ------------------#
 	h_rotation = camera_root.HObject.transform.basis.get_euler().y
@@ -119,6 +146,18 @@ func _physics_process(delta):
 	#------------------ Interaction ------------------#
 	if Input.is_action_just_pressed("interaction"):
 		$CameraRoot/SpringArm3D/Camera/InteractionRaycast.Interact()
+	
+	
+	$Networking.sync_position = position
+	$Networking.sync_mesh_rotation = mesh_ref.rotation
+	$Networking.sync_direction = direction
+	$Networking.sync_gait = gait
+	$Networking.sync_stance = stance
+	$Networking.sync_rotation_mode = rotation_mode
+	$Networking.sync_camera_transform = $CameraRoot.HObject.transform
+	$Networking.sync_movement_state = movement_state
+	$Networking.sync_movement_action = movement_action
+	$Networking.sync_input_is_moving = input_is_moving
 
 
 
