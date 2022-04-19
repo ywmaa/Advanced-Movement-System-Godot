@@ -45,6 +45,7 @@ var crouch_height := 1.0
 
 @export var crouch_switch_speed := 5.0 
 
+@export var rotation_in_place_min_angle := 90.0 
 
 #Movement Values Settings
 #you could play with the values to achieve different movement settings
@@ -193,8 +194,8 @@ var input_is_moving := false
 
 var head_bonked := false
 
-
-
+var is_rotating_in_place := false
+var rotation_difference_camera_mesh : float
 
 var aim_rate_h :float
 
@@ -273,8 +274,7 @@ func update_character_movement():
 					current_movement_data = movement_data.normal.aiming.crouching
 #####################################
 
-var previous_vaim_rate_h :float
-var rotation_difference
+var previous_aim_rate_h :float
 
 func _ready():
 	update_animations()
@@ -285,8 +285,8 @@ func _physics_process(delta):
 	
 	head_bonked = bonker.is_colliding()
 	#
-	aim_rate_h = abs(($CameraRoot.HObject.rotation.y - previous_vaim_rate_h) / delta)
-	previous_vaim_rate_h = $CameraRoot.HObject.rotation.y
+	aim_rate_h = abs(($CameraRoot.HObject.rotation.y - previous_aim_rate_h) / delta)
+	previous_aim_rate_h = $CameraRoot.HObject.rotation.y
 	#
 	#Debug()
 	match movement_state:
@@ -299,24 +299,17 @@ func _physics_process(delta):
 					match rotation_mode:
 							Global.rotation_mode.velocity_direction: 
 								if (is_moving and input_is_moving) or (get_real_velocity() * Vector3(1.0,0.0,1.0)).length() > 0.5:
-									stop_rotating_in_place() #Moving so stop the rotate in place
 									smooth_character_rotation(velocity,calc_grounded_rotation_rate(),delta)
 							Global.rotation_mode.looking_direction:
 								if (is_moving and input_is_moving) or (get_real_velocity() * Vector3(1.0,0.0,1.0)).length() > 0.5:
-									stop_rotating_in_place() #Moving so stop the rotate in place
 									smooth_character_rotation(-$CameraRoot.HObject.transform.basis.z if gait != Global.gait.sprinting else velocity,calc_grounded_rotation_rate(),delta)
-								else:
-									if input_is_moving == false:
-										rotate_in_place()
+								rotate_in_place_check()
 							Global.rotation_mode.aiming:
 								if gait == Global.gait.sprinting: # character can't sprint while aiming
 									gait = Global.gait.running
 								if (is_moving and input_is_moving) or (get_real_velocity() * Vector3(1.0,0.0,1.0)).length() > 0.5:
-									stop_rotating_in_place() #Moving so stop the rotate in place
 									smooth_character_rotation(-$CameraRoot.HObject.transform.basis.z,calc_grounded_rotation_rate(),delta)
-								else:
-									if input_is_moving == false:
-										rotate_in_place()
+								rotate_in_place_check()
 				Global.movement_action.rolling:
 					if input_is_moving == true:
 						smooth_character_rotation(input_acceleration ,2.0,delta)
@@ -324,7 +317,6 @@ func _physics_process(delta):
 		
 		Global.movement_state.in_air:
 			#------------------ Rotate Character Mesh In Air ------------------#
-			stop_rotating_in_place()
 			match rotation_mode:
 					Global.rotation_mode.velocity_direction: 
 						smooth_character_rotation(velocity if (get_real_velocity() * Vector3(1.0,0.0,1.0)).length() > 1.0 else  -$CameraRoot.HObject.transform.basis.z,5.0,delta)
@@ -391,25 +383,20 @@ func calc_grounded_rotation_rate():
 
 
 
-func rotate_in_place():
-	var CameraAngle = Quaternion(Vector3(0,$CameraRoot.HObject.rotation.y,0)) 
-	var MeshAngle = Quaternion(Vector3(0,mesh_ref.rotation.y,0)) 
-	var rotation_difference = rad2deg(MeshAngle.angle_to(CameraAngle) - PI)
-	if (CameraAngle.dot(MeshAngle)) > 0:
-		rotation_difference *= -1
-	if abs(rotation_difference) > 90:
-		anim_ref.set("parameters/Turn/blend_amount" , 1)
-#		var NewRotation = mesh_ref.rotation + Vector3(0,PI/2,0) if rotation_difference > 0 else mesh_ref.rotation - Vector3(0,PI/2,0)
-		anim_ref.set("parameters/RightOrLeft/blend_amount" ,0 if rotation_difference > 0 else 1)
-		smooth_character_rotation(-$CameraRoot.HObject.transform.basis.z,calc_grounded_rotation_rate(),get_physics_process_delta_time()) 
-		
-#		var final_rotation = MeshAngle.slerp(NewRotation,get_physics_process_delta_time())
-#		mesh_ref.transform.basis = Basis(final_rotation)
+func rotate_in_place_check():
+	if !input_is_moving:
+		var CameraAngle = Quaternion(Vector3(0,$CameraRoot.HObject.rotation.y,0)) 
+		var MeshAngle = Quaternion(Vector3(0,mesh_ref.rotation.y,0)) 
+		rotation_difference_camera_mesh = rad2deg(MeshAngle.angle_to(CameraAngle) - PI)
+		if (CameraAngle.dot(MeshAngle)) > 0:
+			rotation_difference_camera_mesh *= -1
+		if abs(rotation_difference_camera_mesh) > rotation_in_place_min_angle:
+			is_rotating_in_place = true
+			smooth_character_rotation(-$CameraRoot.HObject.transform.basis.z,calc_grounded_rotation_rate(),get_physics_process_delta_time()) 
+		else:
+			is_rotating_in_place = false
 	else:
-		anim_ref.set("parameters/Turn/blend_amount" , 0)
-
-func stop_rotating_in_place():
-	anim_ref.set("parameters/Turn/blend_amount" , 0)
+		is_rotating_in_place = false
 
 func ik_look_at(position: Vector3):
 	if $LookAtObject:

@@ -79,7 +79,10 @@ func _physics_process(delta):
 		#On Stopped
 		if !(Input.is_action_pressed("forward") || Input.is_action_pressed("back") || Input.is_action_pressed("right") || Input.is_action_pressed("left")) and (Input.is_action_just_released("right") || Input.is_action_just_released("back") || Input.is_action_just_released("left") || Input.is_action_just_released("forward")):
 			distance_matching.CalculateStopLocation(movement_script.transform.origin,(movement_script.get_real_velocity() * Vector3(1.0,0.0,1.0)),movement_script.deacceleration * movement_script.direction,get_physics_process_delta_time())
-
+			
+		#Rotate In Place
+		set("parameters/Turn/blend_amount" , 1 if movement_script.is_rotating_in_place else 0)
+		set("parameters/RightOrLeft/blend_amount" ,0 if movement_script.rotation_difference_camera_mesh > 0 else 1)
 
 
 
