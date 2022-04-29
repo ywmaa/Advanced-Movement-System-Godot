@@ -12,12 +12,12 @@ env:
 jobs:
   export-windows:
     name: Windows Export
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     container:
       image: barichello/godot-ci:3.4.4
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
       - name: Setup
         run: |
           mkdir -v -p ~/.local/share/godot/templates
@@ -45,12 +45,12 @@ jobs:
 
   export-linux:
     name: Linux Export
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     container:
       image: barichello/godot-ci:3.4.4
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
       - name: Setup
         run: |
           mkdir -v -p ~/.local/share/godot/templates
@@ -78,12 +78,12 @@ jobs:
 
   export-web:
     name: Web Export
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     container:
       image: barichello/godot-ci:3.4.4
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
       - name: Setup
         run: |
           mkdir -v -p ~/.local/share/godot/templates
@@ -121,12 +121,12 @@ jobs:
 
   export-mac:
     name: Mac Export
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     container:
       image: barichello/godot-ci:3.4.4
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
       - name: Setup
         run: |
           mkdir -v -p ~/.local/share/godot/templates
@@ -154,12 +154,12 @@ jobs:
 
   export-android:
     name: Android Export
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     container:
       image: barichello/godot-ci:3.4.4
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
       - name: Setup
         run: |
           mkdir -v -p ~/.local/share/godot/templates
