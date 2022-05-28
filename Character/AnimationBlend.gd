@@ -22,7 +22,28 @@ func _physics_process(delta):
 	rs_blend = (movement_script.get_velocity() * Vector3(1.0,0.0,1.0)).length() / movement_script.current_movement_data.sprint_speed * 3
 	
 	if movement_script:
-
+		#Set Animation State
+		match movement_script.movement_state:
+			Global.movement_state.none:
+				pass
+			Global.movement_state.grounded:
+				set("parameters/InAir/blend_amount" , 0)
+			Global.movement_state.in_air:
+				set("parameters/InAir/blend_amount" , 1)
+			Global.movement_state.mantling:
+				pass
+			Global.movement_state.ragdoll:
+				pass
+		match movement_script.stance:
+			Global.stance.standing:
+				set("parameters/VelocityDirection/crouch/current" ,0)
+			Global.stance.crouching:
+				set("parameters/VelocityDirection/crouch/current" ,1)
+				iw_blend = iw_blend/2
+				wr_blend = wr_blend/2
+				rs_blend = rs_blend/2
+		
+		
 		if movement_script.rotation_mode == Global.rotation_mode.velocity_direction:
 			set("parameters/VelocityOrLooking/blend_amount" ,0)
 			## Currently using imediate switch because there is a bug in the animation blend
@@ -32,12 +53,16 @@ func _physics_process(delta):
 			if movement_script.input_is_moving:
 				if  movement_script.gait == Global.gait.sprinting:
 					set("parameters/VelocityDirection/IWR_Blend/blend_position" , rs_blend)
+					set("parameters/VelocityDirection/IWR_Blend_Crouch/blend_position" , rs_blend)
 				elif movement_script.gait == Global.gait.running:
 					set("parameters/VelocityDirection/IWR_Blend/blend_position" , wr_blend)
+					set("parameters/VelocityDirection/IWR_Blend_Crouch/blend_position" , wr_blend)
 				elif movement_script.gait == Global.gait.walking:
 					set("parameters/VelocityDirection/IWR_Blend/blend_position" , iw_blend)
+					set("parameters/VelocityDirection/IWR_Blend_Crouch/blend_position" , iw_blend)
 			else:
 				set("parameters/VelocityDirection/IWR_Blend/blend_position" , 0)
+				set("parameters/VelocityDirection/IWR_Blend_Crouch/blend_position" , 0)
 		else: #Animation blend for Both looking direction mode and aiming mode
 			set("parameters/VelocityOrLooking/blend_amount" ,1)
 			
@@ -62,25 +87,15 @@ func _physics_process(delta):
 				set("parameters/LookingDirection/LookingDirectionBlend/blend_position" ,  Vector2(0,0))
 		
 		
-		#Set Animation State
-		match movement_script.movement_state:
-			Global.movement_state.none:
-				pass
-			Global.movement_state.grounded:
-				set("parameters/InAir/blend_amount" , 0)
-			Global.movement_state.in_air:
-				set("parameters/InAir/blend_amount" , 1)
-			Global.movement_state.mantling:
-				pass
-			Global.movement_state.ragdoll:
-				pass
-				
-		
-		
 		#On Stopped
 		if !(Input.is_action_pressed("forward") || Input.is_action_pressed("back") || Input.is_action_pressed("right") || Input.is_action_pressed("left")) and (Input.is_action_just_released("right") || Input.is_action_just_released("back") || Input.is_action_just_released("left") || Input.is_action_just_released("forward")):
-			distance_matching.CalculateStopLocation(movement_script.transform.origin,(movement_script.get_velocity() * Vector3(1.0,0.0,1.0)),movement_script.deacceleration * movement_script.direction,get_physics_process_delta_time())
+			var seek_time = get_node(anim_player).get_animation(tree_root.get_node("VelocityDirection").get_node("StopAnim").animation).length - distance_matching.CalculateStopTime((movement_script.get_velocity() * Vector3(1.0,0.0,1.0)),movement_script.deacceleration * movement_script.direction)
+			print(distance_matching.CalculateStopTime((movement_script.get_velocity() * Vector3(1.0,0.0,1.0)),movement_script.deacceleration * movement_script.direction))
+
+			set("parameters/VelocityDirection/StopSeek/seek_position",seek_time)
+			set("parameters/VelocityDirection/Stop/active",1)
 			
+
 		#Rotate In Place
 		set("parameters/Turn/blend_amount" , 1 if movement_script.is_rotating_in_place else 0)
 		set("parameters/RightOrLeft/blend_amount" ,0 if movement_script.rotation_difference_camera_mesh > 0 else 1)

@@ -7,6 +7,7 @@ target_nodepath = NodePath("../../LookAtObject")
 additional_rotation = Vector3(90, 180, 0)
 
 [sub_resource type="SkeletonModificationStack3D" id="SkeletonModificationStack3D_urd5f"]
+enabled = true
 strength = 0.5
 modification_count = 1
 modifications/0 = SubResource( "SkeletonModification3DLookAt_4f067" )

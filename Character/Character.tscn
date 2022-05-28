@@ -11,7 +11,7 @@ resource_local_to_scene = true
 radius = 0.375
 
 [node name="Character" type="CharacterBody3D"]
-transform = Transform3D(0.987165, 0, 0, 0, 0.987165, 0, 0, 0, 0.987165, 0, 0, 0)
+top_level = true
 script = ExtResource( "1_78um4" )
 mesh_path = NodePath("Character")
 rotation_mode = 1
@@ -54,9 +54,6 @@ script = ExtResource( "9_2ydqu" )
 process_callback = 0
 wait_time = 0.2
 one_shot = true
-
-[node name="LookAtObject" type="Position3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.800107, 2.97395)
 
 [node name="FootstepSounds" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource( "8_gwq64" )

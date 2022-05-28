@@ -49,7 +49,7 @@ var crouch_height := 1.0
 
 #Movement Values Settings
 #you could play with the values to achieve different movement settings
-var deacceleration := 10.0
+var deacceleration := 8.0
 var acceleration_reducer := 4.0
 var movement_data = {
 	normal = {
@@ -339,9 +339,11 @@ func _physics_process(delta):
 	if stance == Global.stance.crouching:
 		bonker.transform.origin.y -= crouch_switch_speed * delta
 		collision_shape_ref.shape.height -= crouch_switch_speed * delta /2
+		mesh_ref.position = mesh_ref.position * 2
 	elif stance == Global.stance.standing and not head_bonked:
 		bonker.transform.origin.y += crouch_switch_speed * delta 
 		collision_shape_ref.shape.height += crouch_switch_speed * delta /2
+		mesh_ref.position = mesh_ref.position / 2
 		
 	bonker.transform.origin.y = clamp(bonker.transform.origin.y,0.5,1.0)
 	collision_shape_ref.shape.height = clamp(collision_shape_ref.shape.height,crouch_height,default_height)
@@ -402,8 +404,10 @@ func rotate_in_place_check():
 		is_rotating_in_place = false
 
 func ik_look_at(position: Vector3):
-	if $LookAtObject:
-		$LookAtObject.position = position
+	var lookatobject = mesh_ref.get_node("/LookAtObject")
+	print(lookatobject)
+	if lookatobject:
+		lookatobject.position = position
 
 
 var PrevVelocity :Vector3

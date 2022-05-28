@@ -170,6 +170,8 @@ func _physics_process(delta):
 
 var view_changed_recently = false
 func _input(event):
+	if Input.is_action_just_pressed("flashlight"):
+		$Character/flashlight.visible = !$Character/flashlight.visible
 	#------------------ Change Camera View ------------------#
 	if Input.is_action_just_released("switch_camera_view"):
 		if view_changed_recently == false:
@@ -183,11 +185,19 @@ func _input(event):
 		await get_tree().create_timer(0.2).timeout
 		if view_changed_recently == false:
 			$CameraRoot.view_mode = $CameraRoot.view_mode + 1 if $CameraRoot.view_mode < 1 else 0
+			if $CameraRoot.view_mode == Global.view_mode.first_person:
+				$Character.visible = false
+			else:
+				$Character.visible = true
 			view_changed_recently = true
 
 	if event.is_action_pressed("EnableSDFGI"):
 		var postprocess = preload("res://Maps/default_env.tres")
 		postprocess.sdfgi_enabled = not postprocess.sdfgi_enabled
+		postprocess.ssil_enabled = not postprocess.ssil_enabled
+		postprocess.ssao_enabled = not postprocess.ssao_enabled
+		postprocess.ssr_enabled = not postprocess.ssr_enabled
+		postprocess.glow_enabled = not postprocess.glow_enabled
 	if event.is_action_pressed("ragdoll"):
 		ragdoll = true
 

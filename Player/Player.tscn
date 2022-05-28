@@ -65,20 +65,24 @@ UsingCrouchToggle = true
 [node name="CollisionShape3D" parent="." index="0"]
 shape = SubResource( "CapsuleShape3D_br6ho" )
 
-[node name="LookAtObject" parent="." index="4"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.084224, 0.23971, 1.92731)
+[node name="flashlight" type="SpotLight3D" parent="Character" index="3"]
+transform = Transform3D(-1.013, 0, -8.85594e-08, 0, 1.013, 0, 8.85594e-08, 0, -1.013, -0.0476362, 0.952055, 0.577683)
+visible = false
+light_energy = 10.0
+distance_fade_enabled = true
+spot_angle = 60.0
 
-[node name="FootstepSounds" parent="." index="5"]
+[node name="FootstepSounds" parent="." index="4"]
 stream = ExtResource( "8_k2nvr" )
 
-[node name="Networking" type="Node" parent="." index="6"]
+[node name="Networking" type="Node" parent="." index="5"]
 script = ExtResource( "8_811pj" )
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="Networking" index="0"]
 root_path = NodePath("..")
 resource = SubResource( "SceneReplicationConfig_6or0h" )
 
-[node name="Status" type="Control" parent="." index="7"]
+[node name="Status" type="Control" parent="." index="6"]
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0

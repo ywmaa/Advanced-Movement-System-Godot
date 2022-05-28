@@ -41,4 +41,4 @@ https://youtu.be/qwz9aPdVoFg .
 
 (L) Flashlight
 
-(G) To toggle SDFGI (Global illumination)
+(G) To toggle High graphics : SDFGI (Global illumination),SSIL, SSAO,SSR,Glow
