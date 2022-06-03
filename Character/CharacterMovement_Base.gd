@@ -22,7 +22,7 @@ class_name CharacterMovement
 @export var is_flying := false
 @export var gravity := 9.8
 
-@export var tilt := true
+@export var tilt := false
 @export var tilt_power := 1.0
 
 @export var ragdoll := false :
@@ -196,6 +196,7 @@ var head_bonked := false
 
 var is_rotating_in_place := false
 var rotation_difference_camera_mesh : float
+var IsMovingBackwardRelativeToCamera
 
 var aim_rate_h :float
 
@@ -282,7 +283,8 @@ func _ready():
 	
 	
 func _physics_process(delta):
-	
+	IsMovingBackwardRelativeToCamera = false if -velocity.rotated(Vector3.UP,-camera_root.HObject.transform.basis.get_euler().y).z >= -0.1 else true
+	skeleton_ref.clear_bones_global_pose_override() # this is very important when using orientation warping, because the said function overrides the bones, so we need to reset it in a new frame
 	
 	head_bonked = bonker.is_colliding()
 	#
@@ -302,15 +304,21 @@ func _physics_process(delta):
 								if (is_moving and input_is_moving) or (get_velocity() * Vector3(1.0,0.0,1.0)).length() > 0.5:
 									smooth_character_rotation(velocity,calc_grounded_rotation_rate(),delta)
 								is_rotating_in_place = false
+								skeleton_ref.clear_bones_global_pose_override()
 							Global.rotation_mode.looking_direction:
 								if (is_moving and input_is_moving) or (get_velocity() * Vector3(1.0,0.0,1.0)).length() > 0.5:
 									smooth_character_rotation(-$CameraRoot.HObject.transform.basis.z if gait != Global.gait.sprinting else velocity,calc_grounded_rotation_rate(),delta)
+									if gait != Global.gait.sprinting:
+										distance_matching.orientation_warping($CameraRoot.HObject,velocity,self,skeleton_ref,"Hips",["Spine","Spine1","Spine2"],1.0)
+										pass
 								rotate_in_place_check()
 							Global.rotation_mode.aiming:
 								if gait == Global.gait.sprinting: # character can't sprint while aiming
 									gait = Global.gait.running
 								if (is_moving and input_is_moving) or (get_velocity() * Vector3(1.0,0.0,1.0)).length() > 0.5:
 									smooth_character_rotation(-$CameraRoot.HObject.transform.basis.z,calc_grounded_rotation_rate(),delta)
+								
+								distance_matching.orientation_warping($CameraRoot.HObject,velocity,self,skeleton_ref)
 								rotate_in_place_check()
 				Global.movement_action.rolling:
 					if input_is_moving == true:
@@ -366,11 +374,9 @@ func _physics_process(delta):
 		vertical_velocity.y = 0
 
 
-
-
 func smooth_character_rotation(Target:Vector3,nodelerpspeed,delta):
 	mesh_ref.rotation.y = lerp_angle(mesh_ref.rotation.y, atan2(Target.x,Target.z) , delta * nodelerpspeed)
-	
+
 
 func calc_grounded_rotation_rate():
 	
@@ -404,8 +410,7 @@ func rotate_in_place_check():
 		is_rotating_in_place = false
 
 func ik_look_at(position: Vector3):
-	var lookatobject = mesh_ref.get_node("/LookAtObject")
-	print(lookatobject)
+	var lookatobject = mesh_ref.get_node("LookAtObject")
 	if lookatobject:
 		lookatobject.position = position
 

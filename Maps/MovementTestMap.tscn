@@ -1,10 +1,9 @@
-[gd_scene load_steps=14 format=3 uid="uid://bnwsqqtdmwhtu"]
+[gd_scene load_steps=13 format=3 uid="uid://bnwsqqtdmwhtu"]
 
 [ext_resource type="Environment" uid="uid://qsko45wpxerg" path="res://Maps/default_env.tres" id="1_7h7du"]
 [ext_resource type="Script" path="res://Maps/main.gd" id="1_rvsng"]
 [ext_resource type="Material" uid="uid://bf6te7t23qtp3" path="res://Maps/GridMat.tres" id="3_27oba"]
 [ext_resource type="Script" path="res://Interactable/Light/InteractableLight.gd" id="4_kyyln"]
-[ext_resource type="PackedScene" uid="uid://cmh421lq6vho6" path="res://Player/Player.tscn" id="4_m0eur"]
 [ext_resource type="PackedScene" uid="uid://cstt3dvkbfulu" path="res://3DObjects/Apple/Apple.tscn" id="6_aiuj0"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_2afi4"]
@@ -106,7 +105,6 @@ text = "Main Menu"
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.91311, 7.03314, 0)
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
-replication = [ExtResource( "4_m0eur" )]
 spawn_path = NodePath("../PlayerSpawnLocation")
 auto_spawn = true
 

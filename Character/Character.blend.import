@@ -3,7 +3,7 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://b5eam0prb8uli"
+uid="uid://qfckfrat565d"
 path="res://.godot/imported/Character.blend-2b58ef5a70a0fc6867545ea8dd8a7b2e.scn"
 
 [deps]
@@ -23,7 +23,7 @@ meshes/light_baking=1
 meshes/lightmap_texel_size=0.1
 skins/use_named_skins=true
 animation/import=true
-animation/fps=60.0
+animation/fps=30.0
 import_script/path=""
 _subresources={
 "meshes": {

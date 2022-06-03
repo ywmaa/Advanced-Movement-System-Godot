@@ -1,0 +1,159 @@
+[remap]
+
+importer="scene"
+importer_version=1
+type="PackedScene"
+uid="uid://6iiwbfil0q1y"
+path="res://.godot/imported/Character.glb-85b8689dc9249545ff96597aa94c9afb.scn"
+
+[deps]
+
+source_file="res://Character/Character.glb"
+dest_files=["res://.godot/imported/Character.glb-85b8689dc9249545ff96597aa94c9afb.scn"]
+
+[params]
+
+nodes/root_type="Node3D"
+nodes/root_name="Scene Root"
+nodes/root_scale=1.0
+meshes/ensure_tangents=true
+meshes/generate_lods=true
+meshes/create_shadow_meshes=true
+meshes/light_baking=1
+meshes/lightmap_texel_size=0.2
+skins/use_named_skins=true
+animation/import=true
+animation/fps=30
+import_script/path=""
+_subresources={
+"animations": {
+"CrouchIdle": {
+"save_to_file/enabled": true,
+"save_to_file/keep_custom_tracks": "",
+"save_to_file/path": "res://Character/Animations/CrouchIdle.res",
+"settings/loop_mode": 1
+},
+"CrouchWalkingForward": {
+"save_to_file/enabled": true,
+"save_to_file/keep_custom_tracks": "",
+"save_to_file/path": "res://Character/Animations/CrouchWalkingForward.res",
+"settings/loop_mode": 1
+},
+"Falling": {
+"save_to_file/enabled": true,
+"save_to_file/keep_custom_tracks": "",
+"save_to_file/path": "res://Character/Animations/Falling.res",
+"settings/loop_mode": 1
+},
+"FallingStart": {
+"save_to_file/enabled": true,
+"save_to_file/keep_custom_tracks": "",
+"save_to_file/path": "res://Character/Animations/FallingStart.res",
+"settings/loop_mode": 0
+},
+"FallingToRoll": {
+"save_to_file/enabled": true,
+"save_to_file/keep_custom_tracks": "",
+"save_to_file/path": "res://Character/Animations/FallingToRoll.res",
+"settings/loop_mode": 0
+},
+"HardFalling": {
+"save_to_file/enabled": true,
+"save_to_file/keep_custom_tracks": "",
+"save_to_file/path": "res://Character/Animations/HardFalling.res",
+"settings/loop_mode": 0
+},
+"Idle": {
+"save_to_file/enabled": true,
+"save_to_file/keep_custom_tracks": "",
+"save_to_file/path": "res://Character/Animations/Idle.res",
+"settings/loop_mode": 1
+},
+"Idle1": {
+"save_to_file/enabled": true,
+"save_to_file/keep_custom_tracks": "",
+"save_to_file/path": "res://Character/Animations/Idle1.res",
+"settings/loop_mode": 1
+},
+"Idle2": {
+"save_to_file/enabled": true,
+"save_to_file/keep_custom_tracks": "",
+"save_to_file/path": "res://Character/Animations/Idle2.res",
+"settings/loop_mode": 1
+},
+"JogForward": {
+"save_to_file/enabled": true,
+"save_to_file/keep_custom_tracks": "",
+"save_to_file/path": "res://Character/Animations/JogForward.res",
+"settings/loop_mode": 1
+},
+"Jogbackward": {
+"save_to_file/enabled": true,
+"save_to_file/keep_custom_tracks": "",
+"save_to_file/path": "res://Character/Animations/Jogbackward.res",
+"settings/loop_mode": 1
+},
+"Run": {
+"save_to_file/enabled": true,
+"save_to_file/keep_custom_tracks": "",
+"save_to_file/path": "res://Character/Animations/Run.res",
+"settings/loop_mode": 1
+},
+"RunToStop": {
+"save_to_file/enabled": true,
+"save_to_file/keep_custom_tracks": "",
+"save_to_file/path": "res://Character/Animations/RunToStop.res",
+"settings/loop_mode": 0
+},
+"TPose": {
+"save_to_file/enabled": true,
+"save_to_file/keep_custom_tracks": "",
+"save_to_file/path": "res://Character/Animations/TPose.res",
+"settings/loop_mode": 0
+},
+"TurnLeft": {
+"save_to_file/enabled": true,
+"save_to_file/keep_custom_tracks": "",
+"save_to_file/path": "res://Character/Animations/TurnLeft.res",
+"settings/loop_mode": 1
+},
+"TurnRight": {
+"save_to_file/enabled": true,
+"save_to_file/keep_custom_tracks": "",
+"save_to_file/path": "res://Character/Animations/TurnRight.res",
+"settings/loop_mode": 1
+},
+"Walk": {
+"save_to_file/enabled": true,
+"save_to_file/keep_custom_tracks": "",
+"save_to_file/path": "res://Character/Animations/Walk.res",
+"settings/loop_mode": 1
+},
+"WalkingBackward": {
+"save_to_file/enabled": true,
+"save_to_file/keep_custom_tracks": "",
+"save_to_file/path": "res://Character/Animations/WalkingBackward.res",
+"settings/loop_mode": 1
+}
+},
+"materials": {
+"Alpha_Body_MAT": {
+"use_external/enabled": true,
+"use_external/path": "res://Character/Mesh/Alpha_Body_MAT.res"
+},
+"Alpha_Joints_MAT": {
+"use_external/enabled": true,
+"use_external/path": "res://Character/Mesh/Alpha_Joints_MAT.res"
+}
+},
+"meshes": {
+"Character_Alpha_Joints": {
+"save_to_file/enabled": true,
+"save_to_file/path": "res://Character/Mesh/Character_Alpha_Joints.res"
+},
+"Character_Alpha_Surface": {
+"save_to_file/enabled": true,
+"save_to_file/path": "res://Character/Mesh/Character_Alpha_Surface.res"
+}
+}
+}

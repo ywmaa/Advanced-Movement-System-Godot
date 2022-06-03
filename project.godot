@@ -71,6 +71,11 @@ window/size/height=1080
 
 enabled=PackedStringArray("res://addons/DistanceMatching/plugin.cfg")
 
+[filesystem]
+
+import/blender/enabled=false
+import/fbx/enabled=false
+
 [gdnative]
 
 singletons=[]
