@@ -6,8 +6,8 @@ var singleplayer := false
 var is_the_server_a_player := true #if it is peer to peer the server will also have a playable character 
 # Called when the node enters the scene tree for the first time.
 func _enter_tree():
-	# Start the server if Godot is passed the "--server" argument,
-	# and start the client if Godot is passed the "--client" argument.
+	# Start the server if Godot passed the "--server" argument,
+	# and start the client if Godot passed the "--client" argument.
 	if "--listen_server" in OS.get_cmdline_args():
 		_on_server_pressed()
 	elif "--client" in OS.get_cmdline_args():
@@ -67,6 +67,7 @@ func create_player(id: int) -> void:
 	var p = PlayerCharacter.instantiate()
 	p.name = str(id)
 	$PlayerSpawnLocation.add_child(p)
+#	p.top_level = true
 	
 func destroy_player(id: int) -> void:
 	$PlayerSpawnLocation.get_node(str(id)).queue_free()

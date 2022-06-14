@@ -1,9 +1,7 @@
 extends AnimationTree
 class_name AnimBlend
-@export var skeleton_path : NodePath
-@onready var movement_script := get_parent().get_parent() # I use this to get variables from main movement script
-@onready var camera_root : CameraRoot = movement_script.get_node("CameraRoot")
-@onready var skeleton_ref : Skeleton3D = get_node(skeleton_path)
+@onready var movement_script := get_parent() # I use this to get variables from main movement script
+#@onready var camera_root : CameraRoot = movement_script.get_node("CameraRoot")
 
 
 
@@ -12,7 +10,7 @@ var wr_blend :float
 var rs_blend :float
 func _physics_process(delta):
 	
-
+	
 #	#------------------ blend the animation with the velocity ------------------#
 	
 	#Blend Animations with Movement4
@@ -51,10 +49,13 @@ func _physics_process(delta):
 		if movement_script.rotation_mode == Global.rotation_mode.looking_direction or movement_script.rotation_mode == Global.rotation_mode.aiming:
 			if movement_script.IsMovingBackwardRelativeToCamera == false:
 				set("parameters/VelocityDirection/StateMachine/Walk/FB/current",0)
+				set("parameters/VelocityDirection/StateMachine/Jog/FB/current",0)
 			else:
 				set("parameters/VelocityDirection/StateMachine/Walk/FB/current",1)
+				set("parameters/VelocityDirection/StateMachine/Jog/FB/current",1)
 		else:
 			set("parameters/VelocityDirection/StateMachine/Walk/FB/current",0)
+			set("parameters/VelocityDirection/StateMachine/Jog/FB/current",0)
 		
 	
 		if movement_script.rotation_mode == Global.rotation_mode.velocity_direction:

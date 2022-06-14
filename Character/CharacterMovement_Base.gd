@@ -4,10 +4,11 @@ class_name CharacterMovement
 
 #####################################
 @export var mesh_path : NodePath
+@export var skeleton_path : NodePath
 #Refrences
 @onready var mesh_ref = get_node(mesh_path)
-@onready var anim_ref : AnimBlend = mesh_ref.get_node("AnimationTree")
-@onready var skeleton_ref : Skeleton3D = anim_ref.skeleton_ref
+@onready var anim_ref : AnimBlend = get_node("AnimationTree")
+@onready var skeleton_ref : Skeleton3D = get_node(skeleton_path)
 @onready var collision_shape_ref = $CollisionShape3D
 @onready var bonker = $CollisionShape3D/HeadBonker
 @onready var camera_root : CameraRoot = $CameraRoot
@@ -91,9 +92,9 @@ var movement_data = {
 		
 		velocity_direction = {
 			standing = {
-				walk_speed = 1.75,
+				walk_speed = 1.75,#Anim walk speed 1.48
 				run_speed = 3.75,
-				sprint_speed = 6.5,
+				sprint_speed = 10.0,
 				
 				#Nomral Acceleration
 				walk_acceleration = 20.0/acceleration_reducer,
@@ -196,7 +197,7 @@ var head_bonked := false
 
 var is_rotating_in_place := false
 var rotation_difference_camera_mesh : float
-var IsMovingBackwardRelativeToCamera
+var IsMovingBackwardRelativeToCamera : bool
 
 var aim_rate_h :float
 
@@ -239,6 +240,10 @@ var movement_action = Global.movement_action.none
 
 @export var AnimTurnLeft : String = "TurnLeft"
 @export var AnimTurnRight : String = "TurnRight"
+
+#####################################
+#IK
+
 func update_animations():
 #	var anim_player : AnimationPlayer = anim_ref.get_node(anim_ref.anim_player)
 	anim_ref.tree_root.get_node("AnimTurnLeft").animation = AnimTurnLeft
@@ -278,11 +283,11 @@ func update_character_movement():
 var previous_aim_rate_h :float
 
 func _ready():
-	pass
+
+	update_character_movement()
 #	update_animations()
-	
-	
 func _physics_process(delta):
+#	speed_warping()
 	IsMovingBackwardRelativeToCamera = false if -velocity.rotated(Vector3.UP,-camera_root.HObject.transform.basis.get_euler().y).z >= -0.1 else true
 	skeleton_ref.clear_bones_global_pose_override() # this is very important when using orientation warping, because the said function overrides the bones, so we need to reset it in a new frame
 	
@@ -310,7 +315,6 @@ func _physics_process(delta):
 									smooth_character_rotation(-$CameraRoot.HObject.transform.basis.z if gait != Global.gait.sprinting else velocity,calc_grounded_rotation_rate(),delta)
 									if gait != Global.gait.sprinting:
 										distance_matching.orientation_warping($CameraRoot.HObject,velocity,self,skeleton_ref,"Hips",["Spine","Spine1","Spine2"],1.0)
-										pass
 								rotate_in_place_check()
 							Global.rotation_mode.aiming:
 								if gait == Global.gait.sprinting: # character can't sprint while aiming
@@ -347,13 +351,14 @@ func _physics_process(delta):
 	if stance == Global.stance.crouching:
 		bonker.transform.origin.y -= crouch_switch_speed * delta
 		collision_shape_ref.shape.height -= crouch_switch_speed * delta /2
-		mesh_ref.position = mesh_ref.position * 2
+		mesh_ref.transform.origin.y += crouch_switch_speed * delta /1.5
 	elif stance == Global.stance.standing and not head_bonked:
 		bonker.transform.origin.y += crouch_switch_speed * delta 
 		collision_shape_ref.shape.height += crouch_switch_speed * delta /2
-		mesh_ref.position = mesh_ref.position / 2
+		mesh_ref.transform.origin.y -= crouch_switch_speed * delta /1.5
 		
-	bonker.transform.origin.y = clamp(bonker.transform.origin.y,0.5,1.0)
+	bonker.transform.origin.y = clamp(bonker.transform.origin.y,0.5,0.1)
+	mesh_ref.transform.origin.y = clamp(mesh_ref.transform.origin.y,0.0,0.5)
 	collision_shape_ref.shape.height = clamp(collision_shape_ref.shape.height,crouch_height,default_height)
 	
 
@@ -376,8 +381,24 @@ func _physics_process(delta):
 
 func smooth_character_rotation(Target:Vector3,nodelerpspeed,delta):
 	mesh_ref.rotation.y = lerp_angle(mesh_ref.rotation.y, atan2(Target.x,Target.z) , delta * nodelerpspeed)
-
-
+func speed_warping():
+	var distance_in_each_frame = -velocity.rotated(Vector3.UP,mesh_ref.transform.basis.get_euler().y).z*get_physics_process_delta_time()
+	var boneright = skeleton_ref.find_bone("RightFoot")
+	var bone_transformright = skeleton_ref.get_bone_global_pose_no_override(boneright)
+	var boneleft = skeleton_ref.find_bone("LeftFoot")
+	var bone_transformleft = skeleton_ref.get_bone_global_pose_no_override(boneleft)
+	var difference = bone_transformright.origin.z - bone_transformleft.origin.z
+#	print(abs(difference) < abs(distance_in_each_frame))
+	if abs(difference) > abs(distance_in_each_frame):
+		bone_transformright.origin.z = bone_transformright.origin.z - abs(distance_in_each_frame)
+		skeleton_ref.set_bone_global_pose_override(boneright, bone_transformright,1.0,true)
+		bone_transformleft.origin.z = bone_transformleft.origin.z - abs(distance_in_each_frame)
+		skeleton_ref.set_bone_global_pose_override(boneleft, bone_transformleft,1.0,true)
+	if abs(difference) < abs(distance_in_each_frame):
+		bone_transformright.origin.z = bone_transformright.origin.z + abs(distance_in_each_frame)
+		skeleton_ref.set_bone_global_pose_override(boneright, bone_transformright,1.0,true)
+		bone_transformleft.origin.z = bone_transformleft.origin.z + abs(distance_in_each_frame)
+		skeleton_ref.set_bone_global_pose_override(boneleft, bone_transformleft,1.0,true)
 func calc_grounded_rotation_rate():
 	
 	if input_is_moving == true:

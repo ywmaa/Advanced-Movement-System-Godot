@@ -24,6 +24,7 @@ func _physics_process(delta):
 	super._physics_process(delta)
 	Debug()
 	if !$Networking.is_local_authority():
+		
 		if not $Networking.processed_position:
 			position = $Networking.sync_position
 			$Networking.processed_position = true
@@ -38,6 +39,7 @@ func _physics_process(delta):
 		$CameraRoot.CameraHOffset = $Networking.sync_CameraHOffset
 		movement_state = $Networking.sync_movement_state
 		movement_action = $Networking.sync_movement_action
+		velocity = $Networking.sync_velocity
 		
 		if $Networking.sync_input_is_moving:
 			if gait == Global.gait.sprinting:
@@ -150,7 +152,7 @@ func _physics_process(delta):
 	if Input.is_action_just_pressed("interaction"):
 		$CameraRoot/SpringArm3D/Camera/InteractionRaycast.Interact()
 	
-	
+	$Networking.sync_velocity = velocity
 	$Networking.sync_position = position
 	$Networking.sync_mesh_rotation = mesh_ref.rotation
 	$Networking.sync_direction = direction
@@ -164,6 +166,7 @@ func _physics_process(delta):
 	$Networking.sync_input_is_moving = input_is_moving
 	$Networking.sync_view_mode = $CameraRoot.view_mode
 	$Networking.sync_CameraHOffset = $CameraRoot.CameraHOffset
+	
 
 
 
@@ -185,19 +188,19 @@ func _input(event):
 		await get_tree().create_timer(0.2).timeout
 		if view_changed_recently == false:
 			$CameraRoot.view_mode = $CameraRoot.view_mode + 1 if $CameraRoot.view_mode < 1 else 0
-			if $CameraRoot.view_mode == Global.view_mode.first_person:
+			if $CameraRoot.view_mode == Global.view_mode.first_person and $Networking.is_local_authority():
 				$Character.visible = false
 			else:
 				$Character.visible = true
 			view_changed_recently = true
-
-	if event.is_action_pressed("EnableSDFGI"):
-		var postprocess = preload("res://Maps/default_env.tres")
-		postprocess.sdfgi_enabled = not postprocess.sdfgi_enabled
-		postprocess.ssil_enabled = not postprocess.ssil_enabled
-		postprocess.ssao_enabled = not postprocess.ssao_enabled
-		postprocess.ssr_enabled = not postprocess.ssr_enabled
-		postprocess.glow_enabled = not postprocess.glow_enabled
+	if $Networking.is_local_authority():
+		if event.is_action_pressed("EnableSDFGI"):
+			var postprocess = preload("res://Maps/default_env.tres")
+			postprocess.sdfgi_enabled = not postprocess.sdfgi_enabled
+			postprocess.ssil_enabled = not postprocess.ssil_enabled
+			postprocess.ssao_enabled = not postprocess.ssao_enabled
+			postprocess.ssr_enabled = not postprocess.ssr_enabled
+			postprocess.glow_enabled = not postprocess.glow_enabled
 	if event.is_action_pressed("ragdoll"):
 		ragdoll = true
 

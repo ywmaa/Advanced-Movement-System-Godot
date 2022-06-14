@@ -16,6 +16,9 @@ var sync_rotation_mode : Global.rotation_mode
 var sync_stance : Global.stance
 var sync_movement_state : Global.movement_state
 var sync_movement_action : Global.movement_action
+var sync_velocity : Vector3
+
+
 
 var processed_position : bool
 func _ready():
