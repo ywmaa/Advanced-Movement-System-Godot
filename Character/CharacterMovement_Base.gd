@@ -92,7 +92,7 @@ var movement_data = {
 		
 		velocity_direction = {
 			standing = {
-				walk_speed = 1.75,#Anim walk speed 1.48
+				walk_speed = 1.51,#Anim walk speed 1.48
 				run_speed = 3.75,
 				sprint_speed = 10.0,
 				
@@ -287,7 +287,7 @@ func _ready():
 	update_character_movement()
 #	update_animations()
 func _physics_process(delta):
-#	speed_warping()
+#	animation_speed_warping()
 	IsMovingBackwardRelativeToCamera = false if -velocity.rotated(Vector3.UP,-camera_root.HObject.transform.basis.get_euler().y).z >= -0.1 else true
 	skeleton_ref.clear_bones_global_pose_override() # this is very important when using orientation warping, because the said function overrides the bones, so we need to reset it in a new frame
 	
@@ -314,7 +314,7 @@ func _physics_process(delta):
 								if (is_moving and input_is_moving) or (get_velocity() * Vector3(1.0,0.0,1.0)).length() > 0.5:
 									smooth_character_rotation(-$CameraRoot.HObject.transform.basis.z if gait != Global.gait.sprinting else velocity,calc_grounded_rotation_rate(),delta)
 									if gait != Global.gait.sprinting:
-										distance_matching.orientation_warping($CameraRoot.HObject,velocity,self,skeleton_ref,"Hips",["Spine","Spine1","Spine2"],1.0)
+										pose_warping.orientation_warping($CameraRoot.HObject,velocity,self,skeleton_ref,"Hips",["Spine","Spine1","Spine2"],1.0)
 								rotate_in_place_check()
 							Global.rotation_mode.aiming:
 								if gait == Global.gait.sprinting: # character can't sprint while aiming
@@ -322,7 +322,7 @@ func _physics_process(delta):
 								if (is_moving and input_is_moving) or (get_velocity() * Vector3(1.0,0.0,1.0)).length() > 0.5:
 									smooth_character_rotation(-$CameraRoot.HObject.transform.basis.z,calc_grounded_rotation_rate(),delta)
 								
-								distance_matching.orientation_warping($CameraRoot.HObject,velocity,self,skeleton_ref)
+								pose_warping.orientation_warping($CameraRoot.HObject,velocity,self,skeleton_ref)
 								rotate_in_place_check()
 				Global.movement_action.rolling:
 					if input_is_moving == true:
@@ -381,24 +381,26 @@ func _physics_process(delta):
 
 func smooth_character_rotation(Target:Vector3,nodelerpspeed,delta):
 	mesh_ref.rotation.y = lerp_angle(mesh_ref.rotation.y, atan2(Target.x,Target.z) , delta * nodelerpspeed)
-func speed_warping():
-	var distance_in_each_frame = -velocity.rotated(Vector3.UP,mesh_ref.transform.basis.get_euler().y).z*get_physics_process_delta_time()
+func animation_speed_warping(): #this is currently being worked on and tested, so I don't reccomend using it.
+	var distance_in_each_frame = -velocity.rotated(Vector3.UP,mesh_ref.transform.basis.get_euler().y)*get_physics_process_delta_time()
 	var boneright = skeleton_ref.find_bone("RightFoot")
-	var bone_transformright = skeleton_ref.get_bone_global_pose_no_override(boneright)
+	var bone_transformright = skeleton_ref.get_bone_global_pose(boneright)
 	var boneleft = skeleton_ref.find_bone("LeftFoot")
-	var bone_transformleft = skeleton_ref.get_bone_global_pose_no_override(boneleft)
-	var difference = bone_transformright.origin.z - bone_transformleft.origin.z
+	var bone_transformleft = skeleton_ref.get_bone_global_pose(boneleft)
+	var difference = abs(bone_transformright.origin.z) - abs(bone_transformleft.origin.z)
+#	print(distance_in_each_frame.length()*2*10/30)
+#	print(difference*1.1833*60)
 #	print(abs(difference) < abs(distance_in_each_frame))
-	if abs(difference) > abs(distance_in_each_frame):
-		bone_transformright.origin.z = bone_transformright.origin.z - abs(distance_in_each_frame)
-		skeleton_ref.set_bone_global_pose_override(boneright, bone_transformright,1.0,true)
-		bone_transformleft.origin.z = bone_transformleft.origin.z - abs(distance_in_each_frame)
-		skeleton_ref.set_bone_global_pose_override(boneleft, bone_transformleft,1.0,true)
-	if abs(difference) < abs(distance_in_each_frame):
-		bone_transformright.origin.z = bone_transformright.origin.z + abs(distance_in_each_frame)
-		skeleton_ref.set_bone_global_pose_override(boneright, bone_transformright,1.0,true)
-		bone_transformleft.origin.z = bone_transformleft.origin.z + abs(distance_in_each_frame)
-		skeleton_ref.set_bone_global_pose_override(boneleft, bone_transformleft,1.0,true)
+#	if abs(difference) > abs(distance_in_each_frame):
+#		bone_transformright.origin.z = bone_transformright.origin.z - abs(distance_in_each_frame)
+#		skeleton_ref.set_bone_global_pose_override(boneright, bone_transformright,1.0,true)
+#		bone_transformleft.origin.z = bone_transformleft.origin.z - abs(distance_in_each_frame)
+#		skeleton_ref.set_bone_global_pose_override(boneleft, bone_transformleft,1.0,true)
+#	if abs(difference) < abs(distance_in_each_frame):
+#		bone_transformright.origin.z = bone_transformright.origin.z + abs(distance_in_each_frame)
+#		skeleton_ref.set_bone_global_pose_override(boneright, bone_transformright,1.0,true)
+#		bone_transformleft.origin.z = bone_transformleft.origin.z + abs(distance_in_each_frame)
+#		skeleton_ref.set_bone_global_pose_override(boneleft, bone_transformleft,1.0,true)
 func calc_grounded_rotation_rate():
 	
 	if input_is_moving == true:

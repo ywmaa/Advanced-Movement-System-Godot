@@ -35,9 +35,9 @@ _global_script_classes=[{
 "path": "res://Interactable/Interactable.gd"
 }, {
 "base": "Node",
-"class": &"distance_matching",
+"class": &"pose_warping",
 "language": &"GDScript",
-"path": "res://addons/DistanceMatching/DistanceMatchingFunctions.gd"
+"path": "res://addons/DistanceMatching/PoseWarpingFunctions.gd"
 }]
 _global_script_class_icons={
 "AI": "",
@@ -45,15 +45,15 @@ _global_script_class_icons={
 "CameraRoot": "",
 "CharacterMovement": "",
 "Interactable": "",
-"distance_matching": ""
+"pose_warping": ""
 }
 
 [application]
 
 config/name="AMSG"
 run/main_scene="res://Maps/MovementTestMap.tscn"
-config/icon="res://icon.png"
 config/features=PackedStringArray("4.0")
+config/icon="res://icon.png"
 
 [autoload]
 

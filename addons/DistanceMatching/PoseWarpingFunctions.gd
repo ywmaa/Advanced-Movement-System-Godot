@@ -1,5 +1,5 @@
 extends Node
-class_name distance_matching
+class_name pose_warping
 #For Predicting Stop Location
 static func CalculateStopLocation(CurrentCharacterLocation:Vector3,Velocity:Vector3,deacceleration:Vector3,delta):
 	return CurrentCharacterLocation + (Velocity * CalculateStopTime(Velocity,deacceleration) * delta * 8)
