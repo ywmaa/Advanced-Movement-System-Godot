@@ -37,7 +37,7 @@ _global_script_classes=[{
 "base": "Node",
 "class": &"pose_warping",
 "language": &"GDScript",
-"path": "res://addons/DistanceMatching/PoseWarpingFunctions.gd"
+"path": "res://addons/PoseWarping/PoseWarpingFunctions.gd"
 }]
 _global_script_class_icons={
 "AI": "",
@@ -158,5 +158,6 @@ exit={
 
 scaling_3d/mode=1
 scaling_3d/fsr_sharpness=2.0
+anti_aliasing/quality/use_taa=true
 occlusion_culling/use_occlusion_culling=true
 environment/defaults/default_environment="res://Maps/default_env.tres"
