@@ -69,7 +69,7 @@ window/size/height=1080
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/DistanceMatching/plugin.cfg")
+enabled=PackedStringArray()
 
 [filesystem]
 

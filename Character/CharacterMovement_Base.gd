@@ -92,7 +92,7 @@ var movement_data = {
 		
 		velocity_direction = {
 			standing = {
-				walk_speed = 1.51,#Anim walk speed 1.48
+				walk_speed = 1.75,
 				run_speed = 3.75,
 				sprint_speed = 10.0,
 				

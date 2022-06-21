@@ -134,8 +134,6 @@ spot_angle = 60.0
 parameters/InAirState/playback = SubResource( "AnimationNodeStateMachinePlayback_0ginc" )
 parameters/VelocityDirection/StateMachine/playback = SubResource( "AnimationNodeStateMachinePlayback_cf632" )
 "parameters/VelocityDirection/StateMachine 2/playback" = SubResource( "AnimationNodeStateMachinePlayback_4eg13" )
-"parameters/VelocityDirection/StateMachine 2/conditions/idle" = false
-"parameters/VelocityDirection/StateMachine 2/conditions/walking" = false
 
 [node name="Networking" type="Node" parent="." index="5"]
 script = ExtResource( "8_811pj" )
