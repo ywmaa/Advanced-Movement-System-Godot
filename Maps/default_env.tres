@@ -4,11 +4,11 @@
 sun_angle_max = 120.35
 
 [sub_resource type="Sky" id="1"]
-sky_material = SubResource( "ProceduralSkyMaterial_8pwhp" )
+sky_material = SubResource("ProceduralSkyMaterial_8pwhp")
 
 [resource]
 background_mode = 2
-sky = SubResource( "1" )
+sky = SubResource("1")
 tonemap_mode = 3
 auto_exposure_enabled = true
 auto_exposure_scale = 0.5

@@ -1,9 +1,9 @@
 [gd_scene load_steps=3 format=3 uid="uid://ioyabl3m877b"]
 
-[ext_resource type="PackedScene" uid="uid://6iiwbfil0q1y" path="res://Character/Character.glb" id="1_52ug3"]
+[ext_resource type="PackedScene" uid="uid://bmrpivq3ciku" path="res://Character/Character.glb" id="1_52ug3"]
 [ext_resource type="SkeletonModificationStack3D" uid="uid://di76q7lrd8obs" path="res://Character/IK/LookAtIK.tres" id="2_6yrbk"]
 
-[node name="Character" instance=ExtResource( "1_52ug3" )]
+[node name="Character" instance=ExtResource("1_52ug3")]
 
 [node name="Skeleton3D" parent="Armature" index="0"]
 bones/0/position = Vector3(0.00336514, 0.931659, -0.000539)
@@ -59,7 +59,7 @@ bones/62/rotation = Quaternion(-0.0792331, -0.208412, -0.969318, 0.103484)
 bones/63/rotation = Quaternion(-0.306426, 0.119607, -0.0378618, 0.94359)
 bones/64/rotation = Quaternion(0.48793, -0.0212312, -0.0382724, 0.871785)
 bones/65/rotation = Quaternion(0.358572, -0.000489059, -0.0289674, 0.933052)
-modification_stack = ExtResource( "2_6yrbk" )
+modification_stack = ExtResource("2_6yrbk")
 
 [node name="LookAtObject" type="Position3D" parent="." index="2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.436956, 0.178501, 0.143251)
