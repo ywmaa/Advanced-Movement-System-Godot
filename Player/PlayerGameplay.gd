@@ -79,6 +79,8 @@ func _physics_process(delta):
 	
 		
 	if rotation_mode == Global.rotation_mode.aiming:
+		if gait == Global.gait.sprinting: # character can't sprint while aiming
+			gait = Global.gait.running
 		camera_root.Camera.fov = 60.0
 	if rotation_mode == Global.rotation_mode.velocity_direction or rotation_mode == Global.rotation_mode.looking_direction:
 		camera_root.Camera.fov = 90.0

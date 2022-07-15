@@ -1,13 +1,9 @@
 extends AnimationTree
 class_name AnimBlend
 @onready var movement_script := get_parent() # I use this to get variables from main movement script
-#@onready var camera_root : CameraRoot = movement_script.get_node("CameraRoot")
 
 func _physics_process(delta):
 	
-	
-#	#------------------ blend the animation with the velocity ------------------#
-
 	if movement_script:
 		#Set Animation State
 		match movement_script.movement_state:
@@ -37,7 +33,7 @@ func _physics_process(delta):
 		
 
 		if movement_script.rotation_mode == Global.rotation_mode.looking_direction or movement_script.rotation_mode == Global.rotation_mode.aiming:
-			if movement_script.IsMovingBackwardRelativeToCamera == false:
+			if movement_script.animation_is_moving_backward_relative_to_camera == false:
 				set("parameters/VelocityDirection/StateMachine/Walk/FB/current",0)
 				set("parameters/VelocityDirection/StateMachine/Jog/FB/current",0)
 			else:
@@ -52,7 +48,7 @@ func _physics_process(delta):
 		#On Stopped
 		if !(Input.is_action_pressed("forward") || Input.is_action_pressed("back") || Input.is_action_pressed("right") || Input.is_action_pressed("left")) and (Input.is_action_just_released("right") || Input.is_action_just_released("back") || Input.is_action_just_released("left") || Input.is_action_just_released("forward")):
 			
-			var seek_time = get_node(anim_player).get_animation(tree_root.get_node("VelocityDirection").get_node("StateMachine").get_node("Stopping").get_node("StopAnim").animation).length - pose_warping.CalculateStopTime((movement_script.get_velocity() * Vector3(1.0,0.0,1.0)),movement_script.deacceleration * movement_script.direction)
+			var seek_time = get_node(anim_player).get_animation(tree_root.get_node("VelocityDirection").get_node("StateMachine").get_node("Stopping").get_node("StopAnim").animation).length - movement_script.pose_warping_instance.CalculateStopTime((movement_script.get_velocity() * Vector3(1.0,0.0,1.0)),movement_script.deacceleration * movement_script.direction)
 			set("parameters/VelocityDirection/StateMachine/Stopping/StopSeek/seek_position",seek_time)
 		set("parameters/VelocityDirection/StateMachine/conditions/stop",!movement_script.input_is_moving)
 		

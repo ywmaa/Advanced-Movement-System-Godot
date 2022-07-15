@@ -38,7 +38,7 @@ class_name CharacterMovement
 				skeleton_ref.physical_bones_stop_simulation()
 
 
-@export var jump_magnitude := 10.0
+@export var jump_magnitude := 5.0
 @export var roll_magnitude := 17.0
 
 var default_height := 2.0
@@ -94,7 +94,7 @@ var movement_data = {
 			standing = {
 				walk_speed = 1.75,
 				run_speed = 3.75,
-				sprint_speed = 10.0,
+				sprint_speed = 6.5,
 				
 				#Nomral Acceleration
 				walk_acceleration = 20.0/acceleration_reducer,
@@ -197,7 +197,6 @@ var head_bonked := false
 
 var is_rotating_in_place := false
 var rotation_difference_camera_mesh : float
-var IsMovingBackwardRelativeToCamera : bool
 
 var aim_rate_h :float
 
@@ -218,7 +217,9 @@ var current_movement_data = {
 }
 #####################################
 
-
+#animation
+var animation_is_moving_backward_relative_to_camera : bool
+var animation_velocity : Vector3
 
 #status
 var movement_state = Global.movement_state.grounded
@@ -286,17 +287,22 @@ func _ready():
 
 	update_character_movement()
 #	update_animations()
-func _physics_process(delta):
-#	animation_speed_warping()
-	IsMovingBackwardRelativeToCamera = false if -velocity.rotated(Vector3.UP,-camera_root.HObject.transform.basis.get_euler().y).z >= -0.1 else true
-	skeleton_ref.clear_bones_global_pose_override() # this is very important when using orientation warping, because the said function overrides the bones, so we need to reset it in a new frame
+var pose_warping_instance = pose_warping.new()
+func _process(delta):
 	
-	head_bonked = bonker.is_colliding()
+	calc_animation_data()
+	
+	var orientation_warping_condition = rotation_mode != Global.rotation_mode.velocity_direction and movement_state == Global.movement_state.grounded and movement_action == Global.movement_action.none and gait != Global.gait.sprinting and input_is_moving
+	pose_warping_instance.orientation_warping( orientation_warping_condition,$CameraRoot.HObject,animation_velocity,self,skeleton_ref,"Hips",["Spine","Spine1","Spine2"],0.0,delta)
+
+func _physics_process(delta):
+	#Debug()
 	#
 	aim_rate_h = abs(($CameraRoot.HObject.rotation.y - previous_aim_rate_h) / delta)
 	previous_aim_rate_h = $CameraRoot.HObject.rotation.y
 	#
-	#Debug()
+#	animation_speed_warping()
+
 	match movement_state:
 		Global.movement_state.none:
 			pass
@@ -308,26 +314,17 @@ func _physics_process(delta):
 							Global.rotation_mode.velocity_direction: 
 								if (is_moving and input_is_moving) or (get_velocity() * Vector3(1.0,0.0,1.0)).length() > 0.5:
 									smooth_character_rotation(velocity,calc_grounded_rotation_rate(),delta)
-								is_rotating_in_place = false
-								skeleton_ref.clear_bones_global_pose_override()
 							Global.rotation_mode.looking_direction:
 								if (is_moving and input_is_moving) or (get_velocity() * Vector3(1.0,0.0,1.0)).length() > 0.5:
 									smooth_character_rotation(-$CameraRoot.HObject.transform.basis.z if gait != Global.gait.sprinting else velocity,calc_grounded_rotation_rate(),delta)
-									if gait != Global.gait.sprinting:
-										pose_warping.orientation_warping($CameraRoot.HObject,velocity,self,skeleton_ref,"Hips",["Spine","Spine1","Spine2"],1.0)
 								rotate_in_place_check()
 							Global.rotation_mode.aiming:
-								if gait == Global.gait.sprinting: # character can't sprint while aiming
-									gait = Global.gait.running
 								if (is_moving and input_is_moving) or (get_velocity() * Vector3(1.0,0.0,1.0)).length() > 0.5:
 									smooth_character_rotation(-$CameraRoot.HObject.transform.basis.z,calc_grounded_rotation_rate(),delta)
-								
-								pose_warping.orientation_warping($CameraRoot.HObject,velocity,self,skeleton_ref)
 								rotate_in_place_check()
 				Global.movement_action.rolling:
 					if input_is_moving == true:
 						smooth_character_rotation(input_acceleration ,2.0,delta)
-						
 		
 		Global.movement_state.in_air:
 			#------------------ Rotate Character Mesh In Air ------------------#
@@ -348,6 +345,7 @@ func _physics_process(delta):
 	
 
 	#------------------ Crouch ------------------#
+	head_bonked = bonker.is_colliding()
 	if stance == Global.stance.crouching:
 		bonker.transform.origin.y -= crouch_switch_speed * delta
 		collision_shape_ref.shape.height -= crouch_switch_speed * delta /2
@@ -366,7 +364,7 @@ func _physics_process(delta):
 	if is_flying == false:
 		velocity.y =  lerp(velocity.y,vertical_velocity.y - get_floor_normal().y,delta * gravity)
 		move_and_slide()
-		
+		jump_magnitude
 	if is_on_floor() and is_flying == false:
 		movement_state = Global.movement_state.grounded 
 		vertical_velocity = -get_floor_normal() * 10
@@ -381,26 +379,62 @@ func _physics_process(delta):
 
 func smooth_character_rotation(Target:Vector3,nodelerpspeed,delta):
 	mesh_ref.rotation.y = lerp_angle(mesh_ref.rotation.y, atan2(Target.x,Target.z) , delta * nodelerpspeed)
+
+
+func set_bone_x_rotation(skeleton,bone_name, x_rot,CharacterRootNode):
+	var bone = skeleton.find_bone(bone_name)
+	var bone_transform : Transform3D = skeleton.global_pose_to_local_pose(bone,skeleton.get_bone_global_pose_no_override(bone))
+	var rotate_amount = x_rot
+	bone_transform = bone_transform.rotated(Vector3(1,0,0), rotate_amount)
+	skeleton.set_bone_local_pose_override(bone, bone_transform,1.0,true)
+	
+
+var prev :Transform3D 
+var current :Transform3D
+var anim_speed
 func animation_speed_warping(): #this is currently being worked on and tested, so I don't reccomend using it.
-	var distance_in_each_frame = -velocity.rotated(Vector3.UP,mesh_ref.transform.basis.get_euler().y)*get_physics_process_delta_time()
-	var boneright = skeleton_ref.find_bone("RightFoot")
-	var bone_transformright = skeleton_ref.get_bone_global_pose(boneright)
-	var boneleft = skeleton_ref.find_bone("LeftFoot")
-	var bone_transformleft = skeleton_ref.get_bone_global_pose(boneleft)
-	var difference = abs(bone_transformright.origin.z) - abs(bone_transformleft.origin.z)
-#	print(distance_in_each_frame.length()*2*10/30)
-#	print(difference*1.1833*60)
-#	print(abs(difference) < abs(distance_in_each_frame))
-#	if abs(difference) > abs(distance_in_each_frame):
-#		bone_transformright.origin.z = bone_transformright.origin.z - abs(distance_in_each_frame)
-#		skeleton_ref.set_bone_global_pose_override(boneright, bone_transformright,1.0,true)
-#		bone_transformleft.origin.z = bone_transformleft.origin.z - abs(distance_in_each_frame)
-#		skeleton_ref.set_bone_global_pose_override(boneleft, bone_transformleft,1.0,true)
-#	if abs(difference) < abs(distance_in_each_frame):
-#		bone_transformright.origin.z = bone_transformright.origin.z + abs(distance_in_each_frame)
-#		skeleton_ref.set_bone_global_pose_override(boneright, bone_transformright,1.0,true)
-#		bone_transformleft.origin.z = bone_transformleft.origin.z + abs(distance_in_each_frame)
-#		skeleton_ref.set_bone_global_pose_override(boneleft, bone_transformleft,1.0,true)
+	skeleton_ref.clear_bones_local_pose_override()
+	var distance_in_each_frame = (get_real_velocity()*Vector3(1,0,1)).rotated(Vector3.UP,mesh_ref.transform.basis.get_euler().y).length()
+	var hips = skeleton_ref.find_bone("Hips")
+	var hips_transform = skeleton_ref.get_bone_pose(hips)
+	var Feet : Array = ["RightFoot","LeftFoot"]
+	var Thighs : Array = ["RightUpLeg","LeftUpLeg"]
+	
+	var hips_distance_to_ground
+	var speed_scale
+	for Foot in Feet:
+		var bone = skeleton_ref.find_bone(Foot)
+		var bone_transform = skeleton_ref.get_bone_global_pose_no_override(bone)
+
+		var leg_length = hips_transform.origin.distance_to(bone_transform.origin) 
+		var sign = sign(hips_transform.origin.z - bone_transform.origin.z)
+		
+
+		var thigh_bone = skeleton_ref.find_bone(Thighs[Feet.find(Foot)])
+		var thigh_transform = skeleton_ref.get_bone_pose(thigh_bone)
+		var thigh_angle = thigh_transform.basis.get_euler().x
+		
+		if Foot == "RightFoot":
+			prev = current
+			current = bone_transform
+			anim_speed = sin(current.basis.get_euler().x)* 2 * leg_length# * 60
+			
+		
+		speed_scale = (distance_in_each_frame/abs(anim_speed))
+		print(speed_scale)
+
+		var new_leg_angle = thigh_angle*speed_scale
+		new_leg_angle = thigh_angle+new_leg_angle
+		if speed_scale < 1.0:
+			new_leg_angle = -new_leg_angle
+#		hips_distance_to_ground = cos(new_leg_angle) * leg_length
+		set_bone_x_rotation(skeleton_ref,Thighs[Feet.find(Foot)],clampf(new_leg_angle,-PI/8,PI/8),self)
+		#clampf(new_leg_angle,-PI/8,PI/8)
+	
+#	hips_transform.origin.y = hips_distance_to_ground
+#	skeleton_ref.set_bone_global_pose_override(hips, hips_transform,get_physics_process_delta_time()*10,true)
+
+
 func calc_grounded_rotation_rate():
 	
 	if input_is_moving == true:
@@ -417,20 +451,17 @@ func calc_grounded_rotation_rate():
 
 
 func rotate_in_place_check():
+	is_rotating_in_place = false
 	if !input_is_moving:
 		var CameraAngle = Quaternion(Vector3(0,$CameraRoot.HObject.rotation.y,0)) 
 		var MeshAngle = Quaternion(Vector3(0,mesh_ref.rotation.y,0)) 
 		rotation_difference_camera_mesh = rad2deg(MeshAngle.angle_to(CameraAngle) - PI)
 		if (CameraAngle.dot(MeshAngle)) > 0:
 			rotation_difference_camera_mesh *= -1
-		
 		if floor(abs(rotation_difference_camera_mesh)) > rotation_in_place_min_angle:
 			is_rotating_in_place = true
 			smooth_character_rotation(-$CameraRoot.HObject.transform.basis.z,calc_grounded_rotation_rate(),get_physics_process_delta_time()) 
-		else:
-			is_rotating_in_place = false
-	else:
-		is_rotating_in_place = false
+	
 
 func ik_look_at(position: Vector3):
 	var lookatobject = mesh_ref.get_node("LookAtObject")
@@ -467,6 +498,14 @@ func add_movement_input(direction: Vector3, Speed: float , Acceleration: float) 
 	#
 
 
+func calc_animation_data(): # it is used to modify the animation data to get the wanted animation result
+	animation_is_moving_backward_relative_to_camera = false if -velocity.rotated(Vector3.UP,-camera_root.HObject.transform.basis.get_euler().y).z >= -0.1 else true
+	animation_velocity = velocity
+#	a method to make the character' anim walk backward when moving left
+#	if is_equal_approx(input_velocity.normalized().rotated(Vector3.UP,-$CameraRoot.HObject.transform.basis.get_euler().y).x,-1.0):
+#		animation_velocity = velocity * -1
+#		animation_is_moving_backward_relative_to_camera = true
+	
 
 func mantle_check():
 	pass
