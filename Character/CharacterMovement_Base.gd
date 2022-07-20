@@ -3,6 +3,7 @@ class_name CharacterMovement
 
 
 #####################################
+@export_category("Refrences")
 @export var mesh_path : NodePath
 @export var skeleton_path : NodePath
 #Refrences
@@ -18,6 +19,7 @@ class_name CharacterMovement
 
 #####################################
 #Movement Settings
+@export_category("Movement Data")
 @export var AI := false
 
 @export var is_flying := false
@@ -92,7 +94,7 @@ var movement_data = {
 		
 		velocity_direction = {
 			standing = {
-				walk_speed = 1.75,
+				walk_speed = 1.75*2,
 				run_speed = 3.75,
 				sprint_speed = 6.5,
 				
@@ -224,7 +226,7 @@ var animation_velocity : Vector3
 #status
 var movement_state = Global.movement_state.grounded
 var movement_action = Global.movement_action.none
-
+@export_category("States")
 @export var rotation_mode = Global.rotation_mode :
 	get: return rotation_mode
 	set(Newrotation_mode):
@@ -239,9 +241,9 @@ var movement_action = Global.movement_action.none
 @export var stance = Global.stance
 @export var overlay_state = Global.overlay_state
 
+@export_category("Animations")
 @export var AnimTurnLeft : String = "TurnLeft"
 @export var AnimTurnRight : String = "TurnRight"
-
 #####################################
 #IK
 
@@ -393,6 +395,7 @@ var prev :Transform3D
 var current :Transform3D
 var anim_speed
 func animation_speed_warping(): #this is currently being worked on and tested, so I don't reccomend using it.
+
 	skeleton_ref.clear_bones_local_pose_override()
 	var distance_in_each_frame = (get_real_velocity()*Vector3(1,0,1)).rotated(Vector3.UP,mesh_ref.transform.basis.get_euler().y).length()
 	var hips = skeleton_ref.find_bone("Hips")
@@ -414,21 +417,17 @@ func animation_speed_warping(): #this is currently being worked on and tested, s
 		var thigh_transform = skeleton_ref.get_bone_pose(thigh_bone)
 		var thigh_angle = thigh_transform.basis.get_euler().x
 		
-		if Foot == "RightFoot":
-			prev = current
-			current = bone_transform
-			anim_speed = sin(current.basis.get_euler().x)* 2 * leg_length# * 60
-			
-		
-		speed_scale = (distance_in_each_frame/abs(anim_speed))
-		print(speed_scale)
+		var anim_distance = sqrt(abs(pow(leg_length,2) - pow(hips_transform.origin.y,2)))
+
+		speed_scale = (anim_distance/distance_in_each_frame*get_physics_process_delta_time())
+#		print(speed_scale)
 
 		var new_leg_angle = thigh_angle*speed_scale
-		new_leg_angle = thigh_angle+new_leg_angle
-		if speed_scale < 1.0:
-			new_leg_angle = -new_leg_angle
+#		new_leg_angle = thigh_angle+new_leg_angle
+#		if speed_scale < 1.0:
+#			new_leg_angle = -new_leg_angle
 #		hips_distance_to_ground = cos(new_leg_angle) * leg_length
-		set_bone_x_rotation(skeleton_ref,Thighs[Feet.find(Foot)],clampf(new_leg_angle,-PI/8,PI/8),self)
+		set_bone_x_rotation(skeleton_ref,Thighs[Feet.find(Foot)],new_leg_angle,self)
 		#clampf(new_leg_angle,-PI/8,PI/8)
 	
 #	hips_transform.origin.y = hips_distance_to_ground

@@ -55,7 +55,7 @@ func _physics_process(delta):
 		#Rotate In Place
 		set("parameters/Turn/blend_amount" , 1 if movement_script.is_rotating_in_place else 0)
 		set("parameters/RightOrLeft/blend_amount" ,0 if movement_script.rotation_difference_camera_mesh > 0 else 1)
-
+	
 
 
 

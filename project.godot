@@ -35,6 +35,11 @@ _global_script_classes=[{
 "path": "res://Interactable/Interactable.gd"
 }, {
 "base": "Node",
+"class": &"MotionWarping",
+"language": &"GDScript",
+"path": "res://addons/PoseWarping/MotionWarping.gd"
+}, {
+"base": "Node",
 "class": &"pose_warping",
 "language": &"GDScript",
 "path": "res://addons/PoseWarping/PoseWarpingFunctions.gd"
@@ -45,6 +50,7 @@ _global_script_class_icons={
 "CameraRoot": "",
 "CharacterMovement": "",
 "Interactable": "",
+"MotionWarping": "",
 "pose_warping": ""
 }
 

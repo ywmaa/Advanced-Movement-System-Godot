@@ -16,10 +16,13 @@ var CameraHOffset := 0.0
 		if Camera:
 			if Newview_angle == Global.view_angle.right_shoulder and view_mode != Global.view_mode.first_person:
 				CameraHOffset = 0.45
+				update_camera_offset()
 			elif Newview_angle == Global.view_angle.left_shoulder and view_mode != Global.view_mode.first_person:
 				CameraHOffset = -0.45
+				update_camera_offset()
 			elif Newview_angle == Global.view_angle.head:
 				CameraHOffset = 0.0
+				update_camera_offset()
 			
 @export var view_mode = Global.view_mode :
 	get: return view_mode
@@ -59,9 +62,7 @@ func _input(event):
 	
 
 func _physics_process(delta):
-	if $SpringArm3D/Camera.h_offset != CameraHOffset:
-		$SpringArm3D/Camera.h_offset = lerp($SpringArm3D/Camera.h_offset,CameraHOffset,delta)
-		
+
 	camera_v = clamp(camera_v,deg2rad(camera_vertical_min),deg2rad(camera_vertical_max))
 	HObject.rotation.y = lerp(HObject.rotation.y,camera_h,delta * acceleration_h)
 	
@@ -69,3 +70,8 @@ func _physics_process(delta):
 
 	VObject.rotation.x = lerp(VObject.rotation.x,camera_v,delta * acceleration_v)
 
+func update_camera_offset():
+	if $SpringArm3D/Camera.h_offset != CameraHOffset:
+		var tween := create_tween()
+		tween.tween_property($SpringArm3D/Camera,"h_offset",CameraHOffset,0.5).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_EXPO)
+		
