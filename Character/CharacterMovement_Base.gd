@@ -303,7 +303,7 @@ func _physics_process(delta):
 	aim_rate_h = abs(($CameraRoot.HObject.rotation.y - previous_aim_rate_h) / delta)
 	previous_aim_rate_h = $CameraRoot.HObject.rotation.y
 	#
-#	animation_speed_warping()
+	animation_stride_warping()
 
 	match movement_state:
 		Global.movement_state.none:
@@ -394,45 +394,48 @@ func set_bone_x_rotation(skeleton,bone_name, x_rot,CharacterRootNode):
 var prev :Transform3D 
 var current :Transform3D
 var anim_speed
-func animation_speed_warping(): #this is currently being worked on and tested, so I don't reccomend using it.
-
+func animation_stride_warping(): #this is currently being worked on and tested, so I don't reccomend using it.
+	
+	
 	skeleton_ref.clear_bones_local_pose_override()
-	var distance_in_each_frame = (get_real_velocity()*Vector3(1,0,1)).rotated(Vector3.UP,mesh_ref.transform.basis.get_euler().y).length()
+	var distance_in_each_frame = (get_real_velocity()*Vector3(1,0,1)).rotated(Vector3.UP,mesh_ref.transform.basis.get_euler().y).length() * get_physics_process_delta_time()
 	var hips = skeleton_ref.find_bone("Hips")
 	var hips_transform = skeleton_ref.get_bone_pose(hips)
 	var Feet : Array = ["RightFoot","LeftFoot"]
 	var Thighs : Array = ["RightUpLeg","LeftUpLeg"]
 	
 	var hips_distance_to_ground
-	var speed_scale
+	var stride_scale : float = 1.0
 	for Foot in Feet:
+		#Get Bones
 		var bone = skeleton_ref.find_bone(Foot)
 		var bone_transform = skeleton_ref.get_bone_global_pose_no_override(bone)
-
-		var leg_length = hips_transform.origin.distance_to(bone_transform.origin) 
-		var sign = sign(hips_transform.origin.z - bone_transform.origin.z)
 		
-
 		var thigh_bone = skeleton_ref.find_bone(Thighs[Feet.find(Foot)])
-		var thigh_transform = skeleton_ref.get_bone_pose(thigh_bone)
+		var thigh_transform = skeleton_ref.get_bone_global_pose_no_override(thigh_bone)
 		var thigh_angle = thigh_transform.basis.get_euler().x
 		
-		var anim_distance = sqrt(abs(pow(leg_length,2) - pow(hips_transform.origin.y,2)))
-
-		speed_scale = (anim_distance/distance_in_each_frame*get_physics_process_delta_time())
-#		print(speed_scale)
-
-		var new_leg_angle = thigh_angle*speed_scale
-#		new_leg_angle = thigh_angle+new_leg_angle
-#		if speed_scale < 1.0:
-#			new_leg_angle = -new_leg_angle
-#		hips_distance_to_ground = cos(new_leg_angle) * leg_length
-		set_bone_x_rotation(skeleton_ref,Thighs[Feet.find(Foot)],new_leg_angle,self)
-		#clampf(new_leg_angle,-PI/8,PI/8)
-	
-#	hips_transform.origin.y = hips_distance_to_ground
-#	skeleton_ref.set_bone_global_pose_override(hips, hips_transform,get_physics_process_delta_time()*10,true)
-
+		#Calculate
+		var stride_direction : Vector3 = Vector3.FORWARD
+		var stride_warping_plane_origin = Plane(get_floor_normal(),bone_transform.origin).intersects_ray(thigh_transform.origin,Vector3.DOWN)
+		
+		if stride_warping_plane_origin == null:
+			return #Failed to get a plane origin/ we are probably in air
+		var scale_origin = Plane(stride_direction,stride_warping_plane_origin).project(bone_transform.origin)
+		var anim_speed = pow(hips_transform.origin.distance_to(bone_transform.origin),2) - pow(hips_transform.origin.y,2) 
+		anim_speed = sqrt(abs(anim_speed)) * get_physics_process_delta_time()
+		stride_scale = clampf(distance_in_each_frame/anim_speed,0.0,2.0)
+		var foot_warped_location : Vector3 = scale_origin + (bone_transform.origin - scale_origin) * stride_scale
+		
+		
+		# Apply
+		
+		#test
+#		bone_transform.origin = foot_warped_location 
+#		skeleton_ref.set_bone_local_pose_override(bone, bone_transform,1.0,true)
+		
+		
+		
 
 func calc_grounded_rotation_rate():
 	
