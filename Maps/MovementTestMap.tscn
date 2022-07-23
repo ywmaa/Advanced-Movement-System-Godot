@@ -1,10 +1,11 @@
-[gd_scene load_steps=13 format=3 uid="uid://bnwsqqtdmwhtu"]
+[gd_scene load_steps=14 format=3 uid="uid://bnwsqqtdmwhtu"]
 
 [ext_resource type="Environment" uid="uid://qsko45wpxerg" path="res://Maps/default_env.tres" id="1_7h7du"]
 [ext_resource type="Script" path="res://Maps/main.gd" id="1_rvsng"]
 [ext_resource type="Material" uid="uid://bf6te7t23qtp3" path="res://Maps/GridMat.tres" id="3_27oba"]
 [ext_resource type="Script" path="res://Interactable/Light/InteractableLight.gd" id="4_kyyln"]
 [ext_resource type="PackedScene" uid="uid://cstt3dvkbfulu" path="res://3DObjects/Apple/Apple.tscn" id="6_aiuj0"]
+[ext_resource type="PackedScene" uid="uid://cpdbrnwcbyu6h" path="res://Character/Character.glb" id="6_bx6v7"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_2afi4"]
 
@@ -362,6 +363,9 @@ extents = Vector3(4.02019, 1.40863, 7.04964)
 transform = Transform3D(0.309258, 0, 0, 0, 0.309258, 0, 0, 0, 0.309258, 0, 2.47683, 0)
 mesh = SubResource("SphereMesh_frhet")
 surface_material_override/0 = SubResource("StandardMaterial3D_tx2qg")
+
+[node name="Character" parent="." instance=ExtResource("6_bx6v7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.76241, 1.57356, -3.70886)
 
 [connection signal="pressed" from="ListenServer" to="." method="_on_server_pressed"]
 [connection signal="pressed" from="DServer" to="." method="_on_d_server_pressed"]

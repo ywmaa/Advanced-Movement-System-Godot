@@ -1,6 +1,6 @@
 extends Node
 class_name MotionWarping
- 
+
 var ObjectsArray : Array = []
 var PositionsArray : Array = []
 var NamesArray : Array = []
@@ -25,9 +25,10 @@ func remove_sync_position(sync_name:String):
 #using the name we assigned to the sync position we will tween it, 
 #also in the animation player we should specify the time to tween to this required position
 func motion_warping(sync_name:String, sync_time:float):
+	print("Animation")
 	var sync_index = NamesArray.find(sync_name)
 	var position = PositionsArray[sync_index]
 	var object = ObjectsArray[sync_index]
 	var tween := create_tween()
 	tween.tween_property(object, "transform:origin", position, sync_time)
-	tween.tween_callback(remove_sync_position.bind(sync_name))
+#	tween.tween_callback(remove_sync_position.bind(sync_name))

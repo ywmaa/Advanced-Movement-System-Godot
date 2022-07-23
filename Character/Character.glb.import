@@ -3,7 +3,7 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://bmrpivq3ciku"
+uid="uid://cpdbrnwcbyu6h"
 path="res://.godot/imported/Character.glb-85b8689dc9249545ff96597aa94c9afb.scn"
 
 [deps]
@@ -23,7 +23,7 @@ meshes/light_baking=1
 meshes/lightmap_texel_size=0.2
 skins/use_named_skins=true
 animation/import=true
-animation/fps=30
+animation/fps=60.0
 import_script/path=""
 _subresources={
 "animations": {
@@ -93,6 +93,12 @@ _subresources={
 "save_to_file/path": "res://Character/Animations/Jogbackward.res",
 "settings/loop_mode": 1
 },
+"Kick": {
+"save_to_file/enabled": true,
+"save_to_file/keep_custom_tracks": "",
+"save_to_file/path": "res://Character/Animations/Kick.res",
+"settings/loop_mode": 0
+},
 "Run": {
 "save_to_file/enabled": true,
 "save_to_file/keep_custom_tracks": "",
@@ -148,11 +154,23 @@ _subresources={
 },
 "meshes": {
 "Character_Alpha_Joints": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 0,
+"lods/normal_merge_angle": 60.0,
+"lods/normal_split_angle": 25.0,
 "save_to_file/enabled": true,
+"save_to_file/make_streamable": "",
 "save_to_file/path": "res://Character/Mesh/Character_Alpha_Joints.res"
 },
 "Character_Alpha_Surface": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 0,
+"lods/normal_merge_angle": 60.0,
+"lods/normal_split_angle": 25.0,
 "save_to_file/enabled": true,
+"save_to_file/make_streamable": "",
 "save_to_file/path": "res://Character/Mesh/Character_Alpha_Surface.res"
 }
 }

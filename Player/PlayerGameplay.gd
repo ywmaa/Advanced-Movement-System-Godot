@@ -175,6 +175,20 @@ func _physics_process(delta):
 
 var view_changed_recently = false
 func _input(event):
+	
+	
+	#------------------ Motion Warping test------------------#
+	if event.is_action_pressed("fire"):
+		anim_ref.active = false
+		$MotionWarping.add_sync_position(Vector3(4.762,1.574,-1.709),"kick_target",self)
+		$Character/AnimationPlayer.play("Kick")
+		await get_tree().create_timer(2.6).timeout
+		anim_ref.active = true
+		
+		
+		
+		
+	#---------------------
 	if Input.is_action_just_pressed("flashlight"):
 		$Character/flashlight.visible = !$Character/flashlight.visible
 	#------------------ Change Camera View ------------------#

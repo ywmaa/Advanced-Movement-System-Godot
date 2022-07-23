@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bfkejs88xm680"]
+
+[ext_resource type="Script" path="res://addons/PoseWarping/MotionWarping.gd" id="1_if8ak"]
+
+[node name="MotionWarping" type="Node"]
+script = ExtResource("1_if8ak")
