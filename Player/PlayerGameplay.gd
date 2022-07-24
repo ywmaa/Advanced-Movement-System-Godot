@@ -180,7 +180,7 @@ func _input(event):
 	#------------------ Motion Warping test------------------#
 	if event.is_action_pressed("fire"):
 		anim_ref.active = false
-		$MotionWarping.add_sync_position(Vector3(4.762,1.574,-1.709),"kick_target",self)
+		$MotionWarping.add_sync_position(Vector3(4.762,1.574,-1.709),Vector3(0,PI,0),"kick_target",self,mesh_ref)
 		$Character/AnimationPlayer.play("Kick")
 		await get_tree().create_timer(2.6).timeout
 		anim_ref.active = true

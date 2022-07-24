@@ -94,7 +94,7 @@ var movement_data = {
 		
 		velocity_direction = {
 			standing = {
-				walk_speed = 1.75*2,
+				walk_speed = 1.75,
 				run_speed = 3.75,
 				sprint_speed = 6.5,
 				
@@ -303,7 +303,7 @@ func _physics_process(delta):
 	aim_rate_h = abs(($CameraRoot.HObject.rotation.y - previous_aim_rate_h) / delta)
 	previous_aim_rate_h = $CameraRoot.HObject.rotation.y
 	#
-	animation_stride_warping()
+#	animation_stride_warping()
 
 	match movement_state:
 		Global.movement_state.none:
@@ -398,7 +398,7 @@ func animation_stride_warping(): #this is currently being worked on and tested, 
 	
 	
 	skeleton_ref.clear_bones_local_pose_override()
-	var distance_in_each_frame = (get_real_velocity()*Vector3(1,0,1)).rotated(Vector3.UP,mesh_ref.transform.basis.get_euler().y).length() * get_physics_process_delta_time()
+	var distance_in_each_frame = (get_real_velocity()*Vector3(1,0,1)).rotated(Vector3.UP,mesh_ref.transform.basis.get_euler().y).length() 
 	var hips = skeleton_ref.find_bone("Hips")
 	var hips_transform = skeleton_ref.get_bone_pose(hips)
 	var Feet : Array = ["RightFoot","LeftFoot"]
@@ -423,8 +423,9 @@ func animation_stride_warping(): #this is currently being worked on and tested, 
 			return #Failed to get a plane origin/ we are probably in air
 		var scale_origin = Plane(stride_direction,stride_warping_plane_origin).project(bone_transform.origin)
 		var anim_speed = pow(hips_transform.origin.distance_to(bone_transform.origin),2) - pow(hips_transform.origin.y,2) 
-		anim_speed = sqrt(abs(anim_speed)) * get_physics_process_delta_time()
+		anim_speed = sqrt(abs(anim_speed))
 		stride_scale = clampf(distance_in_each_frame/anim_speed,0.0,2.0)
+#		print(stride_scale)
 		var foot_warped_location : Vector3 = scale_origin + (bone_transform.origin - scale_origin) * stride_scale
 		
 		
@@ -433,8 +434,6 @@ func animation_stride_warping(): #this is currently being worked on and tested, 
 		#test
 #		bone_transform.origin = foot_warped_location 
 #		skeleton_ref.set_bone_local_pose_override(bone, bone_transform,1.0,true)
-		
-		
 		
 
 func calc_grounded_rotation_rate():
