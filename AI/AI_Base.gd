@@ -1,4 +1,4 @@
-extends CharacterMovement
+extends CharacterMovementComponent
 class_name AI
 
 
@@ -27,7 +27,7 @@ func _physics_process(delta):
 	match rotation_mode:
 		Global.rotation_mode.velocity_direction:
 			if input_is_moving:
-				ik_look_at(velocity + Vector3(0.0,1.0,0.0))
+				ik_look_at(actual_velocity + Vector3(0.0,1.0,0.0))
 		Global.rotation_mode.looking_direction:
 			ik_look_at(-$CameraRoot/SpringArm3D.transform.basis.z * 2.0 + Vector3(0.0,1.5,0.0))
 		Global.rotation_mode.aiming:

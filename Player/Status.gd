@@ -12,4 +12,4 @@ func _physics_process(_delta):
 	$Control.set_rotation(h_rot)
 #	direction.rotation = atan2(player.direction.z, player.direction.x) 
 	velocity.position = Vector2(player.velocity.x, player.velocity.z) * 10 
-	mesh.rotation = 90-get_node("../Character").rotation.y - player.rotation.y - .5
+	mesh.rotation = 90-get_node("../Armature").rotation.y - player.rotation.y - .5

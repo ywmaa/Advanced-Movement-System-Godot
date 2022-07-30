@@ -1,6 +1,7 @@
 extends CharacterMovementComponent
 
-
+@export var networking_path : NodePath
+@onready var networking = get_node(networking_path) 
 #####################################
 #Controls Settings
 @export var OnePressJump := false
@@ -18,7 +19,7 @@ var previous_rotation_mode
 func _physics_process(delta):
 	super._physics_process(delta)
 #	Debug()
-	if !Global.is_local_authority():
+	if !networking.is_local_authority():
 		if input_is_moving:
 			if gait == Global.gait.sprinting:
 				add_movement_input(direction, current_movement_data.sprint_speed,current_movement_data.sprint_acceleration)
@@ -128,7 +129,7 @@ func _input(event):
 	if event.is_action_pressed("fire"):
 		anim_ref.active = false
 		get_node("../MotionWarping").add_sync_position(Vector3(4.762,1.574,-1.709),Vector3(0,PI,0),"kick_target",self,mesh_ref)
-		get_node("../Character/AnimationPlayer").play("Kick")
+		get_node("../AnimationPlayer").play("Kick")
 		await get_tree().create_timer(2.6).timeout
 		anim_ref.active = true
 		
@@ -136,8 +137,6 @@ func _input(event):
 		
 		
 	#---------------------
-	if Input.is_action_just_pressed("flashlight"):
-		get_node("../Character/Armature/flashlight").visible = !get_node("../Character/Armature/flashlight").visible
 	#------------------ Change Camera View ------------------#
 	if Input.is_action_just_released("switch_camera_view"):
 		if view_changed_recently == false:
@@ -151,12 +150,12 @@ func _input(event):
 		await get_tree().create_timer(0.2).timeout
 		if view_changed_recently == false:
 			camera_root.view_mode = camera_root.view_mode + 1 if camera_root.view_mode < 1 else 0
-			if camera_root.view_mode == Global.view_mode.first_person and Global.is_local_authority():
+			if camera_root.view_mode == Global.view_mode.first_person and networking.is_local_authority():
 				mesh_ref.visible = false
 			else:
 				mesh_ref.visible = true
 			view_changed_recently = true
-	if Global.is_local_authority():
+	if networking.is_local_authority():
 		if event.is_action_pressed("EnableSDFGI"):
 			var postprocess = preload("res://Maps/default_env.tres")
 			postprocess.sdfgi_enabled = not postprocess.sdfgi_enabled

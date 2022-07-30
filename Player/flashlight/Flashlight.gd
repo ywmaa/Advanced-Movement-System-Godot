@@ -19,7 +19,8 @@ func _input(event):
 				play_sound(light_off_sound, -10)
 	else:
 		can_use = true
-	
+
+
 func play_sound(sound, volume):
 	var audio_node = AudioStreamPlayer.new()
 	add_child(audio_node)

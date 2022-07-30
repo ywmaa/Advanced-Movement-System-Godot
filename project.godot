@@ -9,7 +9,7 @@
 config_version=5
 
 _global_script_classes=[{
-"base": "CharacterMovement",
+"base": "CharacterMovementComponent",
 "class": &"AI",
 "language": &"GDScript",
 "path": "res://AI/AI_Base.gd"
@@ -17,17 +17,17 @@ _global_script_classes=[{
 "base": "AnimationTree",
 "class": &"AnimBlend",
 "language": &"GDScript",
-"path": "res://Character/AnimationBlend.gd"
+"path": "res://Components/AnimationBlend.gd"
 }, {
 "base": "Node",
 "class": &"CameraComponent",
 "language": &"GDScript",
-"path": "res://Player/Camera.gd"
+"path": "res://Components/CameraComponent.gd"
 }, {
 "base": "Node",
 "class": &"CharacterMovementComponent",
 "language": &"GDScript",
-"path": "res://Character/CharacterMovement_Base.gd"
+"path": "res://Components/CharacterMovementComponent.gd"
 }, {
 "base": "Node",
 "class": &"Interactable",
@@ -42,7 +42,7 @@ _global_script_classes=[{
 "base": "Node",
 "class": &"PlayerNetworkingComponent",
 "language": &"GDScript",
-"path": "res://Character/player_networking.gd"
+"path": "res://Components/PlayerNetworkingComponent.gd"
 }, {
 "base": "Node",
 "class": &"pose_warping",
@@ -78,10 +78,6 @@ window/size/viewport_height=1080
 window/vsync/vsync_mode=0
 window/size/width=1920
 window/size/height=1080
-
-[editor_plugins]
-
-enabled=PackedStringArray()
 
 [filesystem]
 

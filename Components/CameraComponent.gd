@@ -1,5 +1,9 @@
 extends Node
 class_name CameraComponent
+
+
+@export var networking_path : NodePath
+@onready var networking = get_node(networking_path) 
 #####################################
 #Refrences
 @export var character_movement_component : NodePath
@@ -16,8 +20,8 @@ var CameraHOffset := 0.0
 @export var view_angle : Global.view_angle = Global.view_angle.right_shoulder:
 	get: return view_angle
 	set(Newview_angle):
-		if view_mode == Global.view_mode.first_person:
-			return
+#		if view_mode == Global.view_mode.first_person:
+#			return
 		view_angle = Newview_angle
 		if Camera:
 			match Newview_angle:
@@ -60,7 +64,7 @@ var acceleration_v = 10
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-	Camera.current = Global.is_local_authority()
+	Camera.current = networking.is_local_authority()
 
 func _input(event):
 	if event is InputEventMouseMotion:

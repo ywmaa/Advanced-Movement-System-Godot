@@ -2,7 +2,7 @@ extends RayCast3D
 
 var current_collider
 
-@onready var interaction_label = get_node("../../../../Status/InteractionLabel")
+@onready var interaction_label = get_node("../../../Status/InteractionLabel")
 var collider = get_collider()
 
 func _ready():
