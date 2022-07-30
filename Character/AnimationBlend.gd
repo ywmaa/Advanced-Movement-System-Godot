@@ -1,6 +1,7 @@
 extends AnimationTree
 class_name AnimBlend
-@onready var movement_script := get_parent() # I use this to get variables from main movement script
+@export var movement_script_path : NodePath
+@onready var movement_script := get_node(movement_script_path) # I use this to get variables from main movement script
 
 func _physics_process(delta):
 	
@@ -48,7 +49,7 @@ func _physics_process(delta):
 		#On Stopped
 		if !(Input.is_action_pressed("forward") || Input.is_action_pressed("back") || Input.is_action_pressed("right") || Input.is_action_pressed("left")) and (Input.is_action_just_released("right") || Input.is_action_just_released("back") || Input.is_action_just_released("left") || Input.is_action_just_released("forward")):
 			
-			var seek_time = get_node(anim_player).get_animation(tree_root.get_node("VelocityDirection").get_node("StateMachine").get_node("Stopping").get_node("StopAnim").animation).length - movement_script.pose_warping_instance.CalculateStopTime((movement_script.get_velocity() * Vector3(1.0,0.0,1.0)),movement_script.deacceleration * movement_script.direction)
+			var seek_time = get_node(anim_player).get_animation(tree_root.get_node("VelocityDirection").get_node("StateMachine").get_node("Stopping").get_node("StopAnim").animation).length - movement_script.pose_warping_instance.CalculateStopTime((movement_script.actual_velocity * Vector3(1.0,0.0,1.0)),movement_script.deacceleration * movement_script.direction)
 			set("parameters/VelocityDirection/StateMachine/Stopping/StopSeek/seek_position",seek_time)
 		set("parameters/VelocityDirection/StateMachine/conditions/stop",!movement_script.input_is_moving)
 		

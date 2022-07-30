@@ -16,3 +16,10 @@ enum movement_direction {forward , right, left, backward}
 func map_range_clamped(value,InputMin,InputMax,OutputMin,OutputMax):
 	value = clamp(value,InputMin,InputMax)
 	return ((value - InputMin) / (InputMax - InputMin) * (OutputMax - OutputMin) + OutputMin)
+
+
+func is_local_authority() -> bool:
+	if !multiplayer.has_multiplayer_peer():
+		return true
+	else:
+		return get_multiplayer_authority() == multiplayer.get_unique_id()

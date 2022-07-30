@@ -19,13 +19,13 @@ _global_script_classes=[{
 "language": &"GDScript",
 "path": "res://Character/AnimationBlend.gd"
 }, {
-"base": "Node3D",
-"class": &"CameraRoot",
+"base": "Node",
+"class": &"CameraComponent",
 "language": &"GDScript",
 "path": "res://Player/Camera.gd"
 }, {
-"base": "CharacterBody3D",
-"class": &"CharacterMovement",
+"base": "Node",
+"class": &"CharacterMovementComponent",
 "language": &"GDScript",
 "path": "res://Character/CharacterMovement_Base.gd"
 }, {
@@ -40,6 +40,11 @@ _global_script_classes=[{
 "path": "res://addons/PoseWarping/MotionWarping.gd"
 }, {
 "base": "Node",
+"class": &"PlayerNetworkingComponent",
+"language": &"GDScript",
+"path": "res://Character/player_networking.gd"
+}, {
+"base": "Node",
 "class": &"pose_warping",
 "language": &"GDScript",
 "path": "res://addons/PoseWarping/PoseWarpingFunctions.gd"
@@ -47,10 +52,11 @@ _global_script_classes=[{
 _global_script_class_icons={
 "AI": "",
 "AnimBlend": "",
-"CameraRoot": "",
-"CharacterMovement": "",
+"CameraComponent": "",
+"CharacterMovementComponent": "",
 "Interactable": "",
 "MotionWarping": "",
+"PlayerNetworkingComponent": "",
 "pose_warping": ""
 }
 

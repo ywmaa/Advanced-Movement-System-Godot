@@ -1,18 +1,23 @@
-extends CharacterBody3D
-class_name CharacterMovement
+extends Node
+class_name CharacterMovementComponent
 
 
 #####################################
 @export_category("Refrences")
+@export var character_path : NodePath
 @export var mesh_path : NodePath
 @export var skeleton_path : NodePath
+@export var anim_tree_path : NodePath
+@export var camera_component : NodePath
+@export var collision_shape_path : NodePath
 #Refrences
 @onready var mesh_ref = get_node(mesh_path)
-@onready var anim_ref : AnimBlend = get_node("AnimationTree")
+@onready var anim_ref : AnimBlend = get_node(anim_tree_path)
 @onready var skeleton_ref : Skeleton3D = get_node(skeleton_path)
-@onready var collision_shape_ref = $CollisionShape3D
-@onready var bonker = $CollisionShape3D/HeadBonker
-@onready var camera_root : CameraRoot = $CameraRoot
+@onready var collision_shape_ref = get_node(collision_shape_path)
+#@onready var bonker = $CollisionShape3D/HeadBonker
+@onready var camera_root : CameraComponent = get_node(camera_component)
+@onready var character_node : CharacterBody3D = get_node(character_path)
 #####################################
 
 
@@ -188,7 +193,9 @@ var input_acceleration :Vector3
 
 var vertical_velocity :Vector3 
 
+var actual_velocity :Vector3
 var input_velocity :Vector3
+
 
 var tiltVector : Vector3
 
@@ -232,6 +239,7 @@ var movement_action = Global.movement_action.none
 	set(Newrotation_mode):
 		rotation_mode = Newrotation_mode
 		update_character_movement()
+		
 		
 @export var gait = Global.gait :
 	get: return gait
@@ -291,17 +299,15 @@ func _ready():
 #	update_animations()
 var pose_warping_instance = pose_warping.new()
 func _process(delta):
-	
 	calc_animation_data()
-	
 	var orientation_warping_condition = rotation_mode != Global.rotation_mode.velocity_direction and movement_state == Global.movement_state.grounded and movement_action == Global.movement_action.none and gait != Global.gait.sprinting and input_is_moving
-	pose_warping_instance.orientation_warping( orientation_warping_condition,$CameraRoot.HObject,animation_velocity,self,skeleton_ref,"Hips",["Spine","Spine1","Spine2"],0.0,delta)
+	pose_warping_instance.orientation_warping( orientation_warping_condition,camera_root.HObject,animation_velocity,skeleton_ref,"Hips",["Spine","Spine1","Spine2"],0.0,delta)
 
 func _physics_process(delta):
 	#Debug()
 	#
-	aim_rate_h = abs(($CameraRoot.HObject.rotation.y - previous_aim_rate_h) / delta)
-	previous_aim_rate_h = $CameraRoot.HObject.rotation.y
+	aim_rate_h = abs((camera_root.HObject.rotation.y - previous_aim_rate_h) / delta)
+	previous_aim_rate_h = camera_root.HObject.rotation.y
 	#
 #	animation_stride_warping()
 
@@ -314,15 +320,15 @@ func _physics_process(delta):
 				Global.movement_action.none:
 					match rotation_mode:
 							Global.rotation_mode.velocity_direction: 
-								if (is_moving and input_is_moving) or (get_velocity() * Vector3(1.0,0.0,1.0)).length() > 0.5:
-									smooth_character_rotation(velocity,calc_grounded_rotation_rate(),delta)
+								if (is_moving and input_is_moving) or (actual_velocity * Vector3(1.0,0.0,1.0)).length() > 0.5:
+									smooth_character_rotation(actual_velocity,calc_grounded_rotation_rate(),delta)
 							Global.rotation_mode.looking_direction:
-								if (is_moving and input_is_moving) or (get_velocity() * Vector3(1.0,0.0,1.0)).length() > 0.5:
-									smooth_character_rotation(-$CameraRoot.HObject.transform.basis.z if gait != Global.gait.sprinting else velocity,calc_grounded_rotation_rate(),delta)
+								if (is_moving and input_is_moving) or (actual_velocity * Vector3(1.0,0.0,1.0)).length() > 0.5:
+									smooth_character_rotation(-camera_root.HObject.transform.basis.z if gait != Global.gait.sprinting else actual_velocity,calc_grounded_rotation_rate(),delta)
 								rotate_in_place_check()
 							Global.rotation_mode.aiming:
-								if (is_moving and input_is_moving) or (get_velocity() * Vector3(1.0,0.0,1.0)).length() > 0.5:
-									smooth_character_rotation(-$CameraRoot.HObject.transform.basis.z,calc_grounded_rotation_rate(),delta)
+								if (is_moving and input_is_moving) or (actual_velocity * Vector3(1.0,0.0,1.0)).length() > 0.5:
+									smooth_character_rotation(-camera_root.HObject.transform.basis.z,calc_grounded_rotation_rate(),delta)
 								rotate_in_place_check()
 				Global.movement_action.rolling:
 					if input_is_moving == true:
@@ -332,11 +338,11 @@ func _physics_process(delta):
 			#------------------ Rotate Character Mesh In Air ------------------#
 			match rotation_mode:
 					Global.rotation_mode.velocity_direction: 
-						smooth_character_rotation(velocity if (get_velocity() * Vector3(1.0,0.0,1.0)).length() > 1.0 else  -$CameraRoot.HObject.transform.basis.z,5.0,delta)
+						smooth_character_rotation(actual_velocity if (actual_velocity * Vector3(1.0,0.0,1.0)).length() > 1.0 else  -camera_root.HObject.transform.basis.z,5.0,delta)
 					Global.rotation_mode.looking_direction:
-						smooth_character_rotation(velocity if (get_velocity() * Vector3(1.0,0.0,1.0)).length() > 1.0 else  -$CameraRoot.HObject.transform.basis.z,5.0,delta)
+						smooth_character_rotation(actual_velocity if (actual_velocity * Vector3(1.0,0.0,1.0)).length() > 1.0 else  -camera_root.HObject.transform.basis.z,5.0,delta)
 					Global.rotation_mode.aiming:
-						smooth_character_rotation(-$CameraRoot.HObject.transform.basis.z ,15.0,delta)
+						smooth_character_rotation(-camera_root.HObject.transform.basis.z ,15.0,delta)
 			#------------------ Mantle Check ------------------#
 			if input_is_moving == true:
 				mantle_check()
@@ -347,35 +353,43 @@ func _physics_process(delta):
 	
 
 	#------------------ Crouch ------------------#
-	head_bonked = bonker.is_colliding()
+	var direct_state = character_node.get_world_3d().direct_space_state
+	var ray_info : PhysicsRayQueryParameters3D = PhysicsRayQueryParameters3D.new()
+	ray_info.exclude = [collision_shape_ref]
+	ray_info.from = collision_shape_ref.global_transform.origin + Vector3(0,collision_shape_ref.shape.height/2,0)
+	ray_info.to = ray_info.from + Vector3(0, 0.2, 0)
+	var collision = direct_state.intersect_ray(ray_info)
+	if collision:
+		head_bonked = true
+	else:
+		head_bonked = false
+	
 	if stance == Global.stance.crouching:
-		bonker.transform.origin.y -= crouch_switch_speed * delta
 		collision_shape_ref.shape.height -= crouch_switch_speed * delta /2
 		mesh_ref.transform.origin.y += crouch_switch_speed * delta /1.5
 	elif stance == Global.stance.standing and not head_bonked:
-		bonker.transform.origin.y += crouch_switch_speed * delta 
 		collision_shape_ref.shape.height += crouch_switch_speed * delta /2
 		mesh_ref.transform.origin.y -= crouch_switch_speed * delta /1.5
-		
-	bonker.transform.origin.y = clamp(bonker.transform.origin.y,0.5,0.1)
+	elif head_bonked:
+		pass
 	mesh_ref.transform.origin.y = clamp(mesh_ref.transform.origin.y,0.0,0.5)
 	collision_shape_ref.shape.height = clamp(collision_shape_ref.shape.height,crouch_height,default_height)
 	
 
 	#------------------ Gravity ------------------#
 	if is_flying == false:
-		velocity.y =  lerp(velocity.y,vertical_velocity.y - get_floor_normal().y,delta * gravity)
-		move_and_slide()
+		character_node.velocity.y =  lerp(character_node.velocity.y,vertical_velocity.y - character_node.get_floor_normal().y,delta * gravity)
+		character_node.move_and_slide()
 		jump_magnitude
-	if is_on_floor() and is_flying == false:
+	if character_node.is_on_floor() and is_flying == false:
 		movement_state = Global.movement_state.grounded 
-		vertical_velocity = -get_floor_normal() * 10
+		vertical_velocity = -character_node.get_floor_normal() * 10
 	else:
 		movement_state = Global.movement_state.in_air
 		vertical_velocity += Vector3.DOWN * gravity * delta
 #		if vertical_velocity < -20:
 #			roll()
-	if is_on_ceiling():
+	if character_node.is_on_ceiling():
 		vertical_velocity.y = 0
 
 
@@ -398,7 +412,7 @@ func animation_stride_warping(): #this is currently being worked on and tested, 
 	
 	
 	skeleton_ref.clear_bones_local_pose_override()
-	var distance_in_each_frame = (get_real_velocity()*Vector3(1,0,1)).rotated(Vector3.UP,mesh_ref.transform.basis.get_euler().y).length() 
+	var distance_in_each_frame = (character_node.get_real_velocity()*Vector3(1,0,1)).rotated(Vector3.UP,mesh_ref.transform.basis.get_euler().y).length() 
 	var hips = skeleton_ref.find_bone("Hips")
 	var hips_transform = skeleton_ref.get_bone_pose(hips)
 	var Feet : Array = ["RightFoot","LeftFoot"]
@@ -417,7 +431,7 @@ func animation_stride_warping(): #this is currently being worked on and tested, 
 		
 		#Calculate
 		var stride_direction : Vector3 = Vector3.FORWARD
-		var stride_warping_plane_origin = Plane(get_floor_normal(),bone_transform.origin).intersects_ray(thigh_transform.origin,Vector3.DOWN)
+		var stride_warping_plane_origin = Plane(character_node.get_floor_normal(),bone_transform.origin).intersects_ray(thigh_transform.origin,Vector3.DOWN)
 		
 		if stride_warping_plane_origin == null:
 			return #Failed to get a plane origin/ we are probably in air
@@ -441,11 +455,11 @@ func calc_grounded_rotation_rate():
 	if input_is_moving == true:
 		match gait:
 			Global.gait.walking:
-				return lerp(current_movement_data.idle_rotation_rate,current_movement_data.walk_rotation_rate, Global.map_range_clamped((get_velocity() * Vector3(1.0,0.0,1.0)).length(),0.0,current_movement_data.walk_speed,0.0,1.0)) * clamp(aim_rate_h,1.0,3.0)
+				return lerp(current_movement_data.idle_rotation_rate,current_movement_data.walk_rotation_rate, Global.map_range_clamped((actual_velocity * Vector3(1.0,0.0,1.0)).length(),0.0,current_movement_data.walk_speed,0.0,1.0)) * clamp(aim_rate_h,1.0,3.0)
 			Global.gait.running:
-				return lerp(current_movement_data.walk_rotation_rate,current_movement_data.run_rotation_rate, Global.map_range_clamped((get_velocity() * Vector3(1.0,0.0,1.0)).length(),current_movement_data.walk_speed,current_movement_data.run_speed,1.0,2.0)) * clamp(aim_rate_h,1.0,3.0)
+				return lerp(current_movement_data.walk_rotation_rate,current_movement_data.run_rotation_rate, Global.map_range_clamped((actual_velocity * Vector3(1.0,0.0,1.0)).length(),current_movement_data.walk_speed,current_movement_data.run_speed,1.0,2.0)) * clamp(aim_rate_h,1.0,3.0)
 			Global.gait.sprinting:
-				return lerp(current_movement_data.run_rotation_rate,current_movement_data.sprint_rotation_rate,  Global.map_range_clamped((get_velocity() * Vector3(1.0,0.0,1.0)).length(),current_movement_data.run_speed,current_movement_data.sprint_speed,2.0,3.0)) * clamp(aim_rate_h,1.0,2.5)
+				return lerp(current_movement_data.run_rotation_rate,current_movement_data.sprint_rotation_rate,  Global.map_range_clamped((actual_velocity * Vector3(1.0,0.0,1.0)).length(),current_movement_data.run_speed,current_movement_data.sprint_speed,2.0,3.0)) * clamp(aim_rate_h,1.0,2.5)
 	else:
 		return current_movement_data.idle_rotation_rate * clamp(aim_rate_h,1.0,3.0)
 
@@ -454,14 +468,14 @@ func calc_grounded_rotation_rate():
 func rotate_in_place_check():
 	is_rotating_in_place = false
 	if !input_is_moving:
-		var CameraAngle = Quaternion(Vector3(0,$CameraRoot.HObject.rotation.y,0)) 
+		var CameraAngle = Quaternion(Vector3(0,camera_root.HObject.rotation.y,0)) 
 		var MeshAngle = Quaternion(Vector3(0,mesh_ref.rotation.y,0)) 
 		rotation_difference_camera_mesh = rad2deg(MeshAngle.angle_to(CameraAngle) - PI)
 		if (CameraAngle.dot(MeshAngle)) > 0:
 			rotation_difference_camera_mesh *= -1
 		if floor(abs(rotation_difference_camera_mesh)) > rotation_in_place_min_angle:
 			is_rotating_in_place = true
-			smooth_character_rotation(-$CameraRoot.HObject.transform.basis.z,calc_grounded_rotation_rate(),get_physics_process_delta_time()) 
+			smooth_character_rotation(-camera_root.HObject.transform.basis.z,calc_grounded_rotation_rate(),get_physics_process_delta_time()) 
 	
 
 func ik_look_at(position: Vector3):
@@ -473,19 +487,19 @@ func ik_look_at(position: Vector3):
 var PrevVelocity :Vector3
 func add_movement_input(direction: Vector3, Speed: float , Acceleration: float) -> void:
 	if is_flying == false:
-		velocity.x = lerp(velocity.x, direction.x * Speed, Acceleration * get_physics_process_delta_time())
-		velocity.z = lerp(velocity.z, direction.z * Speed, Acceleration * get_physics_process_delta_time())
+		character_node.velocity.x = lerp(character_node.velocity.x, direction.x * Speed, Acceleration * get_physics_process_delta_time())
+		character_node.velocity.z = lerp(character_node.velocity.z, direction.z * Speed, Acceleration * get_physics_process_delta_time())
 	else:
-		set_velocity(get_velocity().lerp(direction * Speed, Acceleration * get_physics_process_delta_time()))
-		move_and_slide()
+		character_node.set_velocity(character_node.get_velocity().lerp(direction * Speed, Acceleration * get_physics_process_delta_time()))
+		character_node.move_and_slide()
 	input_velocity = Speed * direction
 	input_is_moving = Speed > 0.0
 	input_acceleration = Acceleration * direction
 	#
-	actual_acceleration = (velocity - PrevVelocity)  / (Acceleration * get_physics_process_delta_time())
-	PrevVelocity = velocity
+	actual_acceleration = (character_node.velocity - PrevVelocity)  / (Acceleration * get_physics_process_delta_time())
+	PrevVelocity = character_node.velocity
 	#
-	
+	actual_velocity = character_node.velocity
 	#tiltCharacterMesh
 	if tilt == true:
 		var MovementDirectionRelativeToCamera = input_velocity.normalized().rotated(Vector3.UP,-camera_root.HObject.transform.basis.get_euler().y)
@@ -500,8 +514,8 @@ func add_movement_input(direction: Vector3, Speed: float , Acceleration: float) 
 
 
 func calc_animation_data(): # it is used to modify the animation data to get the wanted animation result
-	animation_is_moving_backward_relative_to_camera = false if -velocity.rotated(Vector3.UP,-camera_root.HObject.transform.basis.get_euler().y).z >= -0.1 else true
-	animation_velocity = velocity
+	animation_is_moving_backward_relative_to_camera = false if -actual_velocity.rotated(Vector3.UP,-camera_root.HObject.transform.basis.get_euler().y).z >= -0.1 else true
+	animation_velocity = actual_velocity
 #	a method to make the character' anim walk backward when moving left
 #	if is_equal_approx(input_velocity.normalized().rotated(Vector3.UP,-$CameraRoot.HObject.transform.basis.get_euler().y).x,-1.0):
 #		animation_velocity = velocity * -1
@@ -512,7 +526,8 @@ func mantle_check():
 	pass
 
 func jump() -> void:
-	vertical_velocity = Vector3.UP * jump_magnitude
+	if character_node.is_on_floor() and not head_bonked:
+		vertical_velocity = Vector3.UP * jump_magnitude
 
 
 

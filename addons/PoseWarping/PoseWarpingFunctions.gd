@@ -11,7 +11,7 @@ func CalculateStopTime(Velocity:Vector3,deacceleration:Vector3):
 
 var previous_direction : float
 var orientation_direction : float
-func orientation_warping(enabled:bool,CameraObject, Velocity:Vector3, CharacterRootNode, skeleton_ref, Hip = "Hips", Spines := ["Spine","Spine1","Spine2"], Offset := 0.0, delta = 1.0, turn_rate = 10.0):
+func orientation_warping(enabled:bool,CameraObject, Velocity:Vector3, skeleton_ref, Hip = "Hips", Spines := ["Spine","Spine1","Spine2"], Offset := 0.0, delta = 1.0, turn_rate = 10.0):
 	
 	skeleton_ref.clear_bones_global_pose_override()
 	if is_equal_approx(Velocity.length(),0.0) or !enabled:
@@ -40,14 +40,14 @@ func orientation_warping(enabled:bool,CameraObject, Velocity:Vector3, CharacterR
 	
 	orientation_direction = clampf(lerp_angle(previous_direction,orientation_direction,delta*turn_rate),-PI/2, PI/2)
 	#Orient bones to face the forward direction
-	set_bone_y_rotation(skeleton_ref,Hip,orientation_direction,CharacterRootNode)
+	set_bone_y_rotation(skeleton_ref,Hip,orientation_direction)
 	for bone in Spines:
-		set_bone_y_rotation(skeleton_ref,bone,-orientation_direction/(Spines.size()+Offset),CharacterRootNode)
+		set_bone_y_rotation(skeleton_ref,bone,-orientation_direction/(Spines.size()+Offset))
 	
-func set_bone_y_rotation(skeleton,bone_name, y_rot,CharacterRootNode):
+func set_bone_y_rotation(skeleton,bone_name, y_rot):
 	var bone = skeleton.find_bone(bone_name)
 	var bone_transform : Transform3D = skeleton.get_bone_global_pose_no_override(bone)
-	var rotate_amount = y_rot - CharacterRootNode.global_transform.basis.get_euler().y
+	var rotate_amount = y_rot 
 	bone_transform = bone_transform.rotated(Vector3(0,1,0), rotate_amount)
 	skeleton.set_bone_global_pose_override(bone, bone_transform,1.0,true)
 	
