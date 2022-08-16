@@ -55,8 +55,8 @@ var CameraHOffset := 0.0
 
 
 @export var mouse_sensitvity : float = 0.01
-var camera_h = 0
-var camera_v = 0
+var camera_h : float = 0
+var camera_v : float = 0
 @export var camera_vertical_min = -90
 @export var camera_vertical_max =90
 var acceleration_h = 10
