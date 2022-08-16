@@ -305,15 +305,15 @@ modifications/0 = SubResource("SkeletonModification3DStackHolder_c7scx")
 
 [node name="CharacterMovementComponent" parent="." index="1"]
 script = ExtResource("2_23qw2")
+networking_path = NodePath("../Networking")
+OnePressJump = true
+UsingSprintToggle = false
+UsingCrouchToggle = true
 tilt_power = 0.0
 rotation_mode = 0
 gait = 0
 stance = 0
 overlay_state = 0
-networking_path = NodePath("../Networking")
-OnePressJump = true
-UsingSprintToggle = false
-UsingCrouchToggle = true
 
 [node name="CameraComponent" parent="." index="2"]
 networking_path = NodePath("../Networking")

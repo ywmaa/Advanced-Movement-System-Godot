@@ -108,7 +108,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.91311, 7.03314, 0)
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("res://Player/Player.tscn")
 spawn_path = NodePath("../PlayerSpawnLocation")
-auto_spawn = true
 
 [node name="light" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.84419, 1.95787, 16.7421)
