@@ -234,19 +234,19 @@ var animation_velocity : Vector3
 var movement_state = Global.movement_state.grounded
 var movement_action = Global.movement_action.none
 @export_category("States")
-@export var rotation_mode = Global.rotation_mode :
+@export var rotation_mode : Global.rotation_mode = Global.rotation_mode.velocity_direction :
 	get: return rotation_mode
 	set(Newrotation_mode):
 		rotation_mode = Newrotation_mode
 		update_character_movement()
 		
 		
-@export var gait = Global.gait :
+@export var gait : Global.gait = Global.gait.walking :
 	get: return gait
 	set(Newgait):
 		gait = Newgait
 		update_character_movement()
-@export var stance = Global.stance
+@export var stance : Global.stance = Global.stance.standing
 @export var overlay_state = Global.overlay_state
 
 @export_category("Animations")
@@ -470,7 +470,8 @@ func rotate_in_place_check():
 	if !input_is_moving:
 		var CameraAngle = Quaternion(Vector3(0,camera_root.HObject.rotation.y,0)) 
 		var MeshAngle = Quaternion(Vector3(0,mesh_ref.rotation.y,0)) 
-		rotation_difference_camera_mesh = rad2deg(MeshAngle.angle_to(CameraAngle) - PI)
+		
+		rotation_difference_camera_mesh = rad_to_deg(MeshAngle.angle_to(CameraAngle) - PI)
 		if (CameraAngle.dot(MeshAngle)) > 0:
 			rotation_difference_camera_mesh *= -1
 		if floor(abs(rotation_difference_camera_mesh)) > rotation_in_place_min_angle:

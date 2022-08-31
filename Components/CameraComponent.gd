@@ -73,7 +73,7 @@ func _input(event):
 		
 
 func _physics_process(delta):
-	camera_v = clamp(camera_v,deg2rad(camera_vertical_min),deg2rad(camera_vertical_max))
+	camera_v = clamp(camera_v,deg_to_rad(camera_vertical_min),deg_to_rad(camera_vertical_max))
 	HObject.rotation.y = lerp(HObject.rotation.y,camera_h,delta * acceleration_h)
 	VObject.rotation.x = lerp(VObject.rotation.x,camera_v,delta * acceleration_v)
 	

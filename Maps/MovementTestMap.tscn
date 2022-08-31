@@ -28,6 +28,7 @@ albedo_color = Color(1, 0.223529, 0.278431, 1)
 script = ExtResource("1_rvsng")
 
 [node name="ListenServer" type="Button" parent="."]
+anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -42,6 +43,7 @@ text = "Listen Server
 "
 
 [node name="DServer" type="Button" parent="."]
+anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -56,6 +58,7 @@ text = "Dedicated Server
 "
 
 [node name="Client" type="Button" parent="."]
+anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -78,6 +81,7 @@ metadata/_edit_layout_mode = 0
 metadata/_edit_use_custom_anchors = false
 
 [node name="Singleplayer" type="Button" parent="."]
+anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -92,6 +96,7 @@ text = "Singleplayer
 "
 
 [node name="MainMenu" type="Button" parent="."]
+anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
@@ -279,7 +284,7 @@ use_collision = true
 size = Vector3(0.392448, 0.135761, 14.107)
 material = ExtResource("3_27oba")
 
-[node name="RigidDynamicBody3D" type="RigidDynamicBody3D" parent="."]
+[node name="RigidDynamicBody3D" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.53539, 3.76665, 13.5922)
 gravity_scale = -0.07
 
@@ -291,7 +296,7 @@ mesh = SubResource("BoxMesh_jwhxk")
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
 shape = SubResource("ConvexPolygonShape3D_5twjj")
 
-[node name="RigidDynamicBody3D2" type="RigidDynamicBody3D" parent="."]
+[node name="RigidDynamicBody3D2" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.11323, 5.04718, 13.5922)
 mass = 0.01
 
@@ -303,7 +308,7 @@ mesh = SubResource("BoxMesh_jwhxk")
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
 shape = SubResource("ConvexPolygonShape3D_5twjj")
 
-[node name="RigidDynamicBody3D3" type="RigidDynamicBody3D" parent="."]
+[node name="RigidDynamicBody3D3" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.89079, 5.04718, 13.7933)
 mass = 0.01
 
@@ -315,7 +320,7 @@ mesh = SubResource("BoxMesh_jwhxk")
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
 shape = SubResource("ConvexPolygonShape3D_5twjj")
 
-[node name="RigidDynamicBody3D4" type="RigidDynamicBody3D" parent="."]
+[node name="RigidDynamicBody3D4" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.51824, 6.10535, 13.6351)
 mass = 0.01
 
@@ -327,7 +332,7 @@ mesh = SubResource("BoxMesh_jwhxk")
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
 shape = SubResource("ConvexPolygonShape3D_5twjj")
 
-[node name="RigidDynamicBody3D5" type="RigidDynamicBody3D" parent="."]
+[node name="RigidDynamicBody3D5" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.85594, 6.10535, 13.6351)
 mass = 0.01
 
