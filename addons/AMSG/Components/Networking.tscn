@@ -1,0 +1,53 @@
+[gd_scene load_steps=3 format=3 uid="uid://cegbfvlakd2rw"]
+
+[ext_resource type="Script" path="res://addons/AMSG/Components/PlayerNetworkingComponent.gd" id="1_88p3o"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_rxj2q"]
+properties/0/path = NodePath(":sync_camera_h_transform")
+properties/0/spawn = true
+properties/0/sync = true
+properties/1/path = NodePath(":sync_camera_v_transform")
+properties/1/spawn = true
+properties/1/sync = true
+properties/2/path = NodePath(":sync_view_mode")
+properties/2/spawn = true
+properties/2/sync = true
+properties/3/path = NodePath(":sync_CameraHOffset")
+properties/3/spawn = true
+properties/3/sync = true
+properties/4/path = NodePath(":sync_position")
+properties/4/spawn = true
+properties/4/sync = true
+properties/5/path = NodePath(":sync_mesh_rotation")
+properties/5/spawn = true
+properties/5/sync = true
+properties/6/path = NodePath(":sync_direction")
+properties/6/spawn = true
+properties/6/sync = true
+properties/7/path = NodePath(":sync_input_is_moving")
+properties/7/spawn = true
+properties/7/sync = true
+properties/8/path = NodePath(":sync_gait")
+properties/8/spawn = true
+properties/8/sync = true
+properties/9/path = NodePath(":sync_rotation_mode")
+properties/9/spawn = true
+properties/9/sync = true
+properties/10/path = NodePath(":sync_stance")
+properties/10/spawn = true
+properties/10/sync = true
+properties/11/path = NodePath(":sync_movement_state")
+properties/11/spawn = true
+properties/11/sync = true
+properties/12/path = NodePath(":sync_movement_action")
+properties/12/spawn = true
+properties/12/sync = true
+properties/13/path = NodePath(":sync_velocity")
+properties/13/spawn = true
+properties/13/sync = true
+
+[node name="Networking" type="Node"]
+script = ExtResource("1_88p3o")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_rxj2q")

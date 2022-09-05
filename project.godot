@@ -12,27 +12,27 @@ _global_script_classes=[{
 "base": "CharacterMovementComponent",
 "class": &"AI",
 "language": &"GDScript",
-"path": "res://AI/AI_Base.gd"
+"path": "res://addons/AMSG/AI/AI_Base.gd"
 }, {
 "base": "AnimationTree",
 "class": &"AnimBlend",
 "language": &"GDScript",
-"path": "res://Components/AnimationBlend.gd"
+"path": "res://addons/AMSG/Components/AnimationBlend.gd"
 }, {
 "base": "Node",
 "class": &"CameraComponent",
 "language": &"GDScript",
-"path": "res://Components/CameraComponent.gd"
+"path": "res://addons/AMSG/Components/CameraComponent.gd"
 }, {
 "base": "Node",
 "class": &"CharacterMovementComponent",
 "language": &"GDScript",
-"path": "res://Components/CharacterMovementComponent.gd"
+"path": "res://addons/AMSG/Components/CharacterMovementComponent.gd"
 }, {
 "base": "Node",
 "class": &"Interactable",
 "language": &"GDScript",
-"path": "res://Interactable/Interactable.gd"
+"path": "res://addons/AMSG/Interactable/Interactable.gd"
 }, {
 "base": "Node",
 "class": &"MotionWarping",
@@ -42,7 +42,7 @@ _global_script_classes=[{
 "base": "Node",
 "class": &"PlayerNetworkingComponent",
 "language": &"GDScript",
-"path": "res://Components/PlayerNetworkingComponent.gd"
+"path": "res://addons/AMSG/Components/PlayerNetworkingComponent.gd"
 }, {
 "base": "Node",
 "class": &"pose_warping",
@@ -63,13 +63,13 @@ _global_script_class_icons={
 [application]
 
 config/name="AMSG"
-run/main_scene="res://Maps/MovementTestMap.tscn"
+run/main_scene="res://AMSG_Examples/Maps/MovementTestMap.tscn"
 config/features=PackedStringArray("4.0")
 config/icon="res://icon.png"
 
 [autoload]
 
-Global="*res://Global.gd"
+Global="*res://addons/AMSG/Global.gd"
 
 [display]
 
@@ -78,6 +78,10 @@ window/size/viewport_height=1080
 window/vsync/vsync_mode=0
 window/size/width=1920
 window/size/height=1080
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/AMSG/plugin.cfg")
 
 [filesystem]
 
@@ -173,4 +177,3 @@ scaling_3d/mode=1
 scaling_3d/fsr_sharpness=2.0
 anti_aliasing/quality/use_taa=true
 occlusion_culling/use_occlusion_culling=true
-environment/defaults/default_environment="res://Maps/default_env.tres"

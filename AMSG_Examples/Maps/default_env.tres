@@ -1,0 +1,29 @@
+[gd_resource type="Environment" load_steps=4 format=3 uid="uid://cfsln575lgopi"]
+
+[ext_resource type="Texture2D" uid="uid://dcd3eiacliu6f" path="res://AMSG_Examples/Lut.JPG" id="1_5tnx1"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_8pwhp"]
+sky_top_color = Color(0.576471, 0.690196, 0.733333, 1)
+sun_angle_max = 120.35
+
+[sub_resource type="Sky" id="1"]
+sky_material = SubResource("ProceduralSkyMaterial_8pwhp")
+
+[resource]
+background_mode = 2
+sky = SubResource("1")
+tonemap_mode = 3
+auto_exposure_enabled = true
+auto_exposure_min_luma = 0.31
+sdfgi_use_occlusion = true
+glow_levels/3 = 16.0
+glow_levels/5 = 16.0
+glow_normalized = true
+glow_blend_mode = 0
+glow_hdr_threshold = 0.5
+glow_map = ExtResource("1_5tnx1")
+fog_enabled = true
+fog_light_color = Color(0.27451, 0.423529, 0.607843, 1)
+fog_density = 0.004
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.007

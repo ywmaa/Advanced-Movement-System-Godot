@@ -1,0 +1,43 @@
+[gd_resource type="SkeletonModificationStack3D" load_steps=9 format=3 uid="uid://yvsq4x1ber8r"]
+
+[sub_resource type="SkeletonModification3DLookAt" id="SkeletonModification3DLookAt_a3lcm"]
+bone_name = "Spine2"
+bone_index = 3
+target_nodepath = NodePath("../../LookAtObject")
+additional_rotation = Vector3(90, 180, 0)
+
+[sub_resource type="SkeletonModificationStack3D" id="SkeletonModificationStack3D_5lshw"]
+enabled = true
+modification_count = 1
+modifications/0 = SubResource("SkeletonModification3DLookAt_a3lcm")
+
+[sub_resource type="SkeletonModification3DStackHolder" id="SkeletonModification3DStackHolder_gp1fd"]
+held_modification_stack = SubResource("SkeletonModificationStack3D_5lshw")
+
+[sub_resource type="SkeletonModification3DLookAt" id="SkeletonModification3DLookAt_vsnnr"]
+bone_name = "Head"
+bone_index = 5
+target_nodepath = NodePath("../../LookAtObject")
+additional_rotation = Vector3(90, 180, 0)
+
+[sub_resource type="SkeletonModificationStack3D" id="SkeletonModificationStack3D_ckejl"]
+enabled = true
+modification_count = 1
+modifications/0 = SubResource("SkeletonModification3DLookAt_vsnnr")
+
+[sub_resource type="SkeletonModification3DStackHolder" id="SkeletonModification3DStackHolder_3kai3"]
+held_modification_stack = SubResource("SkeletonModificationStack3D_ckejl")
+
+[sub_resource type="SkeletonModificationStack3D" id="SkeletonModificationStack3D_nbt4i"]
+enabled = true
+modification_count = 2
+modifications/0 = SubResource("SkeletonModification3DStackHolder_gp1fd")
+modifications/1 = SubResource("SkeletonModification3DStackHolder_3kai3")
+
+[sub_resource type="SkeletonModification3DStackHolder" id="SkeletonModification3DStackHolder_c7scx"]
+held_modification_stack = SubResource("SkeletonModificationStack3D_nbt4i")
+
+[resource]
+resource_local_to_scene = true
+modification_count = 1
+modifications/0 = SubResource("SkeletonModification3DStackHolder_c7scx")
