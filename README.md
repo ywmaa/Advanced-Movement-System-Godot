@@ -6,10 +6,13 @@ you can get Godot 4 Alpha 15 here : https://godotengine.org/article/dev-snapshot
 
 Note : the materials for the character are broken for some reason in this alpha version
 # Installation
+
+## Method 1 (adding to existing project)
 1- copy the files to your Godot project 
 
 2- copy and paste the following into your project's "project.godot" file 
 
+```
 [input]
 
 forward={
@@ -87,6 +90,14 @@ fire={
 "events": [Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"store_command":true,"alt_pressed":false,"shift_pressed":false,"meta_pressed":false,"command_pressed":false,"button_mask":0,"position":Vector2(0, 0),"global_position":Vector2(0, 0),"factor":1.0,"button_index":1,"pressed":false,"double_click":false,"script":null)
 ]
 }
+```
+
+3- autoload the "globals.gd" GDscript
+
+## Method 2 (creating a new project using the amsg files)
+
+just remove ".amsg" from the file "project.godot.amsg"
+open the project and done.
 
 # This project is a template for creating advanced Third/First Person movement in [GODOT](https://github.com/godotengine/godot)
 You may use it in any other camera type like RTS, but you will need to tweak it yourself.
