@@ -4,9 +4,6 @@ The Project is made using [Godot](https://github.com/godotengine/godot) 4 (alpha
 
 you can get Godot 4 Alpha 15 here : https://godotengine.org/article/dev-snapshot-godot-4-0-alpha-15
 
-Note : the materials for the character are broken for some reason in this alpha version
-# Installation
-
 ## Method 1 (adding to existing project)
 1- copy the files to your Godot project 
 
@@ -92,7 +89,7 @@ fire={
 }
 ```
 
-3- autoload the "globals.gd" GDscript
+3- autoload the "Global.gd" GDscript, you can find it in "res://addons/AMSG/Global.gd"
 
 ## Method 2 (creating a new project using the amsg files)
 
