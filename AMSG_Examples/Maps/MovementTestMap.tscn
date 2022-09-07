@@ -78,7 +78,6 @@ text = "Client
 "
 
 [node name="IP_address" type="TextEdit" parent="Client"]
-layout_mode = 0
 offset_top = 48.0
 offset_right = 144.0
 offset_bottom = 100.0
