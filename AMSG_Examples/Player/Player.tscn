@@ -401,7 +401,7 @@ grow_vertical = 2
 script = ExtResource("6_8h4hk")
 
 [node name="Control" type="Control" parent="Status" index="0"]
-layout_mode = 1
+layout_mode = 3
 anchors_preset = 0
 offset_left = 192.847
 offset_top = 162.692
@@ -428,7 +428,6 @@ texture = ExtResource("8_t071y")
 offset = Vector2(112, 0)
 
 [node name="Label" type="Label" parent="Status" index="1"]
-layout_mode = 0
 offset_left = 500.618
 offset_top = 234.989
 offset_right = 540.618
@@ -436,7 +435,6 @@ offset_bottom = 248.989
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 
 [node name="Label2" type="Label" parent="Status" index="2"]
-layout_mode = 0
 offset_left = 500.618
 offset_top = 263.497
 offset_right = 540.618
@@ -444,7 +442,6 @@ offset_bottom = 277.497
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 
 [node name="Label3" type="Label" parent="Status" index="3"]
-layout_mode = 0
 offset_left = 500.618
 offset_top = 291.052
 offset_right = 540.618
@@ -452,7 +449,6 @@ offset_bottom = 305.052
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 
 [node name="Label4" type="Label" parent="Status" index="4"]
-layout_mode = 0
 offset_left = 500.618
 offset_top = 319.561
 offset_right = 540.618
@@ -460,7 +456,6 @@ offset_bottom = 333.561
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 
 [node name="InteractionLabel" type="Label" parent="Status" index="5"]
-layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
@@ -475,7 +470,6 @@ vertical_alignment = 1
 
 [node name="RichTextLabel" type="RichTextLabel" parent="Status" index="6"]
 visible = false
-layout_mode = 0
 offset_left = 29.0
 offset_top = 354.0
 offset_right = 400.0

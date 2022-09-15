@@ -231,7 +231,7 @@ nodes/crouch/position = Vector2(100, 180)
 nodes/output/position = Vector2(280, 180)
 node_connections = [&"output", 0, &"crouch"]
 
-[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_68khl"]
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_866fg"]
 resource_local_to_scene = true
 graph_offset = Vector2(120, 1366)
 nodes/AnimTurnLeft/node = SubResource("AnimationNodeAnimation_twcy5")
@@ -251,11 +251,11 @@ nodes/VelocityDirection/position = Vector2(680, 1400)
 nodes/output/position = Vector2(1540, 1400)
 node_connections = [&"output", 0, &"InAir", &"InAir", 0, &"Turn", &"InAir", 1, &"InAirState", &"RightOrLeft", 0, &"AnimTurnLeft", &"RightOrLeft", 1, &"AnimTurnRight", &"Turn", 0, &"VelocityDirection", &"Turn", 1, &"RightOrLeft"]
 
-[sub_resource type="AnimationNodeStateMachinePlayback" id="AnimationNodeStateMachinePlayback_mnbwj"]
+[sub_resource type="AnimationNodeStateMachinePlayback" id="AnimationNodeStateMachinePlayback_vfugr"]
 
-[sub_resource type="AnimationNodeStateMachinePlayback" id="AnimationNodeStateMachinePlayback_l356x"]
+[sub_resource type="AnimationNodeStateMachinePlayback" id="AnimationNodeStateMachinePlayback_mhs1f"]
 
-[sub_resource type="AnimationNodeStateMachinePlayback" id="AnimationNodeStateMachinePlayback_343p4"]
+[sub_resource type="AnimationNodeStateMachinePlayback" id="AnimationNodeStateMachinePlayback_itd8t"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_70w0s"]
 resource_local_to_scene = true
@@ -510,14 +510,14 @@ spring_arm_path = NodePath("../SpringArm3D")
 view_mode = 0
 
 [node name="AnimationTreeComponent" parent="." instance=ExtResource("3_86f8p")]
-tree_root = SubResource("AnimationNodeBlendTree_68khl")
+tree_root = SubResource("AnimationNodeBlendTree_866fg")
 anim_player = NodePath("../AnimationPlayer")
 active = true
-parameters/InAirState/playback = SubResource("AnimationNodeStateMachinePlayback_mnbwj")
-parameters/VelocityDirection/Crouching/playback = SubResource("AnimationNodeStateMachinePlayback_l356x")
+parameters/InAirState/playback = SubResource("AnimationNodeStateMachinePlayback_vfugr")
+parameters/VelocityDirection/Crouching/playback = SubResource("AnimationNodeStateMachinePlayback_mhs1f")
 parameters/VelocityDirection/Crouching/conditions/idle = false
 parameters/VelocityDirection/Crouching/conditions/walking = false
-parameters/VelocityDirection/Standing/playback = SubResource("AnimationNodeStateMachinePlayback_343p4")
+parameters/VelocityDirection/Standing/playback = SubResource("AnimationNodeStateMachinePlayback_itd8t")
 parameters/VelocityDirection/Standing/conditions/idle = true
 parameters/VelocityDirection/Standing/conditions/running = false
 parameters/VelocityDirection/Standing/conditions/sprinting = false
@@ -610,7 +610,7 @@ bones/10/parent = 9
 bones/10/rest = Transform3D(0.845869, -0.51692, -0.131522, 0.093338, 0.386222, -0.917671, 0.52516, 0.763954, 0.374941, 7.45058e-09, 0.129223, 3.95812e-08)
 bones/10/enabled = true
 bones/10/position = Vector3(7.45058e-09, 0.129223, 3.95812e-08)
-bones/10/rotation = Quaternion(0.520746, -0.203354, 0.188978, 0.807315)
+bones/10/rotation = Quaternion(0.520746, -0.203354, 0.188978, 0.807316)
 bones/10/scale = Vector3(1, 1, 1)
 bones/11/name = "LeftForeArm"
 bones/11/parent = 10
@@ -722,7 +722,7 @@ bones/26/parent = 25
 bones/26/rest = Transform3D(0.981497, 0.113181, -0.154445, -0.116659, -0.286137, -0.951061, -0.151835, 0.951481, -0.267639, -3.72529e-08, 0.036012, -1.11759e-07)
 bones/26/enabled = true
 bones/26/position = Vector3(-3.72529e-08, 0.036012, -1.11759e-07)
-bones/26/rotation = Quaternion(0.796127, -0.00109192, -0.096178, 0.597436)
+bones/26/rotation = Quaternion(0.796127, -0.00109192, -0.0961779, 0.597436)
 bones/26/scale = Vector3(1, 1, 1)
 bones/27/name = "LeftHandRing3"
 bones/27/parent = 26
@@ -883,7 +883,7 @@ bones/49/parent = 36
 bones/49/rest = Transform3D(0.991829, -0.0281871, 0.124419, 0.122843, -0.0520322, -0.991061, 0.0344089, 0.998247, -0.0481446, -0.0221661, 0.12147, -9.89214e-05)
 bones/49/enabled = true
 bones/49/position = Vector3(-0.0221661, 0.12147, -9.89214e-05)
-bones/49/rotation = Quaternion(0.723188, 0.0327217, 0.0549052, 0.687687)
+bones/49/rotation = Quaternion(0.723188, 0.0327217, 0.0549051, 0.687687)
 bones/49/scale = Vector3(1, 1, 1)
 bones/50/name = "RightHandRing2"
 bones/50/parent = 49
