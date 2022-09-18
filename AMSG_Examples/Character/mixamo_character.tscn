@@ -231,7 +231,7 @@ nodes/crouch/position = Vector2(100, 180)
 nodes/output/position = Vector2(280, 180)
 node_connections = [&"output", 0, &"crouch"]
 
-[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_866fg"]
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_k0cve"]
 resource_local_to_scene = true
 graph_offset = Vector2(120, 1366)
 nodes/AnimTurnLeft/node = SubResource("AnimationNodeAnimation_twcy5")
@@ -251,11 +251,11 @@ nodes/VelocityDirection/position = Vector2(680, 1400)
 nodes/output/position = Vector2(1540, 1400)
 node_connections = [&"output", 0, &"InAir", &"InAir", 0, &"Turn", &"InAir", 1, &"InAirState", &"RightOrLeft", 0, &"AnimTurnLeft", &"RightOrLeft", 1, &"AnimTurnRight", &"Turn", 0, &"VelocityDirection", &"Turn", 1, &"RightOrLeft"]
 
-[sub_resource type="AnimationNodeStateMachinePlayback" id="AnimationNodeStateMachinePlayback_vfugr"]
+[sub_resource type="AnimationNodeStateMachinePlayback" id="AnimationNodeStateMachinePlayback_06uns"]
 
-[sub_resource type="AnimationNodeStateMachinePlayback" id="AnimationNodeStateMachinePlayback_mhs1f"]
+[sub_resource type="AnimationNodeStateMachinePlayback" id="AnimationNodeStateMachinePlayback_ubrtk"]
 
-[sub_resource type="AnimationNodeStateMachinePlayback" id="AnimationNodeStateMachinePlayback_itd8t"]
+[sub_resource type="AnimationNodeStateMachinePlayback" id="AnimationNodeStateMachinePlayback_l4lm6"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_70w0s"]
 resource_local_to_scene = true
@@ -510,14 +510,14 @@ spring_arm_path = NodePath("../SpringArm3D")
 view_mode = 0
 
 [node name="AnimationTreeComponent" parent="." instance=ExtResource("3_86f8p")]
-tree_root = SubResource("AnimationNodeBlendTree_866fg")
+tree_root = SubResource("AnimationNodeBlendTree_k0cve")
 anim_player = NodePath("../AnimationPlayer")
 active = true
-parameters/InAirState/playback = SubResource("AnimationNodeStateMachinePlayback_vfugr")
-parameters/VelocityDirection/Crouching/playback = SubResource("AnimationNodeStateMachinePlayback_mhs1f")
+parameters/InAirState/playback = SubResource("AnimationNodeStateMachinePlayback_06uns")
+parameters/VelocityDirection/Crouching/playback = SubResource("AnimationNodeStateMachinePlayback_ubrtk")
 parameters/VelocityDirection/Crouching/conditions/idle = false
 parameters/VelocityDirection/Crouching/conditions/walking = false
-parameters/VelocityDirection/Standing/playback = SubResource("AnimationNodeStateMachinePlayback_itd8t")
+parameters/VelocityDirection/Standing/playback = SubResource("AnimationNodeStateMachinePlayback_l4lm6")
 parameters/VelocityDirection/Standing/conditions/idle = true
 parameters/VelocityDirection/Standing/conditions/running = false
 parameters/VelocityDirection/Standing/conditions/sprinting = false
@@ -610,7 +610,7 @@ bones/10/parent = 9
 bones/10/rest = Transform3D(0.845869, -0.51692, -0.131522, 0.093338, 0.386222, -0.917671, 0.52516, 0.763954, 0.374941, 7.45058e-09, 0.129223, 3.95812e-08)
 bones/10/enabled = true
 bones/10/position = Vector3(7.45058e-09, 0.129223, 3.95812e-08)
-bones/10/rotation = Quaternion(0.520746, -0.203354, 0.188978, 0.807316)
+bones/10/rotation = Quaternion(0.520746, -0.203354, 0.188978, 0.807315)
 bones/10/scale = Vector3(1, 1, 1)
 bones/11/name = "LeftForeArm"
 bones/11/parent = 10

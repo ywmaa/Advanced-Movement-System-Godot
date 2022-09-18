@@ -46,6 +46,8 @@ class_name CharacterMovementComponent
 
 
 @export var jump_magnitude := 5.0
+@export var max_stair_climb_height : float = 0.5
+@export var max_close_stair_distance : float = 0.75
 @export var roll_magnitude := 17.0
 
 var default_height := 2.0
@@ -402,6 +404,25 @@ func _physics_process(delta):
 	mesh_ref.transform.origin.y = clamp(mesh_ref.transform.origin.y,0.0,0.5)
 	collision_shape_ref.shape.height = clamp(collision_shape_ref.shape.height,crouch_height,default_height)
 	
+	#------------------ Stair climb ------------------#
+	var obs_ray_info : PhysicsRayQueryParameters3D = PhysicsRayQueryParameters3D.new()
+	obs_ray_info.exclude = [character_node]
+	obs_ray_info.from = mesh_ref.global_transform.origin
+	obs_ray_info.to = obs_ray_info.from + Vector3(0, 0, max_close_stair_distance).rotated(Vector3.UP,mesh_ref.rotation.y)
+	
+	#this is used to know if there is obstacle 
+	var first_collision = direct_state.intersect_ray(obs_ray_info)
+	if first_collision and input_is_moving:
+		var climb_ray_info : PhysicsRayQueryParameters3D = PhysicsRayQueryParameters3D.new()
+		climb_ray_info.exclude = [character_node]
+		climb_ray_info.from = first_collision.collider.global_position + Vector3(0, max_stair_climb_height, 0)
+		climb_ray_info.to = first_collision.collider.global_position
+		var stair_top_collision = direct_state.intersect_ray(climb_ray_info)
+		if stair_top_collision:
+			if stair_top_collision.position.y - character_node.global_position.y > 0 and stair_top_collision.position.y - character_node.global_position.y < 0.15:
+				character_node.position.y += stair_top_collision.position.y - character_node.global_position.y
+				character_node.global_position += Vector3(0, 0, 0.01).rotated(Vector3.UP,mesh_ref.rotation.y)
+
 
 	#------------------ Gravity ------------------#
 	if is_flying == false:
