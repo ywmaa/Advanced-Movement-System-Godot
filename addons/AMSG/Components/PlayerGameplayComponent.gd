@@ -35,7 +35,7 @@ func _physics_process(delta):
 	#------------------ Input Movement ------------------#
 	h_rotation = camera_root.HObject.transform.basis.get_euler().y
 #	v_rotation = camera_root.VObject.transform.basis.get_euler().x
-
+	
 	if Input.is_action_pressed("forward") || Input.is_action_pressed("back") || Input.is_action_pressed("right") || Input.is_action_pressed("left") :
 		direction = Vector3(Input.get_action_strength("right") - Input.get_action_strength("left"),
 			0.0 if is_flying == true else 0.0,
@@ -123,8 +123,6 @@ func _physics_process(delta):
 
 var view_changed_recently = false
 func _input(event):
-	
-	
 	#------------------ Motion Warping test------------------#
 	if event.is_action_pressed("fire"):
 		anim_ref.active = false
@@ -133,10 +131,6 @@ func _input(event):
 		await get_tree().create_timer(2.6).timeout
 		anim_ref.active = true
 		
-		
-		
-		
-	#---------------------
 	#------------------ Change Camera View ------------------#
 	if Input.is_action_just_released("switch_camera_view"):
 		if view_changed_recently == false:

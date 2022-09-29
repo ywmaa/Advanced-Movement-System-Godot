@@ -255,39 +255,79 @@ var movement_action = Global.movement_action.none
 @export var overlay_state = Global.overlay_state
 
 @export_category("Animations")
-@export var TurnLeftAnim : String = "TurnLeft"
-@export var TurnRightAnim : String = "TurnRight"
-@export var FallingStartAnim : String = "FallingStart"
-@export var FallingAnim : String = "Falling"
-@export var IdleAnim : String = "Idle"
-@export var WalkForwardAnim : String = "Walk"
-@export var WalkBackwardAnim : String = "WalkingBackward"
-@export var JogForwardAnim : String = "JogForward"
-@export var JogBackwardAnim : String = "Jogbackward"
-@export var RunAnim : String = "Run"
-@export var StopAnim : String = "RunToStop"
-@export var CrouchIdleAnim : String = "CrouchIdle"
-@export var CrouchWalkAnim : String = "CrouchWalkingForward"
+@export var TurnLeftAnim : String = "TurnLeft":
+	set(value):
+		TurnLeftAnim = value
+		update_animations()
+@export var TurnRightAnim : String = "TurnRight":
+	set(value):
+		TurnRightAnim = value
+		update_animations()
+@export var FallingStartAnim : String = "FallingStart":
+	set(value):
+		FallingStartAnim = value
+		update_animations()
+@export var FallingAnim : String = "Falling":
+	set(value):
+		FallingAnim = value
+		update_animations()
+@export var IdleAnim : String = "Idle":
+	set(value):
+		IdleAnim = value
+		update_animations()
+@export var WalkForwardAnim : String = "Walk":
+	set(value):
+		WalkForwardAnim = value
+		update_animations()
+@export var WalkBackwardAnim : String = "WalkingBackward":
+	set(value):
+		WalkBackwardAnim = value
+		update_animations()
+@export var JogForwardAnim : String = "JogForward":
+	set(value):
+		JogForwardAnim = value
+		update_animations()
+@export var JogBackwardAnim : String = "Jogbackward":
+	set(value):
+		JogBackwardAnim = value
+		update_animations()
+@export var RunAnim : String = "Run":
+	set(value):
+		RunAnim = value
+		update_animations()
+@export var StopAnim : String = "RunToStop":
+	set(value):
+		StopAnim = value
+		update_animations()
+@export var CrouchIdleAnim : String = "CrouchIdle":
+	set(value):
+		CrouchIdleAnim = value
+		update_animations()
+@export var CrouchWalkAnim : String = "CrouchWalkingForward":
+	set(value):
+		CrouchWalkAnim = value
+		update_animations()
 #####################################
-#IK
+
 
 func update_animations():
-
+	if !anim_ref:
+		return
 	anim_ref.tree_root.get_node("AnimTurnLeft").animation = TurnLeftAnim
 	anim_ref.tree_root.get_node("AnimTurnRight").animation = TurnRightAnim
 	anim_ref.tree_root.get_node("InAirState").get_node("FallingStart").animation = FallingStartAnim
 	anim_ref.tree_root.get_node("InAirState").get_node("Falling").animation = FallingAnim
-#	var velocity_direction :AnimationNodeBlendTree= anim_ref.tree_root.get_node("VelocityDirection")
-#
-#	print(velocity_direction.get_node("Standing"))
-#	velocity_direction.get_node("Standing").get_node("Walk").get_node("Forward").animation = WalkForwardAnim
-#	anim_ref.tree_root.get_node("VelocityDirection/Standing/Walk/Backward").animation = WalkBackwardAnim
-#	anim_ref.tree_root.get_node("VelocityDirection/Standing/Jog/Forward").animation = JogForwardAnim
-#	anim_ref.tree_root.get_node("VelocityDirection/Standing/Jog/Backward").animation = JogBackwardAnim
-#	anim_ref.tree_root.get_node("VelocityDirection/Standing/Run").animation = RunAnim
-#	anim_ref.tree_root.get_node("VelocityDirection/Standing/Stopping/StopAnim").animation = StopAnim
-#	anim_ref.tree_root.get_node("VelocityDirection/Crouching/CrouchIdle").animation = CrouchIdleAnim
-#	anim_ref.tree_root.get_node("VelocityDirection/Crouching/CrouchWalkingForward").animation = CrouchWalkAnim
+	var velocity_direction : AnimationNodeBlendTree = anim_ref.tree_root.get_node("VelocityDirection")
+	var standing_states = velocity_direction.get_node("standing")
+	standing_states.get_node("Idle").animation = IdleAnim
+	standing_states.get_node("Walk").get_node("Forward").animation = WalkForwardAnim
+	standing_states.get_node("Walk").get_node("Backward").animation = WalkBackwardAnim
+	standing_states.get_node("Jog").get_node("Forward").animation = JogForwardAnim
+	standing_states.get_node("Jog").get_node("Backward").animation = JogBackwardAnim
+	standing_states.get_node("Run").animation = RunAnim
+	standing_states.get_node("Stopping").get_node("StopAnim").animation = StopAnim
+	velocity_direction.get_node("crouching").get_node("CrouchIdle").animation = CrouchIdleAnim
+	velocity_direction.get_node("crouching").get_node("CrouchWalkingForward").animation = CrouchWalkAnim
 func update_character_movement():
 	match rotation_mode:
 		Global.rotation_mode.velocity_direction:
@@ -323,9 +363,8 @@ func update_character_movement():
 var previous_aim_rate_h :float
 
 func _ready():
-
-	update_character_movement()
 	update_animations()
+	update_character_movement()
 var pose_warping_instance = pose_warping.new()
 func _process(delta):
 	calc_animation_data()
