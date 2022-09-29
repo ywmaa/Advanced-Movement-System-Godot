@@ -197,7 +197,7 @@ var vertical_velocity :Vector3
 
 var actual_velocity :Vector3
 var input_velocity :Vector3
-
+var movement_direction
 
 var tiltVector : Vector3
 
@@ -210,6 +210,8 @@ var is_rotating_in_place := false
 var rotation_difference_camera_mesh : float
 
 var aim_rate_h :float
+
+var is_moving_on_stair :bool
 
 
 var current_movement_data = {
@@ -419,8 +421,27 @@ func _physics_process(delta):
 		Global.movement_state.ragdoll:
 			pass
 	
-
 	#------------------ Crouch ------------------#
+	crouch_update(delta)
+
+	#------------------ Gravity ------------------#
+	if is_flying == false:
+		character_node.velocity.y =  lerp(character_node.velocity.y,vertical_velocity.y - character_node.get_floor_normal().y,delta * gravity)
+		character_node.move_and_slide()
+	if character_node.is_on_floor() and is_flying == false:
+		movement_state = Global.movement_state.grounded 
+		vertical_velocity = -character_node.get_floor_normal() * 10
+	else:
+		await get_tree().create_timer(0.1).timeout #wait a moment to see if the character lands fast (this means that the character didn't fall, but stepped down a bit.)
+		movement_state = Global.movement_state.in_air
+		vertical_velocity += Vector3.DOWN * gravity * delta
+	if character_node.is_on_ceiling():
+		vertical_velocity.y = 0
+	#------------------ Stair climb ------------------#
+	#stair movement must happen after gravity so it can override in air status
+	stair_move()
+
+func crouch_update(delta):
 	var direct_state = character_node.get_world_3d().direct_space_state
 	var ray_info : PhysicsRayQueryParameters3D = PhysicsRayQueryParameters3D.new()
 	ray_info.exclude = [collision_shape_ref]
@@ -442,12 +463,14 @@ func _physics_process(delta):
 		pass
 	mesh_ref.transform.origin.y = clamp(mesh_ref.transform.origin.y,0.0,0.5)
 	collision_shape_ref.shape.height = clamp(collision_shape_ref.shape.height,crouch_height,default_height)
-	
-	#------------------ Stair climb ------------------#
+
+
+func stair_move():
+	var direct_state = character_node.get_world_3d().direct_space_state
 	var obs_ray_info : PhysicsRayQueryParameters3D = PhysicsRayQueryParameters3D.new()
 	obs_ray_info.exclude = [character_node]
 	obs_ray_info.from = mesh_ref.global_transform.origin
-	obs_ray_info.to = obs_ray_info.from + Vector3(0, 0, max_close_stair_distance).rotated(Vector3.UP,mesh_ref.rotation.y)
+	obs_ray_info.to = obs_ray_info.from + Vector3(0, 0, max_close_stair_distance).rotated(Vector3.UP,movement_direction)
 	
 	#this is used to know if there is obstacle 
 	var first_collision = direct_state.intersect_ray(obs_ray_info)
@@ -459,24 +482,20 @@ func _physics_process(delta):
 		var stair_top_collision = direct_state.intersect_ray(climb_ray_info)
 		if stair_top_collision:
 			if stair_top_collision.position.y - character_node.global_position.y > 0 and stair_top_collision.position.y - character_node.global_position.y < 0.15:
+				movement_state = Global.movement_state.grounded
+				is_moving_on_stair = true
 				character_node.position.y += stair_top_collision.position.y - character_node.global_position.y
-				character_node.global_position += Vector3(0, 0, 0.01).rotated(Vector3.UP,mesh_ref.rotation.y)
-
-
-	#------------------ Gravity ------------------#
-	if is_flying == false:
-		character_node.velocity.y =  lerp(character_node.velocity.y,vertical_velocity.y - character_node.get_floor_normal().y,delta * gravity)
-		character_node.move_and_slide()
-	if character_node.is_on_floor() and is_flying == false:
-		movement_state = Global.movement_state.grounded 
-		vertical_velocity = -character_node.get_floor_normal() * 10
+				character_node.global_position += Vector3(0, 0, 0.01).rotated(Vector3.UP,movement_direction)
+			else:
+				await get_tree().create_timer(0.4).timeout
+				is_moving_on_stair = false
+		else:
+			await get_tree().create_timer(0.4).timeout
+			is_moving_on_stair = false
 	else:
-		movement_state = Global.movement_state.in_air
-		vertical_velocity += Vector3.DOWN * gravity * delta
-#		if vertical_velocity < -20:
-#			roll()
-	if character_node.is_on_ceiling():
-		vertical_velocity.y = 0
+		await get_tree().create_timer(0.4).timeout
+		is_moving_on_stair = false
+
 
 
 func smooth_character_rotation(Target:Vector3,nodelerpspeed,delta):
@@ -580,6 +599,7 @@ func add_movement_input(direction: Vector3, Speed: float , Acceleration: float) 
 		character_node.set_velocity(character_node.get_velocity().lerp(direction * Speed, Acceleration * get_physics_process_delta_time()))
 		character_node.move_and_slide()
 	input_velocity = Speed * direction
+	movement_direction = atan2(input_velocity.x,input_velocity.z)
 	input_is_moving = Speed > 0.0
 	input_acceleration = Acceleration * direction
 	#
