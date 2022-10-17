@@ -245,7 +245,7 @@ nodes/standing/node = SubResource("AnimationNodeStateMachine_5xtv7")
 nodes/standing/position = Vector2(-120, 40)
 node_connections = [&"output", 0, &"crouch", &"crouch", 0, &"standing", &"crouch", 1, &"crouching"]
 
-[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_fcdyw"]
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_75nun"]
 resource_local_to_scene = true
 graph_offset = Vector2(100.608, 891.611)
 nodes/AnimTurnLeft/node = SubResource("AnimationNodeAnimation_twcy5")
@@ -265,11 +265,11 @@ nodes/VelocityDirection/position = Vector2(680, 1400)
 nodes/output/position = Vector2(1540, 1400)
 node_connections = [&"output", 0, &"InAir", &"InAir", 0, &"Turn", &"InAir", 1, &"InAirState", &"RightOrLeft", 0, &"AnimTurnLeft", &"RightOrLeft", 1, &"AnimTurnRight", &"Turn", 0, &"VelocityDirection", &"Turn", 1, &"RightOrLeft"]
 
-[sub_resource type="AnimationNodeStateMachinePlayback" id="AnimationNodeStateMachinePlayback_0cmlo"]
+[sub_resource type="AnimationNodeStateMachinePlayback" id="AnimationNodeStateMachinePlayback_mn74v"]
 
-[sub_resource type="AnimationNodeStateMachinePlayback" id="AnimationNodeStateMachinePlayback_rbu88"]
+[sub_resource type="AnimationNodeStateMachinePlayback" id="AnimationNodeStateMachinePlayback_mdkpm"]
 
-[sub_resource type="AnimationNodeStateMachinePlayback" id="AnimationNodeStateMachinePlayback_tg5jw"]
+[sub_resource type="AnimationNodeStateMachinePlayback" id="AnimationNodeStateMachinePlayback_u1xby"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_70w0s"]
 resource_local_to_scene = true
@@ -524,12 +524,12 @@ spring_arm_path = NodePath("../SpringArm3D")
 view_mode = 0
 
 [node name="AnimationTree" parent="." instance=ExtResource("3_86f8p")]
-tree_root = SubResource("AnimationNodeBlendTree_fcdyw")
+tree_root = SubResource("AnimationNodeBlendTree_75nun")
 anim_player = NodePath("../AnimationPlayer")
 active = true
-parameters/InAirState/playback = SubResource("AnimationNodeStateMachinePlayback_0cmlo")
-parameters/VelocityDirection/crouching/playback = SubResource("AnimationNodeStateMachinePlayback_rbu88")
-parameters/VelocityDirection/standing/playback = SubResource("AnimationNodeStateMachinePlayback_tg5jw")
+parameters/InAirState/playback = SubResource("AnimationNodeStateMachinePlayback_mn74v")
+parameters/VelocityDirection/crouching/playback = SubResource("AnimationNodeStateMachinePlayback_mdkpm")
+parameters/VelocityDirection/standing/playback = SubResource("AnimationNodeStateMachinePlayback_u1xby")
 movement_script_path = NodePath("../CharacterMovementComponent")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
@@ -1043,5 +1043,4 @@ script = ExtResource("26_8j4xc")
 
 [node name="FootstepSounds" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource("27_cpdra")
-unit_db = -51.4991
 unit_size = 1.0
