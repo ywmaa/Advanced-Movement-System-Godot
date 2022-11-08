@@ -99,6 +99,9 @@ open the project and done.
 # This project is a template for creating advanced Third/First Person movement in [GODOT](https://github.com/godotengine/godot)
 You may use it in any other camera type like RTS, but you will need to tweak it yourself.
 
+# Animation Retargeting in Godot 4 tutroial :
+https://godotengine.org/article/animation-retargeting-in-godot-4-0 .
+
 # For how to fix the armature wrong bones orientation and create a control rig for mixamo character in blender to animate the character :
 https://youtu.be/zfaskQ2BK1s .
 
