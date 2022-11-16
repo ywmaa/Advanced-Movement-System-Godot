@@ -470,7 +470,8 @@ func stair_move():
 	var obs_ray_info : PhysicsRayQueryParameters3D = PhysicsRayQueryParameters3D.new()
 	obs_ray_info.exclude = [character_node]
 	obs_ray_info.from = mesh_ref.global_transform.origin
-	obs_ray_info.to = obs_ray_info.from + Vector3(0, 0, max_close_stair_distance).rotated(Vector3.UP,movement_direction)
+	if movement_direction:
+		obs_ray_info.to = obs_ray_info.from + Vector3(0, 0, max_close_stair_distance).rotated(Vector3.UP,movement_direction)
 	
 	#this is used to know if there is obstacle 
 	var first_collision = direct_state.intersect_ray(obs_ray_info)
@@ -573,8 +574,9 @@ func calc_grounded_rotation_rate():
 func rotate_in_place_check():
 	is_rotating_in_place = false
 	if !input_is_moving:
-		var CameraAngle = Quaternion(Vector3(0,camera_root.HObject.rotation.y,0)) 
-		var MeshAngle = Quaternion(Vector3(0,mesh_ref.rotation.y,0)) 
+		
+		var CameraAngle = Quaternion(Vector3(0,1,0),camera_root.HObject.rotation.y) 
+		var MeshAngle = Quaternion(Vector3(0,1,0),mesh_ref.rotation.y) 
 		
 		rotation_difference_camera_mesh = rad_to_deg(MeshAngle.angle_to(CameraAngle) - PI)
 		if (CameraAngle.dot(MeshAngle)) > 0:

@@ -16,8 +16,8 @@ func orientation_warping(enabled:bool,CameraObject, Velocity:Vector3, skeleton_r
 	skeleton_ref.clear_bones_global_pose_override()
 	if is_equal_approx(Velocity.length(),0.0) or !enabled:
 		return
-	var CameraAngle = Quaternion(Vector3(0,atan2(-CameraObject.transform.basis.z.z, -CameraObject.transform.basis.z.x),0)) 
-	var VelocityAngle = Quaternion(Vector3(0,atan2(Velocity.z, Velocity.x),0)) 
+	var CameraAngle = Quaternion(Vector3(0,1,0),atan2(-CameraObject.transform.basis.z.z, -CameraObject.transform.basis.z.x)) 
+	var VelocityAngle = Quaternion(Vector3(0,1,0),atan2(Velocity.z, Velocity.x)) 
 	var IsMovingBackwardRelativeToCamera = false if -Velocity.rotated(Vector3.UP,-CameraObject.transform.basis.get_euler().y).z >= -0.1 else true
 	var IsMovingLeftRelativeToCamera = false if -Velocity.rotated(Vector3.UP,-CameraObject.transform.basis.get_euler().y).x >= -0.1 else true
 	var rotation_difference_camera_velocity = CameraAngle.angle_to(VelocityAngle)
@@ -52,4 +52,3 @@ func set_bone_y_rotation(skeleton,bone_name, y_rot):
 	skeleton.set_bone_global_pose_override(bone, bone_transform,1.0,true)
 	
 	
-
