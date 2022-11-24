@@ -29,7 +29,7 @@ func _ready():
 
 
 func is_local_authority() -> bool:
-	if !multiplayer.has_multiplayer_peer():
+	if multiplayer.multiplayer_peer is OfflineMultiplayerPeer:
 		return true
 	else:
 		return str(get_parent().name).to_int() == multiplayer.get_unique_id()

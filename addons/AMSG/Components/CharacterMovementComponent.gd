@@ -444,7 +444,8 @@ func _physics_process(delta):
 func crouch_update(delta):
 	var direct_state = character_node.get_world_3d().direct_space_state
 	var ray_info : PhysicsRayQueryParameters3D = PhysicsRayQueryParameters3D.new()
-	ray_info.exclude = [collision_shape_ref]
+	ray_info.exclude = [RID(collision_shape_ref)]
+	
 	ray_info.from = collision_shape_ref.global_transform.origin + Vector3(0,collision_shape_ref.shape.height/2,0)
 	ray_info.to = ray_info.from + Vector3(0, 0.2, 0)
 	var collision = direct_state.intersect_ray(ray_info)
@@ -468,7 +469,7 @@ func crouch_update(delta):
 func stair_move():
 	var direct_state = character_node.get_world_3d().direct_space_state
 	var obs_ray_info : PhysicsRayQueryParameters3D = PhysicsRayQueryParameters3D.new()
-	obs_ray_info.exclude = [character_node]
+	obs_ray_info.exclude = [RID(character_node)]
 	obs_ray_info.from = mesh_ref.global_transform.origin
 	if movement_direction:
 		obs_ray_info.to = obs_ray_info.from + Vector3(0, 0, max_close_stair_distance).rotated(Vector3.UP,movement_direction)
@@ -477,7 +478,7 @@ func stair_move():
 	var first_collision = direct_state.intersect_ray(obs_ray_info)
 	if first_collision and input_is_moving:
 		var climb_ray_info : PhysicsRayQueryParameters3D = PhysicsRayQueryParameters3D.new()
-		climb_ray_info.exclude = [character_node]
+		climb_ray_info.exclude = [RID(character_node)]
 		climb_ray_info.from = first_collision.collider.global_position + Vector3(0, max_stair_climb_height, 0)
 		climb_ray_info.to = first_collision.collider.global_position
 		var stair_top_collision = direct_state.intersect_ray(climb_ray_info)
