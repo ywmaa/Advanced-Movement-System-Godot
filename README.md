@@ -4,6 +4,8 @@ The Project is made using [Godot](https://github.com/godotengine/godot) 4
 
 you can get Godot 4 Beta 7 here : https://godotengine.org/article/dev-snapshot-godot-4-0-beta-7
 
+[![Watch the video](https://img.youtube.com/vi/TiIriuw9s9U/hqdefault.jpg)](https://youtu.be/TiIriuw9s9U)
+
 ## Method 1 (adding to existing project)
 1- copy the files to your Godot project 
 
