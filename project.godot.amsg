@@ -79,6 +79,10 @@ window/vsync/vsync_mode=0
 window/size/width=1920
 window/size/height=1080
 
+[dotnet]
+
+project/assembly_name="AMSG"
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/AMSG/plugin.cfg", "res://addons/PoseWarping/plugin.cfg")

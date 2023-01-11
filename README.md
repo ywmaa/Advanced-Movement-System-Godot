@@ -2,7 +2,7 @@
 
 The Project is made using [Godot](https://github.com/godotengine/godot) 4
 
-you can get Godot 4 Beta 9 here : https://godotengine.org/article/dev-snapshot-godot-4-0-beta-9
+you can get Godot 4 Beta 11 here : https://godotengine.org/article/dev-snapshot-godot-4-0-beta-11
 
 ### Watch this video for preview :
 

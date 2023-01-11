@@ -36,7 +36,7 @@ var CameraHOffset := 0.0
 					update_camera_offset()
 
 			
-@export var view_mode = Global.view_mode :
+@export var view_mode : Global.view_mode = Global.view_mode.third_person :
 	get: return view_mode
 	set(Newview_mode):
 		view_mode = Newview_mode

@@ -4,20 +4,14 @@ class_name CharacterMovementComponent
 
 #####################################
 @export_category("Refrences")
-@export var character_path : NodePath
-@export var mesh_path : NodePath
-@export var skeleton_path : NodePath
-@export var anim_tree_path : NodePath
-@export var camera_component : NodePath
-@export var collision_shape_path : NodePath
 #Refrences
-@onready var mesh_ref = get_node(mesh_path)
-@onready var anim_ref : AnimBlend = get_node(anim_tree_path)
-@onready var skeleton_ref : Skeleton3D = get_node(skeleton_path)
-@onready var collision_shape_ref = get_node(collision_shape_path)
+@onready @export var mesh_ref : Node
+@onready @export var anim_ref : AnimBlend 
+@onready @export var skeleton_ref : Skeleton3D 
+@onready @export var collision_shape_ref : CollisionShape3D
 #@onready var bonker = $CollisionShape3D/HeadBonker
-@onready var camera_root : CameraComponent = get_node(camera_component)
-@onready var character_node : CharacterBody3D = get_node(character_path)
+@onready @export var camera_root : CameraComponent 
+@onready @export var character_node : CharacterBody3D 
 #####################################
 
 
@@ -265,10 +259,6 @@ var movement_action = Global.movement_action.none
 	set(value):
 		TurnRightAnim = value
 		update_animations()
-@export var FallingStartAnim : String = "FallingStart":
-	set(value):
-		FallingStartAnim = value
-		update_animations()
 @export var FallingAnim : String = "Falling":
 	set(value):
 		FallingAnim = value
@@ -315,10 +305,10 @@ var movement_action = Global.movement_action.none
 func update_animations():
 	if !anim_ref:
 		return
+	
 	anim_ref.tree_root.get_node("AnimTurnLeft").animation = TurnLeftAnim
 	anim_ref.tree_root.get_node("AnimTurnRight").animation = TurnRightAnim
-	anim_ref.tree_root.get_node("InAirState").get_node("FallingStart").animation = FallingStartAnim
-	anim_ref.tree_root.get_node("InAirState").get_node("Falling").animation = FallingAnim
+	anim_ref.tree_root.get_node("FallAnimation").animation = FallingAnim
 	var velocity_direction : AnimationNodeBlendTree = anim_ref.tree_root.get_node("VelocityDirection")
 	var standing_states = velocity_direction.get_node("standing")
 	standing_states.get_node("Idle").animation = IdleAnim

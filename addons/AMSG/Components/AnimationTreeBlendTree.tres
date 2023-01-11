@@ -1,7 +1,4 @@
-[gd_scene load_steps=45 format=3 uid="uid://dsdvjuk7muqkf"]
-
-[ext_resource type="Script" path="res://addons/AMSG/Components/AnimationBlend.gd" id="1_iikhh"]
-[ext_resource type="AnimationNodeStateMachinePlayback" uid="uid://b8p1518kwrou2" path="res://addons/AMSG/Components/StandingStateMachine.tres" id="2_oomli"]
+[gd_resource type="AnimationNodeBlendTree" load_steps=41 format=3 uid="uid://vjkfv8poa6di"]
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_mb2kt"]
 animation = &"TurnLeft"
@@ -39,19 +36,15 @@ animation = &"CrouchIdle"
 animation = &"CrouchWalkingForward"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_urt4k"]
-advance_mode = 2
-advance_condition = &"idle"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_6juuf"]
 xfade_time = 0.2
 switch_mode = 1
-advance_mode = 2
 advance_condition = &"walking"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_611fp"]
 xfade_time = 0.2
 switch_mode = 1
-advance_mode = 2
 advance_condition = &"idle"
 
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_2xodt"]
@@ -207,7 +200,7 @@ transitions = ["Stopping", "Idle", SubResource("AnimationNodeStateMachineTransit
 graph_offset = Vector2(-45.773, 131)
 
 [sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_ml0kl"]
-graph_offset = Vector2(-389.513, 396.941)
+graph_offset = Vector2(-337.513, 379.941)
 nodes/crouch/node = SubResource("AnimationNodeTransition_3twx3")
 nodes/crouch/position = Vector2(100, 180)
 nodes/crouching/node = SubResource("AnimationNodeStateMachine_2xodt")
@@ -216,9 +209,9 @@ nodes/standing/node = SubResource("AnimationNodeStateMachine_ieguh")
 nodes/standing/position = Vector2(-120, 40)
 node_connections = [&"output", 0, &"crouch", &"crouch", 0, &"standing", &"crouch", 1, &"crouching"]
 
-[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_5nmia"]
+[resource]
 resource_local_to_scene = true
-graph_offset = Vector2(288.5, 1117.67)
+graph_offset = Vector2(304.5, 1160)
 nodes/AnimTurnLeft/node = SubResource("AnimationNodeAnimation_mb2kt")
 nodes/AnimTurnLeft/position = Vector2(500, 1540)
 nodes/AnimTurnRight/node = SubResource("AnimationNodeAnimation_2rfjg")
@@ -235,26 +228,3 @@ nodes/VelocityDirection/node = SubResource("AnimationNodeBlendTree_ml0kl")
 nodes/VelocityDirection/position = Vector2(680, 1400)
 nodes/output/position = Vector2(1540, 1400)
 node_connections = [&"output", 0, &"InAir", &"InAir", 0, &"Turn", &"InAir", 1, &"FallAnimation", &"RightOrLeft", 0, &"AnimTurnLeft", &"RightOrLeft", 1, &"AnimTurnRight", &"Turn", 0, &"VelocityDirection", &"Turn", 1, &"RightOrLeft"]
-
-[sub_resource type="AnimationNodeStateMachinePlayback" id="AnimationNodeStateMachinePlayback_wc2uc"]
-
-[node name="AnimationTree" type="AnimationTree"]
-tree_root = SubResource("AnimationNodeBlendTree_5nmia")
-anim_player = NodePath("../Character/AnimationPlayer")
-parameters/InAir/blend_amount = 0.0
-parameters/RightOrLeft/blend_amount = 0.0
-parameters/Turn/blend_amount = 0.0
-parameters/VelocityDirection/crouch/current = 0
-parameters/VelocityDirection/crouching/playback = SubResource("AnimationNodeStateMachinePlayback_wc2uc")
-parameters/VelocityDirection/crouching/conditions/idle = false
-parameters/VelocityDirection/crouching/conditions/walking = false
-parameters/VelocityDirection/standing/playback = ExtResource("2_oomli")
-parameters/VelocityDirection/standing/conditions/idle = true
-parameters/VelocityDirection/standing/conditions/running = false
-parameters/VelocityDirection/standing/conditions/sprinting = false
-parameters/VelocityDirection/standing/conditions/stop = false
-parameters/VelocityDirection/standing/conditions/walking = false
-parameters/VelocityDirection/standing/Jog/FB/current = 0
-parameters/VelocityDirection/standing/Stopping/StopSeek/seek_position = -1.0
-parameters/VelocityDirection/standing/Walk/FB/current = 0
-script = ExtResource("1_iikhh")
