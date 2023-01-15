@@ -11,11 +11,9 @@ func _physics_process(_delta):
 		Global.movement_state.none:
 			pass
 		Global.movement_state.grounded:
-			print("ground")
-			set("parameters/InAir/blend_amount" , false)
+			set("parameters/InAir/blend_amount" , 0)
 		Global.movement_state.in_air:
-			print("air")
-			set("parameters/InAir/blend_amount" , true)
+			set("parameters/InAir/blend_amount" , 1)
 		Global.movement_state.mantling:
 			pass
 		Global.movement_state.ragdoll:

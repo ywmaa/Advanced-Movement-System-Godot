@@ -21,6 +21,7 @@ points = PackedVector3Array(1, 1, 1, 1, 1, -1, -1, 1, 1, 1, -1, 1, 1, -1, -1, -1
 script = ExtResource("1_rvsng")
 
 [node name="ListenServer" type="Button" parent="."]
+anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -37,6 +38,7 @@ text = "Listen Server
 "
 
 [node name="DServer" type="Button" parent="."]
+anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -53,6 +55,7 @@ text = "Dedicated Server
 "
 
 [node name="Client" type="Button" parent="."]
+anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -78,6 +81,7 @@ metadata/_edit_layout_mode = 0
 metadata/_edit_use_custom_anchors = false
 
 [node name="Singleplayer" type="Button" parent="."]
+anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -94,6 +98,7 @@ text = "Singleplayer
 "
 
 [node name="MainMenu" type="Button" parent="."]
+anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0

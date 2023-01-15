@@ -354,11 +354,29 @@ func update_character_movement():
 
 var previous_aim_rate_h :float
 
+
+var test_sphere : MeshInstance3D = MeshInstance3D.new()
+var test_sphere1 : MeshInstance3D = MeshInstance3D.new()
 func _ready():
+	
+	#--------- These tests are for stride warping ---------# 
+#	test_sphere.mesh = SphereMesh.new()
+#	test_sphere1.mesh = SphereMesh.new()
+#	test_sphere.mesh.height = 0.2
+#	test_sphere.mesh.radius = 0.1
+#	test_sphere1.mesh.height = 0.2
+#	test_sphere1.mesh.radius = 0.1
+#	test_sphere.mesh.material = StandardMaterial3D.new()
+#	test_sphere1.mesh.material = StandardMaterial3D.new()
+#	test_sphere.mesh.material.albedo_color = Color.GREEN
+#	test_sphere1.mesh.material.albedo_color = Color.RED
+	
 	update_animations()
 	update_character_movement()
 var pose_warping_instance = pose_warping.new()
 func _process(delta):
+
+
 	calc_animation_data()
 	var orientation_warping_condition = rotation_mode != Global.rotation_mode.velocity_direction and movement_state == Global.movement_state.grounded and movement_action == Global.movement_action.none and gait != Global.gait.sprinting and input_is_moving
 	pose_warping_instance.orientation_warping( orientation_warping_condition,camera_root.HObject,animation_velocity,skeleton_ref,"Hips",["Spine","Spine1","Spine2"],0.0,delta)
@@ -506,10 +524,12 @@ var prev :Transform3D
 var current :Transform3D
 var anim_speed
 func animation_stride_warping(): #this is currently being worked on and tested, so I don't reccomend using it.
-	
+
+	add_sibling(test_sphere)
+	add_sibling(test_sphere1)
 	
 	skeleton_ref.clear_bones_local_pose_override()
-	var distance_in_each_frame = (character_node.get_real_velocity()*Vector3(1,0,1)).rotated(Vector3.UP,mesh_ref.transform.basis.get_euler().y).length() 
+	var distance_in_each_frame = (actual_velocity*Vector3(1,0,1)).rotated(Vector3.UP,mesh_ref.transform.basis.get_euler().y).length() 
 	var hips = skeleton_ref.find_bone("Hips")
 	var hips_transform = skeleton_ref.get_bone_pose(hips)
 	var Feet : Array = ["RightFoot","LeftFoot"]
@@ -527,24 +547,25 @@ func animation_stride_warping(): #this is currently being worked on and tested, 
 		var thigh_angle = thigh_transform.basis.get_euler().x
 		
 		#Calculate
-		var stride_direction : Vector3 = Vector3.FORWARD
+		var stride_direction : Vector3 = Vector3.FORWARD # important to use in orientation warping
 		var stride_warping_plane_origin = Plane(character_node.get_floor_normal(),bone_transform.origin).intersects_ray(thigh_transform.origin,Vector3.DOWN)
-		
+#		print(stride_warping_plane_origin)
 		if stride_warping_plane_origin == null:
 			return #Failed to get a plane origin/ we are probably in air
+
 		var scale_origin = Plane(stride_direction,stride_warping_plane_origin).project(bone_transform.origin)
 		var anim_speed = pow(hips_transform.origin.distance_to(bone_transform.origin),2) - pow(hips_transform.origin.y,2) 
 		anim_speed = sqrt(abs(anim_speed))
 		stride_scale = clampf(distance_in_each_frame/anim_speed,0.0,2.0)
-#		print(stride_scale)
+#		print(test_sphere.global_position)
 		var foot_warped_location : Vector3 = scale_origin + (bone_transform.origin - scale_origin) * stride_scale
-		
-		
+
 		# Apply
 		
 		#test
-#		bone_transform.origin = foot_warped_location 
-#		skeleton_ref.set_bone_local_pose_override(bone, bone_transform,1.0,true)
+		test_sphere.position = foot_warped_location.rotated(Vector3.UP,movement_direction)
+		test_sphere1.position = bone_transform.origin.rotated(Vector3.UP,movement_direction)
+		#I should replace this with leg IK system, and its target position is the foot_warped_location
 		
 
 func calc_grounded_rotation_rate():
@@ -578,7 +599,7 @@ func rotate_in_place_check():
 	
 
 func ik_look_at(position: Vector3):
-	var lookatobject = mesh_ref.get_node("LookAtObject")
+	var lookatobject = character_node.get_node("LookAtObject")
 	if lookatobject:
 		lookatobject.position = position
 
