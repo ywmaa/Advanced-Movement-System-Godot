@@ -8,58 +8,6 @@
 
 config_version=5
 
-_global_script_classes=[{
-"base": "CharacterMovementComponent",
-"class": &"AI",
-"language": &"GDScript",
-"path": "res://addons/AMSG/AI/AI_Base.gd"
-}, {
-"base": "AnimationTree",
-"class": &"AnimBlend",
-"language": &"GDScript",
-"path": "res://addons/AMSG/Components/AnimationBlend.gd"
-}, {
-"base": "Node",
-"class": &"CameraComponent",
-"language": &"GDScript",
-"path": "res://addons/AMSG/Components/CameraComponent.gd"
-}, {
-"base": "Node",
-"class": &"CharacterMovementComponent",
-"language": &"GDScript",
-"path": "res://addons/AMSG/Components/CharacterMovementComponent.gd"
-}, {
-"base": "Node",
-"class": &"Interactable",
-"language": &"GDScript",
-"path": "res://addons/AMSG/Interactable/Interactable.gd"
-}, {
-"base": "Node",
-"class": &"MotionWarping",
-"language": &"GDScript",
-"path": "res://addons/PoseWarping/MotionWarping.gd"
-}, {
-"base": "Node",
-"class": &"PlayerNetworkingComponent",
-"language": &"GDScript",
-"path": "res://addons/AMSG/Components/PlayerNetworkingComponent.gd"
-}, {
-"base": "Node",
-"class": &"pose_warping",
-"language": &"GDScript",
-"path": "res://addons/PoseWarping/PoseWarpingFunctions.gd"
-}]
-_global_script_class_icons={
-"AI": "",
-"AnimBlend": "",
-"CameraComponent": "",
-"CharacterMovementComponent": "",
-"Interactable": "",
-"MotionWarping": "",
-"PlayerNetworkingComponent": "",
-"pose_warping": ""
-}
-
 [application]
 
 config/name="AMSG"
@@ -82,6 +30,10 @@ window/size/height=1080
 [dotnet]
 
 project/assembly_name="AMSG"
+
+[editor]
+
+export/convert_text_resources_to_binary=true
 
 [editor_plugins]
 

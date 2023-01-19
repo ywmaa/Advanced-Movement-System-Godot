@@ -323,8 +323,8 @@ func update_animations():
 func update_character_movement():
 	match rotation_mode:
 		Global.rotation_mode.velocity_direction:
-			if skeleton_ref:
-				skeleton_ref.modification_stack.enabled = false
+#			if skeleton_ref:
+#				skeleton_ref.modification_stack.enabled = false
 			tilt = false
 			match stance:
 				Global.stance.standing:
@@ -334,8 +334,8 @@ func update_character_movement():
 					
 					
 		Global.rotation_mode.looking_direction:
-			if skeleton_ref:
-				skeleton_ref.modification_stack.enabled = false #Change to true when Godot fixes the bug.
+#			if skeleton_ref:
+#				skeleton_ref.modification_stack.enabled = false #Change to true when Godot fixes the bug.
 			tilt = true
 			match stance:
 				Global.stance.standing:
