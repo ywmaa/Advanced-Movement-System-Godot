@@ -123,7 +123,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.84419, 1.95787, 16.7421)
 collision_layer = 2
 script = ExtResource("4_kyyln")
 light = NodePath("../SpotLight3D")
-on = false
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="light"]
 shape = SubResource("BoxShape3D_2afi4")
@@ -365,7 +364,7 @@ environment = ExtResource("1_7h7du")
 
 [node name="FogVolume" type="FogVolume" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.4926, 1.50598, 1.53421)
-extents = Vector3(4.02019, 1.40863, 7.04964)
+size = Vector3(8.04038, 2.81726, 14.0993)
 
 [node name="StopLocation" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.309258, 0, 0, 0, 0.309258, 0, 0, 0, 0.309258, 0, 2.47683, 0)

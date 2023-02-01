@@ -34,14 +34,15 @@ func _physics_process(_delta):
 
 	if movement_script.rotation_mode == Global.rotation_mode.looking_direction or movement_script.rotation_mode == Global.rotation_mode.aiming:
 		if movement_script.animation_is_moving_backward_relative_to_camera == false:
-			set("parameters/VelocityDirection/standing/Walk/FB/current",0)
-			set("parameters/VelocityDirection/standing/Jog/FB/current",0)
+			set("parameters/VelocityDirection/standing/Walk/FB/transition_request","Forward")
+			set("parameters/VelocityDirection/standing/Jog/FB/transition_request","Forward")
 		else:
-			set("parameters/VelocityDirection/standing/Walk/FB/current",1)
-			set("parameters/VelocityDirection/standing/Jog/FB/current",1)
+			set("parameters/VelocityDirection/standing/Walk/FB/transition_request","Backward")
+			set("parameters/VelocityDirection/standing/Jog/FB/transition_request","Backward")
+			
 	else:
-		set("parameters/VelocityDirection/standing/Walk/FB/current",0)
-		set("parameters/VelocityDirection/standing/Jog/FB/current",0)
+		set("parameters/VelocityDirection/standing/Walk/FB/transition_request","Forward")
+		set("parameters/VelocityDirection/standing/Jog/FB/transition_request","Forward")
 	# Crouching
 	set("parameters/VelocityDirection/crouching/conditions/idle",!movement_script.input_is_moving)
 	set("parameters/VelocityDirection/crouching/conditions/walking",movement_script.gait == Global.gait.walking and movement_script.input_is_moving)
