@@ -283,8 +283,7 @@ parameters/RightOrLeft/blend_amount = 0
 parameters/Turn/blend_amount = 0
 parameters/VelocityDirection/crouching/playback = SubResource("AnimationNodeStateMachinePlayback_boqww")
 parameters/VelocityDirection/standing/playback = SubResource("AnimationNodeStateMachinePlayback_jbop1")
-parameters/VelocityDirection/standing/Jog/FB/transition_request = "Forward"
-parameters/VelocityDirection/standing/Stopping/StopSeek/seek_position = 1.0
+parameters/VelocityDirection/standing/Stopping/StopSeek/seek_request = -1.0
 parameters/VelocityDirection/standing/Walk/FB/transition_request = "Forward"
 
 [node name="Networking" parent="." index="3" instance=ExtResource("4_8jv5v")]
