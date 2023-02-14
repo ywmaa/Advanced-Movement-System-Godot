@@ -2,7 +2,7 @@
 
 The Project is made using [Godot](https://github.com/godotengine/godot) 4
 
-you can get Godot 4 RC 1 here : https://godotengine.org/article/release-candidate-godot-4-0-rc-1
+you can get Godot 4 RC 2 here : https://godotengine.org/article/release-candidate-godot-4-0-rc-2
 
 ### Watch this video for preview :
 
