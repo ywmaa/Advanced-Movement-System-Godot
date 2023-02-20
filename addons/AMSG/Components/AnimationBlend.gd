@@ -21,9 +21,9 @@ func _physics_process(_delta):
 	#Couch/stand switch
 	match movement_script.stance: 
 		Global.stance.standing:
-			set("parameters/VelocityDirection/crouch/current" ,0)
+			set("parameters/VelocityDirection/crouch/transition_request" , "stand")
 		Global.stance.crouching:
-			set("parameters/VelocityDirection/crouch/current" ,1)
+			set("parameters/VelocityDirection/crouch/transition_request" , "crouch")
 
 	#standing
 	set("parameters/VelocityDirection/standing/conditions/idle",!movement_script.input_is_moving)
