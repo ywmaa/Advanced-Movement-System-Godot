@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://mpaxkxn0fdto"]
+[gd_scene load_steps=12 format=3 uid="uid://mpaxkxn0fdto"]
 
 [ext_resource type="Environment" uid="uid://cfsln575lgopi" path="res://AMSG_Examples/Maps/default_env.tres" id="1_7h7du"]
 [ext_resource type="Script" path="res://AMSG_Examples/Maps/main.gd" id="1_rvsng"]
@@ -8,7 +8,11 @@
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_2afi4"]
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dss5n"]
+albedo_color = Color(0.941176, 0, 0.227451, 1)
+
 [sub_resource type="BoxMesh" id="BoxMesh_n4eeh"]
+material = SubResource("StandardMaterial3D_dss5n")
 
 [sub_resource type="BoxMesh" id="BoxMesh_jwhxk"]
 
@@ -369,6 +373,11 @@ size = Vector3(8.04038, 2.81726, 14.0993)
 [node name="StopLocation" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.309258, 0, 0, 0, 0.309258, 0, 0, 0, 0.309258, 0, 2.47683, 0)
 mesh = SubResource("SphereMesh_frhet")
+
+[node name="Label3D" type="Label3D" parent="."]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.873827, 3.49466, 16.8514)
+pixel_size = 0.008
+text = "Look at the red box and press F to switch the light"
 
 [connection signal="pressed" from="ListenServer" to="." method="_on_server_pressed"]
 [connection signal="pressed" from="DServer" to="." method="_on_d_server_pressed"]
