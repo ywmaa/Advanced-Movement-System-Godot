@@ -11,11 +11,15 @@ func CalculateStopTime(Velocity:Vector3,deacceleration:Vector3):
 
 var previous_direction : float
 var orientation_direction : float
+var cleared_override : bool = true
 func orientation_warping(enabled:bool,CameraObject, Velocity:Vector3, skeleton_ref, Hip = "Hips", Spines := ["Spine","Spine1","Spine2"], Offset := 0.0, delta = 1.0, turn_rate = 10.0):
 	
-	skeleton_ref.clear_bones_global_pose_override()
+	if !enabled and !cleared_override:
+		skeleton_ref.clear_bones_global_pose_override()
+		cleared_override = true
 	if is_equal_approx(Velocity.length(),0.0) or !enabled:
 		return
+	cleared_override = false
 	var CameraAngle = Quaternion(Vector3(0,1,0),atan2(-CameraObject.transform.basis.z.z, -CameraObject.transform.basis.z.x)) 
 	var VelocityAngle = Quaternion(Vector3(0,1,0),atan2(Velocity.z, Velocity.x)) 
 	var IsMovingBackwardRelativeToCamera = false if -Velocity.rotated(Vector3.UP,-CameraObject.transform.basis.get_euler().y).z >= -0.1 else true
