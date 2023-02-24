@@ -12,19 +12,21 @@ func CalculateStopTime(Velocity:Vector3,deacceleration:Vector3):
 var previous_direction : float
 var orientation_direction : float
 var cleared_override : bool = true
-func orientation_warping(enabled:bool,CameraObject, Velocity:Vector3, skeleton_ref, Hip = "Hips", Spines := ["Spine","Spine1","Spine2"], Offset := 0.0, delta = 1.0, turn_rate = 10.0):
+func orientation_warping(enabled:bool,CameraObject, Velocity:Vector3, skeleton_ref:Skeleton3D, Hip :String= "Hips", Spines :Array[String]= ["Spine","Spine1","Spine2"], Offset := 0.0, delta :float= 1.0, turn_rate :float= 10.0):
 	
 	if !enabled and !cleared_override:
-		skeleton_ref.clear_bones_global_pose_override()
+		set_bone_y_rotation(skeleton_ref,Hip,0,false)
+		for bone in Spines:
+			set_bone_y_rotation(skeleton_ref,bone,0,false)
 		cleared_override = true
 	if is_equal_approx(Velocity.length(),0.0) or !enabled:
 		return
 	cleared_override = false
-	var CameraAngle = Quaternion(Vector3(0,1,0),atan2(-CameraObject.transform.basis.z.z, -CameraObject.transform.basis.z.x)) 
-	var VelocityAngle = Quaternion(Vector3(0,1,0),atan2(Velocity.z, Velocity.x)) 
-	var IsMovingBackwardRelativeToCamera = false if -Velocity.rotated(Vector3.UP,-CameraObject.transform.basis.get_euler().y).z >= -0.1 else true
-	var IsMovingLeftRelativeToCamera = false if -Velocity.rotated(Vector3.UP,-CameraObject.transform.basis.get_euler().y).x >= -0.1 else true
-	var rotation_difference_camera_velocity = CameraAngle.angle_to(VelocityAngle)
+	var CameraAngle :Quaternion = Quaternion(Vector3(0,1,0),atan2(-CameraObject.transform.basis.z.z, -CameraObject.transform.basis.z.x)) 
+	var VelocityAngle :Quaternion = Quaternion(Vector3(0,1,0),atan2(Velocity.z, Velocity.x)) 
+	var IsMovingBackwardRelativeToCamera :bool = false if -Velocity.rotated(Vector3.UP,-CameraObject.transform.basis.get_euler().y).z >= -0.1 else true
+	var IsMovingLeftRelativeToCamera :bool = false if -Velocity.rotated(Vector3.UP,-CameraObject.transform.basis.get_euler().y).x >= -0.1 else true
+	var rotation_difference_camera_velocity :float = CameraAngle.angle_to(VelocityAngle)
 	previous_direction = orientation_direction
 	orientation_direction = rotation_difference_camera_velocity
 	if IsMovingBackwardRelativeToCamera:
@@ -44,15 +46,17 @@ func orientation_warping(enabled:bool,CameraObject, Velocity:Vector3, skeleton_r
 	
 	orientation_direction = clampf(lerp_angle(previous_direction,orientation_direction,delta*turn_rate),-PI/2, PI/2)
 	#Orient bones to face the forward direction
+	
 	set_bone_y_rotation(skeleton_ref,Hip,orientation_direction)
 	for bone in Spines:
-		set_bone_y_rotation(skeleton_ref,bone,-orientation_direction/(Spines.size()+Offset))
+		set_bone_y_rotation(skeleton_ref,bone,(-orientation_direction/(Spines.size()))+Offset)
+		
 	
-func set_bone_y_rotation(skeleton,bone_name, y_rot):
+func set_bone_y_rotation(skeleton:Skeleton3D,bone_name:String, y_rot:float, presistant:bool=true):
 	var bone = skeleton.find_bone(bone_name)
 	var bone_transform : Transform3D = skeleton.get_bone_global_pose_no_override(bone)
-	var rotate_amount = y_rot 
-	bone_transform = bone_transform.rotated(Vector3(0,1,0), rotate_amount)
-	skeleton.set_bone_global_pose_override(bone, bone_transform,1.0,true)
+	bone_transform = bone_transform.rotated(Vector3(0,1,0), y_rot)
+	
+	skeleton.set_bone_global_pose_override(bone, bone_transform,1.0,presistant)
 	
 	
