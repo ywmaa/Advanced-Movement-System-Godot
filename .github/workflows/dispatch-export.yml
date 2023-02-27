@@ -38,7 +38,7 @@ jobs:
   release_game:
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.action_type == 'Release'}}
-    name: Export Program Job
+    name: Release Game Job
     steps:
       - name: checkout
         uses: actions/checkout@v3.0.2
@@ -78,7 +78,7 @@ jobs:
   action_export_game:
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.action_type == 'Action'}}
-    name: Export Program Job
+    name: Export Game Job
     steps:
       - name: checkout
         uses: actions/checkout@v3.0.2
