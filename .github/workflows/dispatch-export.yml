@@ -2,18 +2,22 @@ name: "Dispatch Export"
 on:
   workflow_dispatch:
     inputs:
+      action_type:
+        description: "Action Type - Release|Action"
+        required: true
+        default: "Action"
       godot_version:
         description: "Godot Version"
         required: true
         default: "4.0"
-      export_folder:
-        description: "Export Folder - Repository Path"
-        required: true
-        default: "./my/build/destination"
       export_name:
         description: "Export Name"
         required: true
         default: "AMSG"
+      export_version:
+        description: "Export Version"
+        required: true
+        default: "1.0"
       release_android:
         description: "Android Release Build"
         required: false
@@ -31,21 +35,27 @@ env:
   ITCH_IO: ${{ github.event.inputs.itch_io }}
 
 jobs:
-  export_game:
+  release_game:
     runs-on: ubuntu-latest
-    name: Export Game Job
+    if: ${{ github.event.inputs.action_type == 'Release'}}
+    name: Export Program Job
     steps:
       - name: checkout
         uses: actions/checkout@v3.0.2
-      - name: get tag from version
-        id: tag_version
-        run: |
-          echo "TAG_VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
       - name: install wine
         id: wine_install
         run: |
           sudo apt install wine64
           echo "WINE_PATH=$(which wine64)" >> $GITHUB_OUTPUT
+      - name: Set up JDK 11
+        if: env.RELEASE_ANDROID == 'true'
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+      - name: Setup Android SDK
+        if: env.RELEASE_ANDROID == 'true'
+        uses: android-actions/setup-android@v2
       - name: export game
         id: export
         uses: firebelley/godot-export@master
@@ -53,7 +63,7 @@ jobs:
           godot_executable_download_url: https://downloads.tuxfamily.org/godotengine/4.0/rc6/Godot_v4.0-rc6_linux.x86_64.zip
           godot_export_templates_download_url: https://downloads.tuxfamily.org/godotengine/4.0/rc6/Godot_v4.0-rc6_export_templates.tpz
           relative_project_path: ./ # build the standard project
-          relative_export_path: ${EXPORT_FOLDER} # move export output to this directory relative to git root
+          relative_export_path: ./my/build/destination # move export output to this directory relative to git root
           archive_output: true
           wine_path: ${{ steps.wine_install.outputs.WINE_PATH }}
           use_godot_4: true
@@ -62,5 +72,43 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           generateReleaseNotes: true
-          tag: v${{ steps.tag_version.outputs.TAG_VERSION }}
+          tag: v${{env.EXPORT_VERSION}}
           artifacts: ${{ steps.export.outputs.archive_directory }}/* # Added "/*" at the end is glob pattern match for this action
+
+  action_export_game:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.action_type == 'Action'}}
+    name: Export Program Job
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3.0.2
+      - name: install wine
+        id: wine_install
+        run: |
+          sudo apt install wine64
+          echo "WINE_PATH=$(which wine64)" >> $GITHUB_OUTPUT
+      - name: Set up JDK 11
+        if: env.RELEASE_ANDROID == 'true'
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+      - name: Setup Android SDK
+        if: env.RELEASE_ANDROID == 'true'
+        uses: android-actions/setup-android@v2
+      - name: export game
+        id: export
+        uses: firebelley/godot-export@master
+        with:
+          godot_executable_download_url: https://downloads.tuxfamily.org/godotengine/4.0/rc6/Godot_v4.0-rc6_linux.x86_64.zip
+          godot_export_templates_download_url: https://downloads.tuxfamily.org/godotengine/4.0/rc6/Godot_v4.0-rc6_export_templates.tpz
+          relative_project_path: ./ # build the standard project
+          relative_export_path: ./build # move export output to this directory relative to git root
+          archive_output: true
+          wine_path: ${{ steps.wine_install.outputs.WINE_PATH }}
+          use_godot_4: true
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v1
+        with:
+          name: all-platforms
+          path: ./build

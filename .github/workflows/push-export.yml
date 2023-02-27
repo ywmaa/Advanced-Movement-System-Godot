@@ -6,7 +6,6 @@ on:
 env:
   GODOT_VERSION: 4.0
   EXPORT_NAME: AMSG
-  ITCH_IO: ${{ false }} #set to true if you want to enable automatic itch.io deploy
   RELEASE_ANDROID: ${{ false }} #set to  true if you want to enable automatic android release export
 
 jobs:
@@ -16,10 +15,6 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v3.0.2
-      - name: get tag from version
-        id: tag_version
-        run: |
-          echo "TAG_VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
       - name: install wine
         id: wine_install
         run: |
