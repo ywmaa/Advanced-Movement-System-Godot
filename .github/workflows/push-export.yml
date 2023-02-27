@@ -2,7 +2,7 @@ name: "Push Export"
 on:
   push:
     branches:
-      - main
+      - master
 env:
   GODOT_VERSION: 4.0
   EXPORT_NAME: AMSG
@@ -10,193 +10,35 @@ env:
   RELEASE_ANDROID: ${{ false }} #set to  true if you want to enable automatic android release export
 
 jobs:
-  export-windows:
-    name: Windows Export
+  export_game:
     runs-on: ubuntu-latest
-    container:
-      image: barichello/godot-ci:3.4.4
+    name: Export Game Job
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup
+      - name: checkout
+        uses: actions/checkout@v3.0.2
+      - name: get tag from version
+        id: tag_version
         run: |
-          mkdir -v -p ~/.local/share/godot/templates
-          mv /root/.local/share/godot/templates/${GODOT_VERSION}.stable ~/.local/share/godot/templates/${GODOT_VERSION}.stable
-      - name: Windows Build
+          echo "TAG_VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+      - name: install wine
+        id: wine_install
         run: |
-          mkdir -v -p build/windows
-          godot -v --export "Windows Desktop" ./build/windows/$EXPORT_NAME.exe
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v1
+          sudo apt install wine64
+          echo "WINE_PATH=$(which wine64)" >> $GITHUB_OUTPUT
+      - name: export game
+        id: export
+        uses: firebelley/godot-export@v4.7.0
         with:
-          name: windows
-          path: build/windows
-      - name: Zip Folder
-        run: zip -r itch.zip build/windows
-      - name: Deploy to itch.io
-        if: ${{ env.ITCH_IO==true }}
-        uses: josephbmanley/butler-publish-itchio-action@master
-        env:
-          BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
-          CHANNEL: windows
-          ITCH_GAME: ${{ secrets.ITCH_GAME }}
-          ITCH_USER: ${{ secrets.ITCH_USER }}
-          PACKAGE: itch.zip
-
-  export-linux:
-    name: Linux Export
-    runs-on: ubuntu-latest
-    container:
-      image: barichello/godot-ci:3.4.4
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup
-        run: |
-          mkdir -v -p ~/.local/share/godot/templates
-          mv /root/.local/share/godot/templates/${GODOT_VERSION}.stable ~/.local/share/godot/templates/${GODOT_VERSION}.stable
-      - name: Linux Build
-        run: |
-          mkdir -v -p build/linux
-          godot -v --export "Linux/X11" ./build/linux/$EXPORT_NAME.x86_64
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v1
+          godot_executable_download_url: https://downloads.tuxfamily.org/godotengine/4.0/rc6/Godot_v4.0-rc6_linux.x86_64.zip
+          godot_export_templates_download_url: https://downloads.tuxfamily.org/godotengine/4.0/rc6/Godot_v4.0-rc6_export_templates.tpz
+          relative_project_path: ./ # build the standard project
+          relative_export_path: ./my/build/destination # move export output to this directory relative to git root
+          archive_output: true
+          wine_path: ${{ steps.wine_install.outputs.WINE_PATH }}
+      - name: create release
+        uses: ncipollo/release-action@v1.11.2
         with:
-          name: linux
-          path: build/linux
-      - name: Zip Folder
-        run: zip -r itch.zip build/linux
-      - name: Deploy to itch.io
-        if: ${{ env.ITCH_IO==true }}
-        uses: josephbmanley/butler-publish-itchio-action@master
-        env:
-          BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
-          CHANNEL: linux
-          ITCH_GAME: ${{ secrets.ITCH_GAME }}
-          ITCH_USER: ${{ secrets.ITCH_USER }}
-          PACKAGE: itch.zip
-
-  export-web:
-    name: Web Export
-    runs-on: ubuntu-latest
-    container:
-      image: barichello/godot-ci:3.4.4
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup
-        run: |
-          mkdir -v -p ~/.local/share/godot/templates
-          mv /root/.local/share/godot/templates/${GODOT_VERSION}.stable ~/.local/share/godot/templates/${GODOT_VERSION}.stable
-      - name: Web Build
-        run: |
-          mkdir -v -p build/web
-          godot -v --export "HTML5" ./build/web/index.html
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v1
-        with:
-          name: web
-          path: build/web
-      # Installing rsync is needed in order to deploy to GitHub Pages. Without it, the build will fail.
-      - name: Install rsync 📚
-        run: |
-          apt-get update && apt-get install -y rsync
-      - name: Deploy to GitHub Pages 🚀
-        uses: JamesIves/github-pages-deploy-action@releases/v3
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: gh-pages # The branch the action should deploy to.
-          FOLDER: build/web # The folder the action should deploy.
-      - name: Zip Folder
-        run: zip -r itch.zip build/web
-      - name: Deploy to itch.io
-        if: ${{ env.ITCH_IO==true }}
-        uses: josephbmanley/butler-publish-itchio-action@master
-        env:
-          BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
-          CHANNEL: HTML
-          ITCH_GAME: ${{ secrets.ITCH_GAME }}
-          ITCH_USER: ${{ secrets.ITCH_USER }}
-          PACKAGE: itch.zip
-
-  export-mac:
-    name: Mac Export
-    runs-on: ubuntu-latest
-    container:
-      image: barichello/godot-ci:3.4.4
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup
-        run: |
-          mkdir -v -p ~/.local/share/godot/templates
-          mv /root/.local/share/godot/templates/${GODOT_VERSION}.stable ~/.local/share/godot/templates/${GODOT_VERSION}.stable
-      - name: Mac Build
-        run: |
-          mkdir -v -p build/mac
-          godot -v --export "Mac OSX" ./build/mac/$EXPORT_NAME.zip
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v1
-        with:
-          name: mac
-          path: build/mac
-      - name: Zip Folder
-        run: zip -r itch.zip build/mac
-      - name: Deploy to itch.io
-        if: ${{ env.ITCH_IO==true }}
-        uses: josephbmanley/butler-publish-itchio-action@master
-        env:
-          BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
-          CHANNEL: mac
-          ITCH_GAME: ${{ secrets.ITCH_GAME }}
-          ITCH_USER: ${{ secrets.ITCH_USER }}
-          PACKAGE: itch.zip
-
-  export-android:
-    name: Android Export
-    runs-on: ubuntu-latest
-    container:
-      image: barichello/godot-ci:3.4.4
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup
-        run: |
-          mkdir -v -p ~/.local/share/godot/templates
-          mkdir -v -p ~/.config/godot/
-          ls /root/.local/share/godot/templates
-          mv /root/.local/share/godot/templates/${GODOT_VERSION}.stable ~/.local/share/godot/templates/${GODOT_VERSION}.stable
-          cp /root/.config/godot/editor_settings-3.tres ~/.config/godot/editor_settings-3.tres
-          echo 'export/android/debug_keystore = "/root/debug.keystore"' >> ~/.config/godot/editor_settings-3.tres
-          echo 'export/android/android_sdk_path = "/usr/lib/android-sdk"' >> ~/.config/godot/editor_settings-3.tres
-      - name: Android Debug Build
-        run: |
-          mkdir -v -p build/android
-          godot --verbose --export-debug "Android-CI-job (Do not edit)" ./build/android/$EXPORT_NAME.debug.apk
-      - name: Android Release Build
-        if: ${{ env.RELEASE_ANDROID==true }}
-        env:
-          K8S_SECRET_RELEASE_KEYSTORE_BASE64: ${{ secrets.K8S_SECRET_RELEASE_KEYSTORE_BASE64 }}
-          K8S_SECRET_RELEASE_KEYSTORE_USER: ${{ secrets.K8S_SECRET_RELEASE_KEYSTORE_USER  }}
-          K8S_SECRET_RELEASE_KEYSTORE_PASSWORD: ${{ secrets.K8S_SECRET_RELEASE_KEYSTORE_PASSWORD  }}
-        run: |
-          echo $K8S_SECRET_RELEASE_KEYSTORE_BASE64 | base64 --decode > /root/release.keystore
-          sed 's@keystore/release[[:space:]]*=[[:space:]]*".*"@keystore/release = "/root/release.keystore"@g' -i export_presets.cfg
-          sed 's@keystore/release_password[[:space:]]*=[[:space:]]*".*"@keystore/release_password="'$K8S_SECRET_RELEASE_KEYSTORE_PASSWORD'"@g' -i export_presets.cfg
-          sed 's@keystore/release_user[[:space:]]*=[[:space:]]*".*"@keystore/release_user="'$K8S_SECRET_RELEASE_KEYSTORE_USER'"@g' -i export_presets.cfg
-          godot --verbose --export "Android" ./build/android/$EXPORT_NAME.release.apk
-      - uses: actions/upload-artifact@v1
-        with:
-          name: android
-          path: build/android
-      - name: Zip Folder
-        run: zip -r itch.zip build/android
-      - name: Deploy to itch.io
-        if: ${{ env.ITCH_IO==true }}
-        uses: josephbmanley/butler-publish-itchio-action@master
-        env:
-          BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
-          CHANNEL: android
-          ITCH_GAME: ${{ secrets.ITCH_GAME }}
-          ITCH_USER: ${{ secrets.ITCH_USER }}
-          PACKAGE: itch.zip
+          token: ${{ secrets.GITHUB_TOKEN }}
+          generateReleaseNotes: true
+          tag: v${{ steps.tag_version.outputs.TAG_VERSION }}
+          artifacts: ${{ steps.export.outputs.archive_directory }}/* # Added "/*" at the end is glob pattern match for this action

@@ -7,3 +7,4 @@
 /.gitignore         export-ignore
 .github/            export-ignore
 /README.md          export-ignore
+/project.godot      export-ignore
