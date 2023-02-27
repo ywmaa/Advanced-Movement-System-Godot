@@ -8,12 +8,7 @@ you can get Godot 4 RC 6 here : https://godotengine.org/article/release-candidat
 
 [![Watch the video](https://img.youtube.com/vi/TiIriuw9s9U/hqdefault.jpg)](https://youtu.be/TiIriuw9s9U)
 
-## Method 1 (creating a new project using the amsg files)
-
-just remove ".amsg" from the file "project.godot.amsg"
-open the project and done.
-
-## Method 2 (adding to existing project)
+## (adding to existing project)
 1- copy the files to your Godot project 
 
 2- copy and paste the following into your project's "project.godot" file 
