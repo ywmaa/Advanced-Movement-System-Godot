@@ -37,4 +37,7 @@ jobs:
           wine_path: ${{ steps.wine_install.outputs.WINE_PATH }}
           use_godot_4: true
       - name: Upload Artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/upload-artifact@v1
+        with:
+          name: all-platforms
+          path: .
