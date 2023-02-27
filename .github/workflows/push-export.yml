@@ -1,4 +1,4 @@
-name: "Push Export"
+name: "Push Export" #using this github action https://github.com/firebelley/godot-export
 on:
   push:
     branches:
@@ -32,7 +32,7 @@ jobs:
           godot_executable_download_url: https://downloads.tuxfamily.org/godotengine/4.0/rc6/Godot_v4.0-rc6_linux.x86_64.zip
           godot_export_templates_download_url: https://downloads.tuxfamily.org/godotengine/4.0/rc6/Godot_v4.0-rc6_export_templates.tpz
           relative_project_path: ./ # build the standard project
-          relative_export_path: . # move export output to this directory relative to git root
+          relative_export_path: ./build/ # move export output to this directory relative to git root
           archive_output: true
           wine_path: ${{ steps.wine_install.outputs.WINE_PATH }}
           use_godot_4: true
@@ -40,4 +40,4 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: all-platforms
-          path: .
+          path: /build
