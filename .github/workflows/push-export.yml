@@ -36,7 +36,7 @@ jobs:
           archive_output: true
           wine_path: ${{ steps.wine_install.outputs.WINE_PATH }}
           use_godot_4: true
-      - name: Upload Artifact
+      - name: Upload
               uses: actions/upload-artifact@v1
               with:
                 name: Upload Artifact
