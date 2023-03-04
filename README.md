@@ -8,6 +8,9 @@ you can get Godot 4.0 Stable here : https://godotengine.org/
 
 [![Watch the video](https://img.youtube.com/vi/TiIriuw9s9U/hqdefault.jpg)](https://youtu.be/TiIriuw9s9U)
 
+# This project is a template for creating advanced Third/First Person movement in [GODOT](https://github.com/godotengine/godot)
+You may use it in any other camera type like RTS, but you will need to tweak it yourself.
+
 ## (adding to existing project)
 1- copy the files to your Godot project 
 
@@ -95,8 +98,9 @@ fire={
 
 3- autoload the "Global.gd" GDscript, you can find it in "res://addons/AMSG/Global.gd"
 
-# This project is a template for creating advanced Third/First Person movement in [GODOT](https://github.com/godotengine/godot)
-You may use it in any other camera type like RTS, but you will need to tweak it yourself.
+
+# Importing characters and animations from mixamo to Godot 4
+https://youtu.be/59vKbXKuaNI
 
 # Animation Retargeting in Godot 4 tutroial :
 https://godotengine.org/article/animation-retargeting-in-godot-4-0 .
