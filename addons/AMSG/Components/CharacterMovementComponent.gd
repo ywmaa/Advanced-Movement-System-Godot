@@ -381,7 +381,7 @@ func _physics_process(delta):
 		vertical_velocity.y = 0
 	#------------------ Stair climb ------------------#
 	#stair movement must happen after gravity so it can override in air status
-#	stair_move()
+	stair_move()
 
 func crouch_update(delta):
 	var direct_state = character_node.get_world_3d().direct_space_state
