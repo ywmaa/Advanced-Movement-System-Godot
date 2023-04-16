@@ -1,6 +1,6 @@
 extends Node
 class_name CameraComponent
-
+## Script used to control the camera for the player
 
 @export var networking_path : NodePath
 @onready var networking = get_node(networking_path) 

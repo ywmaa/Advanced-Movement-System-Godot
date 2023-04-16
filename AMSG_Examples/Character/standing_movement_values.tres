@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="movement_values" load_steps=2 format=3 uid="uid://buhjkpv85gdmi"]
+
+[ext_resource type="Script" path="res://addons/AMSG/Data/movement_values.gd" id="1_i36h3"]
+
+[resource]
+script = ExtResource("1_i36h3")
+walk_speed = 1.75
+run_speed = 3.75
+sprint_speed = 6.5
+walk_acceleration = 20.0
+run_acceleration = 20.0
+sprint_acceleration = 20.0
+idle_rotation_rate = 0.5
+walk_rotation_rate = 4.0
+run_rotation_rate = 5.0
+sprint_rotation_rate = 20.0

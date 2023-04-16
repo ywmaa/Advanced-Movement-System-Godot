@@ -27,9 +27,9 @@ func remove_sync_position(sync_name:String):
 	rotation_objects_array.remove_at(sync_index)
 	names_array.remove_at(sync_index)
 
-#this should be called as a method in the animation player, and set the name
-#using the name we assigned to the sync position we will tween it, 
-#also in the animation player we should specify the time to tween to this required position
+## this should be called as a method in the animation player, and set the name
+## using the name we assigned to the sync position that we will tween it, 
+## also in the animation player we should specify the time to tween to this required position
 func motion_warping(sync_name:String, sync_time:float):
 
 	var sync_index = names_array.find(sync_name)

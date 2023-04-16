@@ -29,16 +29,17 @@ func _physics_process(delta):
 				add_movement_input(direction, current_movement_data.walk_speed,current_movement_data.walk_acceleration)
 		else:
 			add_movement_input(direction,0,deacceleration)
+			
 		return
 
 	
 	#------------------ Input Movement ------------------#
 	h_rotation = camera_root.HObject.transform.basis.get_euler().y
-#	v_rotation = camera_root.VObject.transform.basis.get_euler().x
+	var v_rotation = camera_root.VObject.transform.basis.get_euler().x
 	
 	if Input.is_action_pressed("forward") || Input.is_action_pressed("back") || Input.is_action_pressed("right") || Input.is_action_pressed("left") :
 		direction = Vector3(Input.get_action_strength("right") - Input.get_action_strength("left"),
-			0.0 if is_flying == true else 0.0,
+			remap(v_rotation,-PI/2,PI/2,-1.0,1.0) if is_flying == true else 0.0,
 			Input.get_action_strength("back") - Input.get_action_strength("forward"))
 		direction = direction.rotated(Vector3.UP,h_rotation).normalized()
 		if gait == Global.gait.sprinting :
@@ -48,7 +49,8 @@ func _physics_process(delta):
 		else:
 			add_movement_input(direction, current_movement_data.walk_speed,current_movement_data.walk_acceleration)
 	else:
-		add_movement_input(direction,0,deacceleration)
+		direction = Vector3.ZERO
+		add_movement_input()
 		
 	
 	#------------------ Input Crouch ------------------#

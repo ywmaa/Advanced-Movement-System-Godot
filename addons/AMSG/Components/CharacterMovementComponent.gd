@@ -5,13 +5,24 @@ class_name CharacterMovementComponent
 #####################################
 @export_category("Refrences")
 #Refrences
-@onready @export var mesh_ref : Node
-@onready @export var anim_ref : AnimBlend 
-@onready @export var skeleton_ref : Skeleton3D 
-@onready @export var collision_shape_ref : CollisionShape3D
+
+## Refrence to character mesh, should be assigned to a [Node3D] that is a parent to the actual mesh (Skeleton3D)
+@export var mesh_ref : Node
+## Refrence to AnimationTree that uses the AnimBlend Script provided in the addon
+@export var anim_ref : AnimBlend 
+## Refrence to character mesh which should probably be [Skeleton3D]
+@export var skeleton_ref : Skeleton3D 
+## Refrence to the [CollisionShape3D] used for the character
+@export var collision_shape_ref : CollisionShape3D
 #@onready var bonker = $CollisionShape3D/HeadBonker
-@onready @export var camera_root : CameraComponent 
-@onready @export var character_node : CharacterBody3D 
+## Refrence to [CameraComponent] Node provided by the addon
+@export var camera_root : CameraComponent 
+
+## Refrence to Tree Root, which should be either a [CharacterBody3D] or [RigidBody3D]
+@export var character_node : PhysicsBody3D
+## Refrence to a [RayCast3D] that should detect if character is on ground
+@export var ground_check : RayCast3D
+
 #####################################
 
 
@@ -22,10 +33,11 @@ class_name CharacterMovementComponent
 @export var AI := false
 
 @export var is_flying := false
-@export var gravity := 9.8
+var gravity : float = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 @export var tilt := false
 @export var tilt_power := 1.0
+
 
 @export var ragdoll := false :
 	get: return ragdoll
@@ -39,9 +51,15 @@ class_name CharacterMovementComponent
 				skeleton_ref.physical_bones_stop_simulation()
 
 
-@export var jump_magnitude := 5.0
+@export var jump_magnitude := 4.0
+
+## the maximum height of stair that the character can step on
 @export var max_stair_climb_height : float = 0.5
+
+## the distance to the stair that the script will start detecting it
 @export var max_close_stair_distance : float = 0.75
+
+
 @export var roll_magnitude := 17.0
 
 var default_height := 2.0
@@ -49,124 +67,29 @@ var crouch_height := 1.0
 
 @export var crouch_switch_speed := 5.0 
 
+## the maximum angle between the camera and the character's rotation.
+## when the angle between them exceeds this value, the character will rotate in place to face the camera direction.
 @export var rotation_in_place_min_angle := 90.0 
 
-#Movement Values Settings
-#you could play with the values to achieve different movement settings
-var deacceleration := 8.0
-var acceleration_reducer := 4.0
-var movement_data = {
-	normal = {
-		looking_direction = {
-			standing = {
-				walk_speed = 1.75,
-				run_speed = 3.75,
-				sprint_speed = 6.5,
-				
-				walk_acceleration = 20.0/acceleration_reducer,
-				run_acceleration = 20.0/acceleration_reducer,
-				sprint_acceleration = 7.5/acceleration_reducer,
-				
-				idle_rotation_rate = 0.5,
-				walk_rotation_rate = 4.0,
-				run_rotation_rate = 5.0,
-				sprint_rotation_rate = 20.0,
-			},
-
-			crouching = {
-				walk_speed = 1.5,
-				run_speed = 2,
-				sprint_speed = 3,
-				
-				walk_acceleration = 25.0/acceleration_reducer,
-				run_acceleration = 25.0/acceleration_reducer,
-				sprint_acceleration = 5.0/acceleration_reducer,
-				
-				idle_rotation_rate = 0.5,
-				walk_rotation_rate = 4.0,
-				run_rotation_rate = 5.0,
-				sprint_rotation_rate = 20.0,
-			}
-		},
-		
-		
-		
-		
-		
-		velocity_direction = {
-			standing = {
-				walk_speed = 1.75,
-				run_speed = 3.75,
-				sprint_speed = 6.5,
-				
-				#Nomral Acceleration
-				walk_acceleration = 20.0/acceleration_reducer,
-				run_acceleration = 20.0/acceleration_reducer, 
-				sprint_acceleration = 7.5/acceleration_reducer,
-				
-				#Responsive Rotation
-				idle_rotation_rate = 5.0,
-				walk_rotation_rate = 8.0,
-				run_rotation_rate = 12.0, 
-				sprint_rotation_rate = 20.0,
-			},
-
-			crouching = {
-				walk_speed = 1.5,
-				run_speed = 2,
-				sprint_speed = 3,
-				
-				#Responsive Acceleration
-				walk_acceleration = 25.0/acceleration_reducer,
-				run_acceleration = 25.0/acceleration_reducer,
-				sprint_acceleration = 5.0/acceleration_reducer,
-				
-				#Nomral Rotation
-				idle_rotation_rate = 0.5,
-				walk_rotation_rate = 4.0,
-				run_rotation_rate = 5.0,
-				sprint_rotation_rate = 20.0,
-			}
-		},
-		
-		
-		
-		
-		
-		
-		aiming = {
-			standing = {
-				walk_speed = 1.65,
-				run_speed = 3.75,
-				sprint_speed = 6.5,
-				
-				walk_acceleration = 20.0/acceleration_reducer,
-				run_acceleration = 20.0/acceleration_reducer,
-				sprint_acceleration = 7.5/acceleration_reducer,
-				
-				idle_rotation_rate = 0.5,
-				walk_rotation_rate = 4.0,
-				run_rotation_rate = 5.0,
-				sprint_rotation_rate = 20.0,
-			},
-
-			crouching = {
-				walk_speed = 1.5,
-				run_speed = 2,
-				sprint_speed = 3,
-				
-				walk_acceleration = 25.0/acceleration_reducer,
-				run_acceleration = 25.0/acceleration_reducer,
-				sprint_acceleration = 5.0/acceleration_reducer,
-				
-				idle_rotation_rate = 0.5,
-				walk_rotation_rate = 4.0,
-				run_rotation_rate = 5.0,
-				sprint_rotation_rate = 20.0,
-			}
-		}
-	}
-}
+@export var deacceleration := 0.5
+## Movement Values Settings
+## you can change the values to achieve different movement settings
+@export var looking_direction_standing_data : movement_values
+## Movement Values Settings
+## you can change the values to achieve different movement settings
+@export var looking_direction_crouch_data : movement_values
+## Movement Values Settings
+## you can change the values to achieve different movement settings
+@export var velocity_direction_standing_data : movement_values
+## Movement Values Settings
+## you can change the values to achieve different movement settings
+@export var velocity_direction_crouch_data : movement_values
+## Movement Values Settings
+## you can change the values to achieve different movement settings
+@export var aim_standing_data : movement_values
+## Movement Values Settings
+## you can change the values to achieve different movement settings
+@export var aim_crouch_data : movement_values
 #####################################
 
 
@@ -184,18 +107,30 @@ var movement_data = {
 
 #####################################
 #for logic #it is better not to change it if you don't want to break the system / only change it if you want to redesign the system
+
+## returns the actual acceleration in [Vector3]
 var actual_acceleration :Vector3
+## returns the acceleration that the character should move with, aka input acceleration
 var input_acceleration :Vector3
 
 var vertical_velocity :Vector3 
 
+## returns the actual velocity for the player.
+## so for example if player is holding forward key, but character is stuck by wall, it will return 0 velocity.
 var actual_velocity :Vector3
+var velocity :Vector3
+## returns the input velocity for the player.
+## so for example if player is holding forward key, but character is stuck by wall, it will return the velocity that the character should move using it.
 var input_velocity :Vector3
-var movement_direction
+
+## the Y/UP rotation of the movement direction
+var movement_direction : float
 
 var tiltVector : Vector3
 
+## is the character actually moving ? regardless of the player input.
 var is_moving := false
+## is the player trying to move / holding input key.
 var input_is_moving := false
 
 var head_bonked := false
@@ -208,20 +143,7 @@ var aim_rate_h :float
 var is_moving_on_stair :bool
 
 
-var current_movement_data = {
-	walk_speed = 1.75,
-	run_speed = 3.75,
-	sprint_speed = 6.5,
-
-	walk_acceleration = 20.0,
-	run_acceleration = 20.0,
-	sprint_acceleration = 7.5,
-
-	idle_rotation_rate = 0.5,
-	walk_rotation_rate = 4.0,
-	run_rotation_rate = 5.0,
-	sprint_rotation_rate = 20.0,
-}
+var current_movement_data : movement_values = movement_values.new()
 #####################################
 
 #animation
@@ -328,9 +250,9 @@ func update_character_movement():
 			tilt = false
 			match stance:
 				Global.stance.standing:
-					current_movement_data = movement_data.normal.velocity_direction.standing
+					current_movement_data = velocity_direction_standing_data
 				Global.stance.crouching:
-					current_movement_data = movement_data.normal.velocity_direction.crouching
+					current_movement_data = velocity_direction_crouch_data
 					
 					
 		Global.rotation_mode.looking_direction:
@@ -339,17 +261,17 @@ func update_character_movement():
 			tilt = true
 			match stance:
 				Global.stance.standing:
-					current_movement_data = movement_data.normal.looking_direction.standing
+					current_movement_data = looking_direction_standing_data
 				Global.stance.crouching:
-					current_movement_data = movement_data.normal.looking_direction.crouching
+					current_movement_data = looking_direction_crouch_data
 					
 					
 		Global.rotation_mode.aiming:
 			match stance:
 				Global.stance.standing:
-					current_movement_data = movement_data.normal.aiming.standing
+					current_movement_data = aim_standing_data
 				Global.stance.crouching:
-					current_movement_data = movement_data.normal.aiming.crouching
+					current_movement_data = aim_crouch_data
 #####################################
 
 var previous_aim_rate_h :float
@@ -358,7 +280,19 @@ var previous_aim_rate_h :float
 var test_sphere : MeshInstance3D = MeshInstance3D.new()
 var test_sphere1 : MeshInstance3D = MeshInstance3D.new()
 func _ready():
-	
+	if not character_node is CharacterBody3D and not character_node is RigidBody3D:
+		assert(false, "Character Node Must be either CharacterBody3D or RigidBody3D, please choose the right node from the inspector.")
+		
+	if character_node is RigidBody3D:
+		character_node.mass = 80
+		character_node.continuous_cd = true
+		character_node.max_contacts_reported = 1
+		character_node.contact_monitor = true
+		character_node.freeze_mode = RigidBody3D.FREEZE_MODE_KINEMATIC
+		character_node.axis_lock_angular_x = true
+		character_node.axis_lock_angular_y = true
+		character_node.axis_lock_angular_z = true
+		character_node.linear_damp = deacceleration
 	#--------- These tests are for stride warping ---------# 
 #	test_sphere.mesh = SphereMesh.new()
 #	test_sphere1.mesh = SphereMesh.new()
@@ -433,21 +367,21 @@ func _physics_process(delta):
 	crouch_update(delta)
 
 	#------------------ Gravity ------------------#
-	if is_flying == false:
+	if is_flying == false and character_node is CharacterBody3D:
 		character_node.velocity.y =  lerp(character_node.velocity.y,vertical_velocity.y - character_node.get_floor_normal().y,delta * gravity)
 		character_node.move_and_slide()
-	if character_node.is_on_floor() and is_flying == false:
-		movement_state = Global.movement_state.grounded 
-		vertical_velocity = -character_node.get_floor_normal() * 10
+	if ground_check.is_colliding() and is_flying == false:
+		movement_state = Global.movement_state.grounded
 	else:
 		await get_tree().create_timer(0.1).timeout #wait a moment to see if the character lands fast (this means that the character didn't fall, but stepped down a bit.)
 		movement_state = Global.movement_state.in_air
-		vertical_velocity += Vector3.DOWN * gravity * delta
-	if character_node.is_on_ceiling():
+		if character_node is CharacterBody3D:
+			vertical_velocity += Vector3.DOWN * gravity * delta
+	if character_node is CharacterBody3D and character_node.is_on_ceiling():
 		vertical_velocity.y = 0
 	#------------------ Stair climb ------------------#
 	#stair movement must happen after gravity so it can override in air status
-	stair_move()
+#	stair_move()
 
 func crouch_update(delta):
 	var direct_state = character_node.get_world_3d().direct_space_state
@@ -605,22 +539,46 @@ func ik_look_at(position: Vector3):
 
 
 var PrevVelocity :Vector3
-func add_movement_input(direction: Vector3, Speed: float , Acceleration: float) -> void:
-	if is_flying == false:
-		character_node.velocity.x = lerp(character_node.velocity.x, direction.x * Speed, Acceleration * get_physics_process_delta_time())
-		character_node.velocity.z = lerp(character_node.velocity.z, direction.z * Speed, Acceleration * get_physics_process_delta_time())
-	else:
-		character_node.set_velocity(character_node.get_velocity().lerp(direction * Speed, Acceleration * get_physics_process_delta_time()))
-		character_node.move_and_slide()
-	input_velocity = Speed * direction
+
+## Adds input to move the character, should be called when Idle too, to execute deacceleration for CharacterBody3D or reset velocity for RigidBody3D.
+## when Idle speed and direction should be passed as 0, and deacceleration passed, or leave them empty.
+func add_movement_input(direction: Vector3 = Vector3.ZERO, Speed: float = 0, Acceleration: float = deacceleration if character_node is CharacterBody3D else 0) -> void:
+	var max_speed : float = Speed
+	
+	
+	if character_node is RigidBody3D:
+		if is_flying == false:
+			velocity.x = direction.x * Acceleration * character_node.mass * get_physics_process_delta_time()
+			velocity.z = direction.z * Acceleration * character_node.mass * get_physics_process_delta_time()
+		else:
+			velocity = direction * Acceleration * character_node.mass * get_physics_process_delta_time()
+		
+		if is_inf(character_node.linear_velocity.length()):
+			character_node.linear_velocity = velocity
+		if character_node.linear_velocity.length() > max_speed:
+			velocity = direction
+		character_node.apply_central_impulse(velocity)
+
+	if character_node is CharacterBody3D:
+		if is_flying == false:
+			character_node.velocity.x = lerp(character_node.velocity.x,(direction*max_speed).x,Acceleration/(max_speed if max_speed != 0 else (abs(character_node.velocity.x) if character_node.velocity.x != 0 else 1.0))*get_physics_process_delta_time())
+			character_node.velocity.z = lerp(character_node.velocity.z,(direction*max_speed).z,Acceleration/(max_speed if max_speed != 0 else (abs(character_node.velocity.z) if character_node.velocity.z != 0 else 1.0))*get_physics_process_delta_time())
+		else:
+			character_node.velocity = character_node.velocity.lerp((direction*max_speed),Acceleration/(max_speed if max_speed != 0 else character_node.velocity.x if character_node.velocity.x != 0 else 1.0)*get_physics_process_delta_time())
+			character_node.move_and_slide()
+	# Get the velocity from the character node
+	var character_node_velocity = character_node.velocity if character_node is CharacterBody3D else character_node.linear_velocity
+	
+	input_velocity = direction*max_speed if character_node is CharacterBody3D else velocity 
 	movement_direction = atan2(input_velocity.x,input_velocity.z)
-	input_is_moving = Speed > 0.0
-	input_acceleration = Acceleration * direction
+	input_is_moving = input_velocity.length() > 0.0
+	input_acceleration = Acceleration * direction * (1 if max_speed != 0 else -1)
 	#
-	actual_acceleration = (character_node.velocity - PrevVelocity)  / (Acceleration * get_physics_process_delta_time())
-	PrevVelocity = character_node.velocity
+	
+	actual_acceleration = (character_node_velocity - PrevVelocity)  / (get_physics_process_delta_time())
+	PrevVelocity = character_node_velocity
 	#
-	actual_velocity = character_node.velocity
+	actual_velocity = character_node_velocity
 	#tiltCharacterMesh
 	if tilt == true:
 		var MovementDirectionRelativeToCamera = input_velocity.normalized().rotated(Vector3.UP,-camera_root.HObject.transform.basis.get_euler().y)
@@ -647,8 +605,10 @@ func mantle_check():
 	pass
 
 func jump() -> void:
-	if character_node.is_on_floor() and not head_bonked:
-		vertical_velocity = Vector3.UP * jump_magnitude
-
+	if ground_check.is_colliding() and not head_bonked:
+		if character_node is RigidBody3D:
+			character_node.apply_impulse(Vector3.UP * jump_magnitude * character_node.mass)
+		else:
+			vertical_velocity = Vector3.UP * jump_magnitude
 
 

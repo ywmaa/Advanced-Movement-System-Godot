@@ -1,8 +1,11 @@
 extends Node
 class_name pose_warping
-#For Predicting Stop Location
+## For Predicting Stop Location
+## it uses a linear equation : d = v*t + 0.5 * a * t^2
+## v is velocity. t is time. a is acceleration
 func CalculateStopLocation(CurrentCharacterLocation:Vector3,Velocity:Vector3,deacceleration:Vector3,delta):
-	return CurrentCharacterLocation + (Velocity * CalculateStopTime(Velocity,deacceleration) * delta * 8)
+	var time = CalculateStopTime(Velocity,deacceleration)
+	return CurrentCharacterLocation + (Velocity * time + 0.5*deacceleration*pow(time,2))
 
 func CalculateStopTime(Velocity:Vector3,deacceleration:Vector3):
 	var time = Velocity.length() / deacceleration.length()
