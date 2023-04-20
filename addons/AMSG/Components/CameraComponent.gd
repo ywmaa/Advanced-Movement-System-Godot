@@ -58,7 +58,7 @@ var camera_v : float = 0
 
 ## Assign a [camera_values] resource to it and change its values to tweak camera settings
 @export var camera_settings : camera_values = camera_values.new()
-
+@export var first_person_camera_bone : BoneAttachment3D
 var current_fov : float = 90.0
 var acceleration_h = 10
 var acceleration_v = 10
@@ -69,7 +69,6 @@ func _ready():
 	Camera.current = networking.is_local_authority()
 	spring_arm_position_relative_to_player = SpringArm.position
 	SpringArm.top_level = true
-	
 
 func _input(event):
 	if event is InputEventMouseMotion:
@@ -81,7 +80,7 @@ func _physics_process(delta):
 	if camera_settings.camera_change_fov_on_speed and PlayerRef.actual_velocity.length() > camera_settings.camera_fov_change_starting_speed:
 		smooth_fov(current_fov + clampf((PlayerRef.actual_velocity.length()-camera_settings.camera_fov_change_starting_speed)*(camera_settings.camera_max_fov_change/10.0),0,camera_settings.camera_max_fov_change))
 
-	SpringArm.position = SpringArm.position.lerp(get_parent().global_position + spring_arm_position_relative_to_player,(1/camera_settings.camera_inertia))
+	SpringArm.position = SpringArm.position.lerp((get_parent().global_position + spring_arm_position_relative_to_player) if view_mode == Global.view_mode.third_person else first_person_camera_bone.global_position,(1/camera_settings.camera_inertia) if view_mode == Global.view_mode.third_person else 1.0)
 	
 	camera_v = clamp(camera_v,deg_to_rad(camera_vertical_min),deg_to_rad(camera_vertical_max))
 	HObject.rotation.y = lerp(HObject.rotation.y,camera_h,delta * acceleration_h)

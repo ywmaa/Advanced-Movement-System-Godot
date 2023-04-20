@@ -146,10 +146,6 @@ func _input(event):
 		await get_tree().create_timer(0.2).timeout
 		if view_changed_recently == false:
 			camera_root.view_mode = camera_root.view_mode + 1 if camera_root.view_mode < 1 else 0
-			if camera_root.view_mode == Global.view_mode.first_person and networking.is_local_authority():
-				mesh_ref.visible = false
-			else:
-				mesh_ref.visible = true
 			view_changed_recently = true
 	if networking.is_local_authority():
 		if event.is_action_pressed("EnableSDFGI"):
