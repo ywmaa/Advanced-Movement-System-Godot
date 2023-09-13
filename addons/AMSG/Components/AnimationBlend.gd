@@ -18,18 +18,25 @@ func _physics_process(_delta):
 			pass
 		Global.movement_state.ragdoll:
 			pass
-	#Couch/stand switch
-	match movement_script.stance: 
-		Global.stance.standing:
-			set("parameters/VelocityDirection/crouch/transition_request" , "stand")
-		Global.stance.crouching:
-			set("parameters/VelocityDirection/crouch/transition_request" , "crouch")
 
 	#standing
 	set("parameters/VelocityDirection/standing/conditions/idle",!movement_script.input_is_moving)
 	set("parameters/VelocityDirection/standing/conditions/walking",movement_script.gait == Global.gait.walking and movement_script.input_is_moving)
 	set("parameters/VelocityDirection/standing/conditions/running",movement_script.gait == Global.gait.running and movement_script.input_is_moving)
 	set("parameters/VelocityDirection/standing/conditions/sprinting",movement_script.gait == Global.gait.sprinting and movement_script.input_is_moving)
+
+	# Crouching
+	set("parameters/VelocityDirection/crouching/conditions/idle",!movement_script.input_is_moving)
+	set("parameters/VelocityDirection/crouching/conditions/walking",movement_script.gait == Global.gait.walking and movement_script.input_is_moving)
+	#Couch/stand switch
+	match movement_script.stance: 
+		Global.stance.standing:
+			set("parameters/VelocityDirection/crouch/transition_request" , "stand")
+		Global.stance.crouching:
+
+			set("parameters/VelocityDirection/crouch/transition_request" , "crouch")
+
+
 
 
 	if movement_script.rotation_mode == Global.rotation_mode.looking_direction or movement_script.rotation_mode == Global.rotation_mode.aiming:
@@ -43,9 +50,6 @@ func _physics_process(_delta):
 	else:
 		set("parameters/VelocityDirection/standing/Walk/FB/transition_request","Forward")
 		set("parameters/VelocityDirection/standing/Jog/FB/transition_request","Forward")
-	# Crouching
-	set("parameters/VelocityDirection/crouching/conditions/idle",!movement_script.input_is_moving)
-	set("parameters/VelocityDirection/crouching/conditions/walking",movement_script.gait == Global.gait.walking and movement_script.input_is_moving)
 
 	#On Stopped
 	if !(Input.is_action_pressed("forward") || Input.is_action_pressed("back") || Input.is_action_pressed("right") || Input.is_action_pressed("left")) and (Input.is_action_just_released("right") || Input.is_action_just_released("back") || Input.is_action_just_released("left") || Input.is_action_just_released("forward")):

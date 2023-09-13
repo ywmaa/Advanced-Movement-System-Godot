@@ -1,4 +1,4 @@
-[gd_resource type="AnimationNodeBlendTree" load_steps=41 format=3 uid="uid://vjkfv8poa6di"]
+[gd_resource type="AnimationNodeBlendTree" load_steps=42 format=3 uid="uid://vjkfv8poa6di"]
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_mb2kt"]
 animation = &"TurnLeft"
@@ -22,12 +22,13 @@ sync = true
 
 [sub_resource type="AnimationNodeTransition" id="AnimationNodeTransition_3twx3"]
 sync = true
-enabled_inputs = 2
 xfade_time = 0.3
 input_0/name = "stand"
 input_0/auto_advance = false
+input_0/reset = true
 input_1/name = "crouch"
 input_1/auto_advance = false
+input_1/reset = true
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_id6x0"]
 animation = &"CrouchIdle"
@@ -36,15 +37,19 @@ animation = &"CrouchIdle"
 animation = &"CrouchWalkingForward"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_urt4k"]
+switch_mode = 1
+advance_mode = 2
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_6juuf"]
 xfade_time = 0.2
 switch_mode = 1
+advance_mode = 2
 advance_condition = &"walking"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_611fp"]
 xfade_time = 0.2
 switch_mode = 1
+advance_mode = 2
 advance_condition = &"idle"
 
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_2xodt"]
@@ -52,7 +57,7 @@ states/CrouchIdle/node = SubResource("AnimationNodeAnimation_id6x0")
 states/CrouchIdle/position = Vector2(321, 100)
 states/CrouchWalkingForward/node = SubResource("AnimationNodeAnimation_cri6g")
 states/CrouchWalkingForward/position = Vector2(560, 100)
-states/Start/position = Vector2(157, 100)
+states/Start/position = Vector2(169, 183)
 transitions = ["Start", "CrouchIdle", SubResource("AnimationNodeStateMachineTransition_urt4k"), "CrouchIdle", "CrouchWalkingForward", SubResource("AnimationNodeStateMachineTransition_6juuf"), "CrouchWalkingForward", "CrouchIdle", SubResource("AnimationNodeStateMachineTransition_611fp")]
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_u8pjd"]
@@ -62,11 +67,14 @@ animation = &"Idle"
 animation = &"Jogbackward"
 
 [sub_resource type="AnimationNodeTransition" id="AnimationNodeTransition_mk3d0"]
-enabled_inputs = 2
+sync = true
+xfade_time = 0.1
 input_0/name = "Forward"
 input_0/auto_advance = false
+input_0/reset = false
 input_1/name = "Backward"
 input_1/auto_advance = false
+input_1/reset = false
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_6bsh6"]
 animation = &"JogForward"
@@ -101,11 +109,14 @@ node_connections = [&"output", 0, &"StopSeek", &"StopSeek", 0, &"StopAnim"]
 animation = &"WalkingBackward"
 
 [sub_resource type="AnimationNodeTransition" id="AnimationNodeTransition_tyxgb"]
-enabled_inputs = 2
+sync = true
+xfade_time = 0.1
 input_0/name = "Forward"
 input_0/auto_advance = false
+input_0/reset = false
 input_1/name = "Backward"
 input_1/auto_advance = false
+input_1/reset = false
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_3y4dp"]
 animation = &"Walk"
@@ -138,7 +149,6 @@ advance_condition = &"sprinting"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_xf5i1"]
 advance_mode = 2
-advance_condition = &"idle"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_nbs2g"]
 xfade_time = 0.2
@@ -184,6 +194,12 @@ switch_mode = 1
 advance_mode = 2
 advance_condition = &"running"
 
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_01wuf"]
+xfade_time = 0.2
+switch_mode = 1
+advance_mode = 2
+advance_condition = &"walking"
+
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_ieguh"]
 states/Idle/node = SubResource("AnimationNodeAnimation_u8pjd")
 states/Idle/position = Vector2(137, 278)
@@ -196,22 +212,22 @@ states/Stopping/node = SubResource("AnimationNodeBlendTree_xw0ge")
 states/Stopping/position = Vector2(505, 327)
 states/Walk/node = SubResource("AnimationNodeBlendTree_3e37y")
 states/Walk/position = Vector2(216.227, 134)
-transitions = ["Stopping", "Idle", SubResource("AnimationNodeStateMachineTransition_wnbtw"), "Run", "Stopping", SubResource("AnimationNodeStateMachineTransition_rvsaa"), "Idle", "Run", SubResource("AnimationNodeStateMachineTransition_s0egl"), "Start", "Idle", SubResource("AnimationNodeStateMachineTransition_xf5i1"), "Idle", "Walk", SubResource("AnimationNodeStateMachineTransition_nbs2g"), "Walk", "Stopping", SubResource("AnimationNodeStateMachineTransition_rs3n0"), "Walk", "Jog", SubResource("AnimationNodeStateMachineTransition_6gab4"), "Jog", "Walk", SubResource("AnimationNodeStateMachineTransition_6m5a2"), "Run", "Jog", SubResource("AnimationNodeStateMachineTransition_hy2h2"), "Jog", "Run", SubResource("AnimationNodeStateMachineTransition_2tyel"), "Jog", "Stopping", SubResource("AnimationNodeStateMachineTransition_7h1qf"), "Idle", "Jog", SubResource("AnimationNodeStateMachineTransition_4twgu")]
-graph_offset = Vector2(-45.773, 131)
+transitions = ["Stopping", "Idle", SubResource("AnimationNodeStateMachineTransition_wnbtw"), "Run", "Stopping", SubResource("AnimationNodeStateMachineTransition_rvsaa"), "Idle", "Run", SubResource("AnimationNodeStateMachineTransition_s0egl"), "Start", "Idle", SubResource("AnimationNodeStateMachineTransition_xf5i1"), "Idle", "Walk", SubResource("AnimationNodeStateMachineTransition_nbs2g"), "Walk", "Stopping", SubResource("AnimationNodeStateMachineTransition_rs3n0"), "Walk", "Jog", SubResource("AnimationNodeStateMachineTransition_6gab4"), "Jog", "Walk", SubResource("AnimationNodeStateMachineTransition_6m5a2"), "Run", "Jog", SubResource("AnimationNodeStateMachineTransition_hy2h2"), "Jog", "Run", SubResource("AnimationNodeStateMachineTransition_2tyel"), "Jog", "Stopping", SubResource("AnimationNodeStateMachineTransition_7h1qf"), "Idle", "Jog", SubResource("AnimationNodeStateMachineTransition_4twgu"), "Run", "Walk", SubResource("AnimationNodeStateMachineTransition_01wuf")]
+graph_offset = Vector2(23.227, 86)
 
 [sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_ml0kl"]
-graph_offset = Vector2(-337.513, 379.941)
+graph_offset = Vector2(-240.871, 43.0034)
 nodes/crouch/node = SubResource("AnimationNodeTransition_3twx3")
 nodes/crouch/position = Vector2(100, 180)
 nodes/crouching/node = SubResource("AnimationNodeStateMachine_2xodt")
-nodes/crouching/position = Vector2(-100, 420)
+nodes/crouching/position = Vector2(-120, 320)
 nodes/standing/node = SubResource("AnimationNodeStateMachine_ieguh")
 nodes/standing/position = Vector2(-120, 40)
 node_connections = [&"output", 0, &"crouch", &"crouch", 0, &"standing", &"crouch", 1, &"crouching"]
 
 [resource]
 resource_local_to_scene = true
-graph_offset = Vector2(304.5, 1160)
+graph_offset = Vector2(290.475, 913.145)
 nodes/AnimTurnLeft/node = SubResource("AnimationNodeAnimation_mb2kt")
 nodes/AnimTurnLeft/position = Vector2(500, 1540)
 nodes/AnimTurnRight/node = SubResource("AnimationNodeAnimation_2rfjg")
