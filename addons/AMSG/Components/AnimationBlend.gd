@@ -20,14 +20,17 @@ func _physics_process(_delta):
 			pass
 
 	#standing
-	set("parameters/VelocityDirection/standing/conditions/idle",!movement_script.input_is_moving)
-	set("parameters/VelocityDirection/standing/conditions/walking",movement_script.gait == Global.gait.walking and movement_script.input_is_moving)
-	set("parameters/VelocityDirection/standing/conditions/running",movement_script.gait == Global.gait.running and movement_script.input_is_moving)
-	set("parameters/VelocityDirection/standing/conditions/sprinting",movement_script.gait == Global.gait.sprinting and movement_script.input_is_moving)
+	if !movement_script.input_is_moving:
+		set("parameters/VelocityDirection/Standing/transition_request","Idle")
+		set("parameters/VelocityDirection/crouching/transition_request","Idle")
+	if movement_script.gait == Global.gait.walking and movement_script.input_is_moving:
+		set("parameters/VelocityDirection/Standing/transition_request","Walk")
+		set("parameters/VelocityDirection/crouching/transition_request","Walk")
+	if movement_script.gait == Global.gait.running and movement_script.input_is_moving:
+		set("parameters/VelocityDirection/Standing/transition_request","Jog")
+	if movement_script.gait == Global.gait.sprinting and movement_script.input_is_moving:
+		set("parameters/VelocityDirection/Standing/transition_request","Run")
 
-	# Crouching
-	set("parameters/VelocityDirection/crouching/conditions/idle",!movement_script.input_is_moving)
-	set("parameters/VelocityDirection/crouching/conditions/walking",movement_script.gait == Global.gait.walking and movement_script.input_is_moving)
 	#Couch/stand switch
 	match movement_script.stance: 
 		Global.stance.standing:
@@ -37,27 +40,25 @@ func _physics_process(_delta):
 			set("parameters/VelocityDirection/crouch/transition_request" , "crouch")
 
 
-
-
 	if movement_script.rotation_mode == Global.rotation_mode.looking_direction or movement_script.rotation_mode == Global.rotation_mode.aiming:
 		if movement_script.animation_is_moving_backward_relative_to_camera == false:
-			set("parameters/VelocityDirection/standing/Walk/FB/transition_request","Forward")
-			set("parameters/VelocityDirection/standing/Jog/FB/transition_request","Forward")
+			set("parameters/VelocityDirection/WalkFB/transition_request","Forward")
+			set("parameters/VelocityDirection/JogFB/transition_request","Forward")
 		else:
-			set("parameters/VelocityDirection/standing/Walk/FB/transition_request","Backward")
-			set("parameters/VelocityDirection/standing/Jog/FB/transition_request","Backward")
+			set("parameters/VelocityDirection/WalkFB/transition_request","Backward")
+			set("parameters/VelocityDirection/JogFB/transition_request","Backward")
 			
 	else:
-		set("parameters/VelocityDirection/standing/Walk/FB/transition_request","Forward")
-		set("parameters/VelocityDirection/standing/Jog/FB/transition_request","Forward")
+		set("parameters/VelocityDirection/WalkFB/transition_request","Forward")
+		set("parameters/VelocityDirection/JogFB/transition_request","Forward")
 
 	#On Stopped
 	if !(Input.is_action_pressed("forward") || Input.is_action_pressed("back") || Input.is_action_pressed("right") || Input.is_action_pressed("left")) and (Input.is_action_just_released("right") || Input.is_action_just_released("back") || Input.is_action_just_released("left") || Input.is_action_just_released("forward")):
 
-		var seek_time = get_node(anim_player).get_animation(tree_root.get_node("VelocityDirection").get_node("standing").get_node("Stopping").get_node("StopAnim").animation).length - movement_script.pose_warping_instance.CalculateStopTime((movement_script.actual_velocity * Vector3(1.0,0.0,1.0)),movement_script.deacceleration * movement_script.direction)
-		set("parameters/VelocityDirection/standing/Stopping/StopSeek/seek_position",seek_time)
-	set("parameters/VelocityDirection/standing/conditions/stop",!movement_script.input_is_moving)
-
+		var seek_time = get_node(anim_player).get_animation(tree_root.get_node("VelocityDirection").get_node("StopAnim").animation).length - movement_script.pose_warping_instance.CalculateStopTime((movement_script.actual_velocity * Vector3(1.0,0.0,1.0)),movement_script.deacceleration * movement_script.direction)
+		set("parameters/VelocityDirection/StopSeek/seek_position",seek_time)
+	if !movement_script.input_is_moving:
+		set("parameters/VelocityDirection/Standing/transition_request","Stop")
 	#Rotate In Place
 	set("parameters/Turn/blend_amount" , 1 if movement_script.is_rotating_in_place else 0)
 	set("parameters/RightOrLeft/blend_amount" ,0 if movement_script.rotation_difference_camera_mesh > 0 else 1)

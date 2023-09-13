@@ -232,16 +232,15 @@ func update_animations():
 	anim_ref.tree_root.get_node("AnimTurnRight").animation = TurnRightAnim
 	anim_ref.tree_root.get_node("FallAnimation").animation = FallingAnim
 	var velocity_direction : AnimationNodeBlendTree = anim_ref.tree_root.get_node("VelocityDirection")
-	var standing_states = velocity_direction.get_node("standing")
-	standing_states.get_node("Idle").animation = IdleAnim
-	standing_states.get_node("Walk").get_node("Forward").animation = WalkForwardAnim
-	standing_states.get_node("Walk").get_node("Backward").animation = WalkBackwardAnim
-	standing_states.get_node("Jog").get_node("Forward").animation = JogForwardAnim
-	standing_states.get_node("Jog").get_node("Backward").animation = JogBackwardAnim
-	standing_states.get_node("Run").animation = RunAnim
-	standing_states.get_node("Stopping").get_node("StopAnim").animation = StopAnim
-	velocity_direction.get_node("crouching").get_node("CrouchIdle").animation = CrouchIdleAnim
-	velocity_direction.get_node("crouching").get_node("CrouchWalkingForward").animation = CrouchWalkAnim
+	velocity_direction.get_node("Idle").animation = IdleAnim
+	velocity_direction.get_node("WalkForward").animation = WalkForwardAnim
+	velocity_direction.get_node("WalkBackward").animation = WalkBackwardAnim
+	velocity_direction.get_node("JogForward").animation = JogForwardAnim
+	velocity_direction.get_node("JogBackward").animation = JogBackwardAnim
+	velocity_direction.get_node("Run").animation = RunAnim
+	velocity_direction.get_node("StopAnim").animation = StopAnim
+	velocity_direction.get_node("CrouchIdle").animation = CrouchIdleAnim
+	velocity_direction.get_node("CrouchWalkingForward").animation = CrouchWalkAnim
 func update_character_movement():
 	match rotation_mode:
 		Global.rotation_mode.velocity_direction:
