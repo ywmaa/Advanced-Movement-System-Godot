@@ -396,12 +396,12 @@ func crouch_update(delta):
 	else:
 		head_bonked = false
 	
+	ground_check.position.y = -(collision_shape_ref.shape.height/2)+collision_shape_ref.position.y + 0.2#Just a small margin
+	
 	if stance == Global.stance.crouching:
-		ground_check.position.y = 0.7
 		collision_shape_ref.shape.height -= crouch_switch_speed * delta /2
 		mesh_ref.transform.origin.y += crouch_switch_speed * delta /1.5
 	elif stance == Global.stance.standing and not head_bonked:
-		ground_check.position.y = 0.186
 		collision_shape_ref.shape.height += crouch_switch_speed * delta /2
 		mesh_ref.transform.origin.y -= crouch_switch_speed * delta /1.5
 	elif head_bonked:
