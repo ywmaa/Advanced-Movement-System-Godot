@@ -7,6 +7,11 @@ class_name PlayerGameplayComponent
 @export var stamina_attribute: GameAttribute
 
 @export var networking : PlayerNetworkingComponent 
+@export var targeting_component : TargetingComponent 
+
+func _ready():
+	targeting_component.connect("detected", func(p): print(p))
+
 
 func _process(delta):
 	if gait != Global.gait.sprinting and stamina_use:
@@ -17,6 +22,7 @@ func _process(delta):
 			return
 		stamina_attribute.being_used = true
 		stamina_attribute.current_value -= stamina_energy_consumption*delta
+
 func _physics_process(delta):
 	super._physics_process(delta)
 #	Debug()

@@ -1,8 +1,9 @@
-[gd_scene load_steps=43 format=3 uid="uid://c2l3xxr5mfm6w"]
+[gd_scene load_steps=44 format=3 uid="uid://c2l3xxr5mfm6w"]
 
 [ext_resource type="PackedScene" uid="uid://cth47yn1duvdh" path="res://AMSG_Examples/Character/mixamo_character.tscn" id="1_ihvpu"]
 [ext_resource type="PackedScene" uid="uid://bfkejs88xm680" path="res://addons/PoseWarping/MotionWarping.tscn" id="2_0jifq"]
 [ext_resource type="PackedScene" uid="uid://wh4rtve4au55" path="res://addons/AMSG/Components/CombatComponent/CombatSystem.tscn" id="2_806xw"]
+[ext_resource type="PackedScene" uid="uid://dsum6nu2c2wm5" path="res://addons/AMSG/Components/TargetingComponent/TargetingComponent.tscn" id="3_0qp7j"]
 [ext_resource type="PackedScene" uid="uid://bei5f3xkiw2ur" path="res://addons/AMSG/Components/AttributesComponent/AttributesManager.tscn" id="3_2cn4e"]
 [ext_resource type="Script" path="res://addons/AMSG/Components/PlayerGameplayComponent.gd" id="3_jj2if"]
 [ext_resource type="PackedScene" uid="uid://bkw0qe3jh352j" path="res://addons/AMSG/Components/AttributesComponent/GameAttribute.tscn" id="4_7c4a2"]
@@ -191,12 +192,16 @@ bg_color = Color(0, 0, 0, 1)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ueab0"]
 bg_color = Color(0.745098, 0.905882, 1, 1)
 
-[node name="Character" instance=ExtResource("1_ihvpu")]
+[node name="Character" groups=["player"] instance=ExtResource("1_ihvpu")]
 
 [node name="CombatSystem" parent="." index="0" node_paths=PackedStringArray("attribute_map") instance=ExtResource("2_806xw")]
 attribute_map = NodePath("../AttributesManager")
 
-[node name="AttributesManager" parent="." index="1" node_paths=PackedStringArray("character") instance=ExtResource("3_2cn4e")]
+[node name="TargetingComponent" parent="." index="1" node_paths=PackedStringArray("detection_raycast", "combat_component") instance=ExtResource("3_0qp7j")]
+detection_raycast = NodePath("../SpringArm3D/Camera/TargetRayCast")
+combat_component = NodePath("../CombatSystem")
+
+[node name="AttributesManager" parent="." index="2" node_paths=PackedStringArray("character") instance=ExtResource("3_2cn4e")]
 character = NodePath("../CharacterMovementComponent")
 
 [node name="HealthAttribute" parent="AttributesManager" index="0" node_paths=PackedStringArray("health_bar") instance=ExtResource("4_7c4a2")]
@@ -218,34 +223,35 @@ attribute_name = "stamina"
 maximum_value = 100.0
 current_value = 100.0
 
-[node name="MotionWarping" parent="." index="2" instance=ExtResource("2_0jifq")]
+[node name="MotionWarping" parent="." index="3" instance=ExtResource("2_0jifq")]
 
-[node name="GroundCheck" parent="." index="3"]
+[node name="GroundCheck" parent="." index="4"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
 
-[node name="CharacterMovementComponent" parent="." index="4" node_paths=PackedStringArray("stamina_attribute", "networking")]
+[node name="CharacterMovementComponent" parent="." index="5" node_paths=PackedStringArray("stamina_attribute", "networking", "targeting_component")]
 script = ExtResource("3_jj2if")
 stamina_use = true
 stamina_energy_consumption = 15.0
 stamina_attribute = NodePath("../AttributesManager/StaminaAttribute")
 networking = NodePath("../Networking")
+targeting_component = NodePath("../TargetingComponent")
 tilt_power = 0.0
 deacceleration = 5.0
 
-[node name="PlayerController" type="Node" parent="." index="5" node_paths=PackedStringArray("character_component", "networking")]
+[node name="PlayerController" type="Node" parent="." index="6" node_paths=PackedStringArray("character_component", "networking")]
 script = ExtResource("4_7eusw")
 OnePressJump = true
 UsingCrouchToggle = true
 character_component = NodePath("../CharacterMovementComponent")
 networking = NodePath("../Networking")
 
-[node name="Networking" parent="." index="6" instance=ExtResource("4_8jv5v")]
+[node name="Networking" parent="." index="7" instance=ExtResource("4_8jv5v")]
 character_movement_component = NodePath("../CharacterMovementComponent")
 
-[node name="CameraComponent" parent="." index="7" node_paths=PackedStringArray("networking")]
+[node name="CameraComponent" parent="." index="8" node_paths=PackedStringArray("networking")]
 networking = NodePath("../Networking")
 
-[node name="AnimationTree" parent="." index="8"]
+[node name="AnimationTree" parent="." index="9"]
 tree_root = SubResource("AnimationNodeBlendTree_jqd3m")
 parameters/VelocityDirection/JogFB/current_state = ""
 parameters/VelocityDirection/JogFB/current_index = -1
@@ -256,7 +262,7 @@ parameters/VelocityDirection/WalkFB/current_index = -1
 parameters/VelocityDirection/crouching/current_state = ""
 parameters/VelocityDirection/crouching/current_index = -1
 
-[node name="CollisionShape3D" parent="." index="9"]
+[node name="CollisionShape3D" parent="." index="10"]
 shape = SubResource("CapsuleShape3D_jrjkm")
 
 [node name="Skeleton3D" parent="Armature" index="0"]
@@ -324,7 +330,10 @@ light_energy = 10.0
 [node name="Camera" parent="SpringArm3D" index="0"]
 current = true
 
-[node name="Status" type="Control" parent="." index="14" node_paths=PackedStringArray("camera_root")]
+[node name="TargetRayCast" type="RayCast3D" parent="SpringArm3D/Camera" index="1"]
+target_position = Vector3(0, 0, -10)
+
+[node name="Status" type="Control" parent="." index="15" node_paths=PackedStringArray("camera_root")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
