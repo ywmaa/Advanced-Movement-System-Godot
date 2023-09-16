@@ -50,7 +50,6 @@ var CameraHOffset := 0.0
 					VObject = SpringArm
 
 
-@export var mouse_sensitvity : float = 0.01
 var camera_h : float = 0
 var camera_v : float = 0
 @export var camera_vertical_min : float = -90
@@ -65,16 +64,8 @@ var acceleration_v = 10
 
 var spring_arm_position_relative_to_player : Vector3
 func _ready():
-	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-	Camera.current = networking.is_local_authority()
 	spring_arm_position_relative_to_player = SpringArm.position
 	SpringArm.top_level = true
-
-func _input(event):
-	if event is InputEventMouseMotion:
-		camera_h += -event.relative.x * mouse_sensitvity
-		camera_v += -event.relative.y * mouse_sensitvity
-		
 
 func _physics_process(delta):
 	if camera_settings.camera_change_fov_on_speed and PlayerRef.actual_velocity.length() > camera_settings.camera_fov_change_starting_speed:

@@ -1,8 +1,9 @@
-[gd_scene load_steps=34 format=3 uid="uid://c2l3xxr5mfm6w"]
+[gd_scene load_steps=35 format=3 uid="uid://c2l3xxr5mfm6w"]
 
 [ext_resource type="PackedScene" uid="uid://cth47yn1duvdh" path="res://AMSG_Examples/Character/mixamo_character.tscn" id="1_ihvpu"]
 [ext_resource type="PackedScene" uid="uid://bfkejs88xm680" path="res://addons/PoseWarping/MotionWarping.tscn" id="2_0jifq"]
 [ext_resource type="Script" path="res://addons/AMSG/Components/PlayerGameplayComponent.gd" id="3_jj2if"]
+[ext_resource type="Script" path="res://AMSG_Examples/Player/PlayerController.gd" id="4_7eusw"]
 [ext_resource type="PackedScene" uid="uid://cegbfvlakd2rw" path="res://addons/AMSG/Components/Networking.tscn" id="4_8jv5v"]
 [ext_resource type="PackedScene" path="res://AMSG_Examples/Player/flashlight/Flashlight.tscn" id="5_euvsl"]
 [ext_resource type="Script" path="res://AMSG_Examples/Player/Status.gd" id="6_8h4hk"]
@@ -150,11 +151,10 @@ nodes/crouch/node = SubResource("AnimationNodeTransition_3twx3")
 nodes/crouch/position = Vector2(100, 180)
 nodes/crouching/node = SubResource("AnimationNodeTransition_rufvy")
 nodes/crouching/position = Vector2(-120, 640)
-node_connections = [&"output", 0, &"crouch", &"crouch", 0, &"Standing", &"crouch", 1, &"crouching", &"crouching", 0, &"CrouchIdle", &"crouching", 1, &"CrouchWalkingForward", &"WalkFB", 0, &"WalkForward", &"WalkFB", 1, &"WalkBackward", &"StopSeek", 0, &"StopAnim", &"JogFB", 0, &"JogForward", &"JogFB", 1, &"JogBackward", &"Standing", 0, &"Idle", &"Standing", 1, &"WalkFB", &"Standing", 2, &"Run", &"Standing", 3, &"JogFB", &"Standing", 4, &"StopSeek"]
+node_connections = [&"output", 0, &"crouch", &"JogFB", 0, &"JogForward", &"JogFB", 1, &"JogBackward", &"Standing", 0, &"Idle", &"Standing", 1, &"WalkFB", &"Standing", 2, &"Run", &"Standing", 3, &"JogFB", &"Standing", 4, &"StopSeek", &"StopSeek", 0, &"StopAnim", &"WalkFB", 0, &"WalkForward", &"WalkFB", 1, &"WalkBackward", &"crouch", 0, &"Standing", &"crouch", 1, &"crouching", &"crouching", 0, &"CrouchIdle", &"crouching", 1, &"CrouchWalkingForward"]
 
 [sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_jqd3m"]
 resource_local_to_scene = true
-graph_offset = Vector2(251.731, 825.534)
 nodes/AnimTurnLeft/node = SubResource("AnimationNodeAnimation_mb2kt")
 nodes/AnimTurnLeft/position = Vector2(500, 1540)
 nodes/AnimTurnRight/node = SubResource("AnimationNodeAnimation_2rfjg")
@@ -184,19 +184,26 @@ height = 1.0
 [node name="GroundCheck" parent="." index="1"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
 
-[node name="CharacterMovementComponent" parent="." index="2"]
+[node name="CharacterMovementComponent" parent="." index="2" node_paths=PackedStringArray("networking")]
 script = ExtResource("3_jj2if")
-networking_path = NodePath("../Networking")
-OnePressJump = true
-UsingSprintToggle = false
-UsingCrouchToggle = true
+networking = NodePath("../Networking")
 tilt_power = 0.0
 deacceleration = 5.0
 
-[node name="Networking" parent="." index="3" instance=ExtResource("4_8jv5v")]
+[node name="PlayerController" type="Node" parent="." index="3" node_paths=PackedStringArray("character_component", "networking")]
+script = ExtResource("4_7eusw")
+OnePressJump = true
+UsingCrouchToggle = true
+character_component = NodePath("../CharacterMovementComponent")
+networking = NodePath("../Networking")
+
+[node name="Networking" parent="." index="4" instance=ExtResource("4_8jv5v")]
 character_movement_component = NodePath("../CharacterMovementComponent")
 
-[node name="AnimationTree" parent="." index="4"]
+[node name="CameraComponent" parent="." index="5" node_paths=PackedStringArray("networking")]
+networking = NodePath("../Networking")
+
+[node name="AnimationTree" parent="." index="6"]
 tree_root = SubResource("AnimationNodeBlendTree_jqd3m")
 parameters/VelocityDirection/JogFB/current_state = ""
 parameters/VelocityDirection/JogFB/current_index = -1
@@ -207,10 +214,7 @@ parameters/VelocityDirection/WalkFB/current_index = -1
 parameters/VelocityDirection/crouching/current_state = ""
 parameters/VelocityDirection/crouching/current_index = -1
 
-[node name="CameraComponent" parent="." index="5" node_paths=PackedStringArray("networking")]
-networking = NodePath("../Networking")
-
-[node name="CollisionShape3D" parent="." index="6"]
+[node name="CollisionShape3D" parent="." index="7"]
 shape = SubResource("CapsuleShape3D_jrjkm")
 
 [node name="Skeleton3D" parent="Armature" index="0"]
@@ -278,7 +282,7 @@ light_energy = 10.0
 [node name="Camera" parent="SpringArm3D" index="0"]
 current = true
 
-[node name="Status" type="Control" parent="." index="11"]
+[node name="Status" type="Control" parent="." index="12"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0

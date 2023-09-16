@@ -55,7 +55,7 @@ func _physics_process(_delta):
 	#On Stopped
 	if !(Input.is_action_pressed("forward") || Input.is_action_pressed("back") || Input.is_action_pressed("right") || Input.is_action_pressed("left")) and (Input.is_action_just_released("right") || Input.is_action_just_released("back") || Input.is_action_just_released("left") || Input.is_action_just_released("forward")):
 
-		var seek_time = get_node(anim_player).get_animation(tree_root.get_node("VelocityDirection").get_node("StopAnim").animation).length - movement_script.pose_warping_instance.CalculateStopTime((movement_script.actual_velocity * Vector3(1.0,0.0,1.0)),movement_script.deacceleration * movement_script.direction)
+		var seek_time = get_node(anim_player).get_animation(tree_root.get_node("VelocityDirection").get_node("StopAnim").animation).length - movement_script.pose_warping_instance.CalculateStopTime((movement_script.actual_velocity * Vector3(1.0,0.0,1.0)),movement_script.deacceleration * movement_script.input_direction)
 		set("parameters/VelocityDirection/StopSeek/seek_position",seek_time)
 	if !movement_script.input_is_moving:
 		set("parameters/VelocityDirection/Standing/transition_request","Stop")

@@ -41,7 +41,7 @@ func _physics_process(_delta):
 			PlayerRef.character_node.position = sync_position
 			processed_position = true
 		PlayerRef.mesh_ref.rotation = sync_mesh_rotation
-		PlayerRef.direction = sync_direction
+		PlayerRef.input_direction = sync_direction
 		PlayerRef.gait = sync_gait
 		PlayerRef.stance = sync_stance
 		PlayerRef.rotation_mode = sync_rotation_mode 
@@ -57,7 +57,7 @@ func _physics_process(_delta):
 	
 	sync_position = PlayerRef.character_node.position
 	sync_mesh_rotation = PlayerRef.mesh_ref.rotation
-	sync_direction = PlayerRef.direction
+	sync_direction = PlayerRef.input_direction
 	sync_gait = PlayerRef.gait
 	sync_stance = PlayerRef.stance
 	sync_rotation_mode = PlayerRef.rotation_mode
