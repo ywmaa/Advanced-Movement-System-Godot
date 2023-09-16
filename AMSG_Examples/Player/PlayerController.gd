@@ -23,6 +23,7 @@ var direction := Vector3.ZERO
 #####################################
 #Locks System
 @export var lock_system : LockSystem
+@export var lock_attribute: GameAttribute
 #####################################
 
 @export var mouse_sensitivity : float = 0.01
@@ -183,7 +184,9 @@ func _input(event):
 					character_component.camera_root.view_mode = Global.view_mode.third_person
 					
 	if(Input.is_action_pressed("pause")):
+		var previousLockStatus = lock_system.lock_count;
 		if(lock_system.contains_lock("pauseGame")):
 			lock_system.remove_lock("pauseGame")
 		else:
 			lock_system.add_lock("pauseGame")
+		lock_attribute.set_attribute(previousLockStatus, lock_system.lock_count)

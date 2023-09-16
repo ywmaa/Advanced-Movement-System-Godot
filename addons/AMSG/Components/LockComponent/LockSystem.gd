@@ -5,6 +5,10 @@ class_name LockSystem
 #The locks can be used for any manner of things: player movement in cutscenes, restricting dialogue choices, door open conditions etc
 var _locks = []
 
+var lock_count : int :
+	get:
+		return _locks.size()
+
 #An event to hook into - primarily for debugging.
 signal Lock_Added(lockName:String)
 
