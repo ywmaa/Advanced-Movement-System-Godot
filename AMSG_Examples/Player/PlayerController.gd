@@ -180,3 +180,8 @@ func _input(event):
 				if character_component.camera_root.view_mode == Global.view_mode.first_person:
 					character_component.camera_root.view_mode = Global.view_mode.third_person
 					
+	if(Input.is_action_pressed("pause")):
+		if(lock_system.contains_lock("pauseGame")):
+			lock_system.remove_lock("pauseGame")
+		else:
+			lock_system.add_lock("pauseGame")

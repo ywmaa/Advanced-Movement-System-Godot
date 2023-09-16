@@ -22,6 +22,13 @@ func add_lock(lock_name:String):
 		_locks.append(lock_name)
 		emit_signal("Lock_Added", lock_name)
 		return;
+		
+#Removes a lock with the name lock_name. Prints a message if it's not in there.
+func remove_lock(lock_name:String):
+	if(contains_lock(lock_name)):
+		_locks.erase(lock_name)
+	else:
+		print_debug("Lock %lock cannot be removed as it isn't there." % lock_name)
 
 #Returns true if _locks has any entries added, false if no locks are being applied
 func _check_is_locked():
