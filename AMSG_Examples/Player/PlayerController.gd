@@ -50,6 +50,8 @@ func _physics_process(delta):
 		return
 	
 	if lock_system != null && lock_system.is_locked:
+		direction = Vector3.ZERO
+		character_component.add_movement_input()
 		return
 	
 	#------------------ Input Movement ------------------#
