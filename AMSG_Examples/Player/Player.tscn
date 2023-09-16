@@ -193,7 +193,8 @@ bg_color = Color(0.745098, 0.905882, 1, 1)
 
 [node name="Character" instance=ExtResource("1_ihvpu")]
 
-[node name="CombatSystem" parent="." index="0" instance=ExtResource("2_806xw")]
+[node name="CombatSystem" parent="." index="0" node_paths=PackedStringArray("attribute_map") instance=ExtResource("2_806xw")]
+attribute_map = NodePath("../AttributesManager")
 
 [node name="AttributesManager" parent="." index="1" node_paths=PackedStringArray("character") instance=ExtResource("3_2cn4e")]
 character = NodePath("../CharacterMovementComponent")
@@ -323,7 +324,7 @@ light_energy = 10.0
 [node name="Camera" parent="SpringArm3D" index="0"]
 current = true
 
-[node name="Status" type="Control" parent="." index="14"]
+[node name="Status" type="Control" parent="." index="14" node_paths=PackedStringArray("camera_root")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -331,6 +332,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("6_8h4hk")
+camera_root = NodePath("../CameraComponent")
 
 [node name="Control" type="Control" parent="Status" index="0"]
 layout_mode = 1

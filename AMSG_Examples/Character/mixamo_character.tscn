@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://addons/AMSG/Components/CharacterMovementComponent.gd" id="1_ewnep"]
 [ext_resource type="Resource" uid="uid://buhjkpv85gdmi" path="res://AMSG_Examples/Character/standing_movement_values.tres" id="2_c4o7m"]
 [ext_resource type="Script" path="res://addons/AMSG/Components/CameraComponent.gd" id="2_d5854"]
-[ext_resource type="PackedScene" uid="uid://dsdvjuk7muqkf" path="res://addons/AMSG/Components/AnimationTreeComponent.tscn" id="3_86f8p"]
+[ext_resource type="PackedScene" uid="uid://dsdvjuk7muqkf" path="res://addons/AMSG/Components/AnimationComponents/AnimationTreeComponent.tscn" id="3_86f8p"]
 [ext_resource type="Resource" uid="uid://bo31hnmxahuqb" path="res://AMSG_Examples/Character/crouch_movement_values.tres" id="3_p3fng"]
 [ext_resource type="ArrayMesh" uid="uid://wpxkyy82pcud" path="res://AMSG_Examples/Character/Mesh/Character_Alpha_Joints.res" id="5_0247x"]
 [ext_resource type="ArrayMesh" uid="uid://xm71l8lsa8hp" path="res://AMSG_Examples/Character/Mesh/Character_Alpha_Surface.res" id="6_e2l25"]
@@ -171,7 +171,7 @@ nodes/crouching/node = SubResource("AnimationNodeTransition_rufvy")
 nodes/crouching/position = Vector2(-120, 640)
 node_connections = [&"output", 0, &"crouch", &"JogFB", 0, &"JogForward", &"JogFB", 1, &"JogBackward", &"Standing", 0, &"Idle", &"Standing", 1, &"WalkFB", &"Standing", 2, &"Run", &"Standing", 3, &"JogFB", &"Standing", 4, &"StopSeek", &"StopSeek", 0, &"StopAnim", &"WalkFB", 0, &"WalkForward", &"WalkFB", 1, &"WalkBackward", &"crouch", 0, &"Standing", &"crouch", 1, &"crouching", &"crouching", 0, &"CrouchIdle", &"crouching", 1, &"CrouchWalkingForward"]
 
-[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_5frvr"]
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_xyuun"]
 resource_local_to_scene = true
 nodes/AnimTurnLeft/node = SubResource("AnimationNodeAnimation_mb2kt")
 nodes/AnimTurnLeft/position = Vector2(500, 1540)
@@ -455,7 +455,7 @@ PlayerRef = NodePath("../CharacterMovementComponent")
 first_person_camera_bone = NodePath("../Armature/Skeleton3D/BoneAttachment3D")
 
 [node name="AnimationTree" parent="." node_paths=PackedStringArray("movement_script") instance=ExtResource("3_86f8p")]
-tree_root = SubResource("AnimationNodeBlendTree_5frvr")
+tree_root = SubResource("AnimationNodeBlendTree_xyuun")
 anim_player = NodePath("../AnimationPlayer")
 active = true
 parameters/VelocityDirection/JogFB/current_state = "Forward"
@@ -962,7 +962,7 @@ mesh = ExtResource("6_e2l25")
 skin = SubResource("Skin_hh536")
 
 [node name="BoneAttachment3D" type="BoneAttachment3D" parent="Armature/Skeleton3D"]
-transform = Transform3D(0.998009, -0.0596129, 0.0206171, 0.061149, 0.834153, -0.548133, 0.015478, 0.548303, 0.836137, -0.0198939, 1.49463, 0.113293)
+transform = Transform3D(0.998008, -0.059613, 0.0206173, 0.0611492, 0.834152, -0.548134, 0.0154779, 0.548303, 0.836136, -0.0198938, 1.49463, 0.113293)
 bone_name = "Head"
 bone_idx = 5
 

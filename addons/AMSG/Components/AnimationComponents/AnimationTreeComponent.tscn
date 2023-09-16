@@ -1,7 +1,7 @@
 [gd_scene load_steps=45 format=3 uid="uid://dsdvjuk7muqkf"]
 
-[ext_resource type="Script" path="res://addons/AMSG/Components/AnimationBlend.gd" id="1_iikhh"]
-[ext_resource type="AnimationNodeStateMachinePlayback" uid="uid://b8p1518kwrou2" path="res://addons/AMSG/Components/StandingStateMachine.tres" id="2_oomli"]
+[ext_resource type="Script" path="res://addons/AMSG/Components/AnimationComponents/AnimationBlend.gd" id="1_iikhh"]
+[ext_resource type="AnimationNodeStateMachinePlayback" uid="uid://b8p1518kwrou2" path="res://addons/AMSG/Components/AnimationComponents/StandingStateMachine.tres" id="2_oomli"]
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_mb2kt"]
 animation = &"TurnLeft"

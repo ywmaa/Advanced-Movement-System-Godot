@@ -1,12 +1,13 @@
 extends Control
 
+@export var camera_root : CameraComponent
 @onready var player = get_parent()
 @onready var direction = $Control/Direction
 @onready var velocity = $Control/Velocity
 @onready var mesh = $Control/mesh
 
 func _physics_process(_delta):
-	
+	visible = camera_root.Camera.current
 	var h_rot = get_parent().get_node("SpringArm3D").transform.basis.get_euler().y
 	var character_node_velocity = player.velocity if player is CharacterBody3D else player.linear_velocity
 	$Control.set_rotation(h_rot)
