@@ -1,8 +1,22 @@
 extends CharacterMovementComponent
 class_name PlayerGameplayComponent
 
+@export_group("Stamina System", "stamina_")
+@export var stamina_use: bool = false
+@export var stamina_energy_consumption: float = 15.0#per second
+@export var stamina_attribute: GameAttribute
 
 @export var networking : PlayerNetworkingComponent 
+
+func _process(delta):
+	if gait != Global.gait.sprinting and stamina_use:
+		stamina_attribute.being_used = false
+	if gait == Global.gait.sprinting and stamina_use:
+		if !stamina_attribute.can_use or stamina_attribute.current_value < stamina_energy_consumption*delta:
+			gait = Global.gait.running
+			return
+		stamina_attribute.being_used = true
+		stamina_attribute.current_value -= stamina_energy_consumption*delta
 func _physics_process(delta):
 	super._physics_process(delta)
 #	Debug()
