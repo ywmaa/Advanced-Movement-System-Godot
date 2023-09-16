@@ -1,0 +1,233 @@
+name: Publish AMSG
+
+on:
+ workflow_dispatch:
+  inputs:
+    export_version:
+      description: "Export Version"
+      required: true
+      default: "0.x"
+    release_github_page:
+      description: "Upload To Github Pages"
+      required: false
+      default: "false"
+    itch_io:
+      description: "Itch.io Build"
+      required: false
+      default: "false"
+ push:
+  branches:
+  - master
+ pull_request:
+  branches:
+  - master
+env:
+ BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }} # Needs to be added through github
+ DISCORD_WEBHOOK: ${{secrets.DISCORD_WEBHOOK}} # Needs to be added through github
+ GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+ IS_MAIN: ${{ contains(github.ref, 'master') }}
+ PROJECT_NAME: "AMSG" # Needs to be added, PLEASE DON'T USE SPACES
+ ITCH_PROJECT_NAME: "amsg" # Needs to be added
+ ITCH_USER_NAME: "ywmaa" # Needs to be added
+ GODOT_VERSION: 4.1.1 # Needs to be added
+jobs:
+ CleanArtifacts:
+  # This job clears out the previous artifacts made so you don't run out of space in your github account
+  runs-on: ubuntu-latest
+  steps:
+  - uses: kolpav/purge-artifacts-action@v1
+    with:
+     token: ${{ secrets.GITHUB_TOKEN }}
+     expire-in: 1hr
+
+ Export:
+  needs: CleanArtifacts # wait for artifacts to clean before making a new one
+  runs-on: ubuntu-latest
+  steps:
+  - uses: actions/checkout@v2
+
+  - name: Download + Authorize Godot
+    run: |
+       curl -L -o godot.zip https://downloads.tuxfamily.org/godotengine/${{ env.GODOT_VERSION }}/Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64.zip
+       unzip godot.zip
+       mv Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64 godot
+       ls
+       chmod +x godot
+       mkdir ~/.config/godot/
+       cat <<EOT >> ~/.config/godot/editor_settings-4.tres
+       [gd_resource type="EditorSettings" format=3]
+
+       [resource]
+       export/android/android_sdk_path = "/usr/local/lib/android/sdk"
+       EOT
+       
+  - name: Download Export Templates
+    run: |
+     curl -L -o export_templates.zip https://downloads.tuxfamily.org/godotengine/${{ env.GODOT_VERSION }}/Godot_v${{ env.GODOT_VERSION }}-stable_export_templates.tpz
+     unzip export_templates.zip
+  
+  - name: Install Export Templates
+    run: |
+     mkdir -p ~/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable
+     mv ./templates/* ~/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable
+
+  - name: Import Project
+    run: |
+     ./godot --headless -e --quit --path ./
+
+  - name: Export Windows Desktop
+    run: |
+     mkdir -p ./exports
+     ./godot --headless --path ./ --export-release "windows" ./exports/${{ env.PROJECT_NAME }}.x86_64.exe
+    
+  - name: Export macOS
+    run: |
+     mkdir -p ./exports
+     ./godot --headless --path ./ --export-release "mac" ./exports/${{ env.PROJECT_NAME }}.app.zip
+    
+  - name: Export Linux/X11
+    run: |
+     mkdir -p ./exports
+     ./godot --headless --path ./ --export-release "Linux/X11" ./exports/${{ env.PROJECT_NAME }}.x86_64
+
+
+  - uses: actions/upload-artifact@v2
+    with:
+     name: exports
+     path: exports
+  
+ Release:
+  needs: Export
+  if: github.event_name == 'workflow_dispatch' && github.event.inputs.release_github_page
+  runs-on: ubuntu-latest
+  steps:
+    - uses: actions/checkout@v2
+   
+    - name: Version
+      id: tag_version
+      uses: mathieudutour/github-tag-action@v5.6
+      with:
+       github_token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Verify Tag
+      if: ${{ !github.event.inputs.export_version }}
+      run: exit 1
+    
+    - name: Download Exports
+      uses: actions/download-artifact@v2
+      with:
+       name: exports
+       path: exports
+    
+    - name: Move Out Of Export Folder
+      run: |
+       mv exports/${{ env.PROJECT_NAME }}.x86_64.exe ${{ env.PROJECT_NAME }}.x86_64.exe
+       mv exports/${{ env.PROJECT_NAME }}.x86_64 ${{ env.PROJECT_NAME }}.x86_64
+       mv exports/${{ env.PROJECT_NAME }}.app.zip ${{ env.PROJECT_NAME }}.app.zip
+
+    - name: Zip
+      run: |
+       chmod +x ${{ env.PROJECT_NAME }}.x86_64
+       zip -r ${{ env.PROJECT_NAME }}-windows-release-v${{ github.event.inputs.export_version }}.zip ${{ env.PROJECT_NAME }}.x86_64.exe
+       zip -r ${{ env.PROJECT_NAME }}-linux-release-v${{ github.event.inputs.export_version }}.zip ${{ env.PROJECT_NAME }}.x86_64
+       zip -r ${{ env.PROJECT_NAME }}-macos-release-v${{ github.event.inputs.export_version }}.zip ${{ env.PROJECT_NAME }}.app.zip
+    
+    - name: Create Github Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+       tag_name: v${{ github.event.inputs.export_version }}
+       release_name: Release v${{ github.event.inputs.export_version }}
+       body: ${{ steps.tag_version.outputs.changelog }}
+    
+    - name: Upload Linux Artifact
+      uses: actions/upload-release-asset@v1
+      env:
+       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+       upload_url: ${{ steps.create_release.outputs.upload_url }}
+       asset_path: ./${{ env.PROJECT_NAME }}-linux-release-v${{ github.event.inputs.export_version }}.zip
+       asset_name: ${{ env.PROJECT_NAME }}-linux-release-v${{ github.event.inputs.export_version }}.zip
+       asset_content_type: application/zip
+
+    - name: Upload Windows Artifact
+      uses: actions/upload-release-asset@v1
+      env:
+       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+       upload_url: ${{ steps.create_release.outputs.upload_url }}
+       asset_path: ./${{ env.PROJECT_NAME }}-windows-release-v${{ github.event.inputs.export_version }}.zip
+       asset_name: ${{ env.PROJECT_NAME }}-windows-release-v${{ github.event.inputs.export_version }}.zip
+       asset_content_type: application/zip
+
+    - name: Upload MacOS Artifact
+      uses: actions/upload-release-asset@v1
+      env:
+       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+       upload_url: ${{ steps.create_release.outputs.upload_url }}
+       asset_path: ./${{ env.PROJECT_NAME }}-macos-release-v${{ github.event.inputs.export_version }}.zip
+       asset_name: ${{ env.PROJECT_NAME }}-macos-release-v${{ github.event.inputs.export_version }}.zip
+       asset_content_type: application/zip
+
+    - uses: frdrwrt/write-to-file@v1.3
+      with:
+       filepath: ./VERSION.txt
+       content: v${{ github.event.inputs.export_version }}
+       mode: 0655
+    
+    - uses: actions/upload-artifact@v2
+      with:
+       name: VERSION
+       path: ./VERSION.txt
+ 
+ Publish:
+  needs: Release
+  if: github.event_name == 'workflow_dispatch' && github.event.inputs.itch_io
+  runs-on: ubuntu-latest
+  steps:
+    - name: Download Exports
+      uses: actions/download-artifact@v2
+      with:
+       name: exports
+       path: exports
+    
+    - name: Move Out Of Export Folder
+      run: |
+       mv exports/${{ env.PROJECT_NAME }}.x86_64.exe ${{ env.PROJECT_NAME }}.x86_64.exe
+       mv exports/${{ env.PROJECT_NAME }}.x86_64 ${{ env.PROJECT_NAME }}.x86_64
+       mv exports/${{ env.PROJECT_NAME }}.app.zip ${{ env.PROJECT_NAME }}.app.zip
+
+    - name: Zip
+      run: |
+       chmod +x ${{ env.PROJECT_NAME }}.x86_64
+       zip -r windows-release-v${{ github.event.inputs.export_version }}.zip ${{ env.PROJECT_NAME }}.x86_64.exe
+       zip -r linux-release-v${{ github.event.inputs.export_version }}.zip ${{ env.PROJECT_NAME }}.x86_64
+       zip -r mac-release-v${{ github.event.inputs.export_version }}.zip ${{ env.PROJECT_NAME }}.app.zip
+    
+    - name: Download + Authorize Butler
+      run: |
+       curl -L -o butler.zip https://broth.itch.ovh/butler/linux-amd64/LATEST/archive/default
+       unzip butler.zip
+       chmod +x butler
+       ./butler -V
+    
+    - name: Login To Butler
+      run: ./butler login
+    
+    - name: Butler Push
+      run: |
+       ./butler push windows-release-v${{ github.event.inputs.export_version }}.zip ${{env.ITCH_USER_NAME}}/${{env.ITCH_PROJECT_NAME}}:windows-release
+       ./butler push linux-release-v${{ github.event.inputs.export_version }}.zip ${{env.ITCH_USER_NAME}}/${{env.ITCH_PROJECT_NAME}}:linux-release
+       ./butler push mac-release-v${{ github.event.inputs.export_version }}.zip ${{env.ITCH_USER_NAME}}/${{env.ITCH_PROJECT_NAME}}:mac-release
+
+
+# Cleanup:
+#  needs: [Export, Release, Publish]
+#  runs-on: ubuntu-latest
+#  steps:
+#    - uses: geekyeggo/delete-artifact@v1
+#      with:
+#       name: VERSION
