@@ -1,10 +1,17 @@
-[gd_scene load_steps=34 format=3 uid="uid://c2l3xxr5mfm6w"]
+[gd_scene load_steps=44 format=3 uid="uid://c2l3xxr5mfm6w"]
 
 [ext_resource type="PackedScene" uid="uid://cth47yn1duvdh" path="res://AMSG_Examples/Character/mixamo_character.tscn" id="1_ihvpu"]
 [ext_resource type="PackedScene" uid="uid://bfkejs88xm680" path="res://addons/PoseWarping/MotionWarping.tscn" id="2_0jifq"]
+[ext_resource type="PackedScene" uid="uid://wh4rtve4au55" path="res://addons/AMSG/Components/CombatComponent/CombatSystem.tscn" id="2_806xw"]
+[ext_resource type="PackedScene" uid="uid://dsum6nu2c2wm5" path="res://addons/AMSG/Components/TargetingComponent/TargetingComponent.tscn" id="3_0qp7j"]
+[ext_resource type="PackedScene" uid="uid://bei5f3xkiw2ur" path="res://addons/AMSG/Components/AttributesComponent/AttributesManager.tscn" id="3_2cn4e"]
 [ext_resource type="Script" path="res://addons/AMSG/Components/PlayerGameplayComponent.gd" id="3_jj2if"]
+[ext_resource type="PackedScene" uid="uid://bkw0qe3jh352j" path="res://addons/AMSG/Components/AttributesComponent/GameAttribute.tscn" id="4_7c4a2"]
+[ext_resource type="Script" path="res://AMSG_Examples/Player/PlayerController.gd" id="4_7eusw"]
 [ext_resource type="PackedScene" uid="uid://cegbfvlakd2rw" path="res://addons/AMSG/Components/Networking.tscn" id="4_8jv5v"]
 [ext_resource type="PackedScene" path="res://AMSG_Examples/Player/flashlight/Flashlight.tscn" id="5_euvsl"]
+[ext_resource type="Script" path="res://addons/AMSG/Components/AttributesComponent/HealthAttribute.gd" id="5_hlhwh"]
+[ext_resource type="Script" path="res://addons/AMSG/Components/AttributesComponent/StaminaAttribute.gd" id="6_8dtn8"]
 [ext_resource type="Script" path="res://AMSG_Examples/Player/Status.gd" id="6_8h4hk"]
 [ext_resource type="Texture2D" uid="uid://dpkisrpco54qj" path="res://AMSG_Examples/Player/UI/Debug/circle.png" id="7_n2d8i"]
 [ext_resource type="Texture2D" uid="uid://ijv6wr22hov8" path="res://AMSG_Examples/Player/UI/Debug/direction.png" id="8_t071y"]
@@ -150,11 +157,10 @@ nodes/crouch/node = SubResource("AnimationNodeTransition_3twx3")
 nodes/crouch/position = Vector2(100, 180)
 nodes/crouching/node = SubResource("AnimationNodeTransition_rufvy")
 nodes/crouching/position = Vector2(-120, 640)
-node_connections = [&"output", 0, &"crouch", &"crouch", 0, &"Standing", &"crouch", 1, &"crouching", &"crouching", 0, &"CrouchIdle", &"crouching", 1, &"CrouchWalkingForward", &"WalkFB", 0, &"WalkForward", &"WalkFB", 1, &"WalkBackward", &"StopSeek", 0, &"StopAnim", &"JogFB", 0, &"JogForward", &"JogFB", 1, &"JogBackward", &"Standing", 0, &"Idle", &"Standing", 1, &"WalkFB", &"Standing", 2, &"Run", &"Standing", 3, &"JogFB", &"Standing", 4, &"StopSeek"]
+node_connections = [&"output", 0, &"crouch", &"JogFB", 0, &"JogForward", &"JogFB", 1, &"JogBackward", &"Standing", 0, &"Idle", &"Standing", 1, &"WalkFB", &"Standing", 2, &"Run", &"Standing", 3, &"JogFB", &"Standing", 4, &"StopSeek", &"StopSeek", 0, &"StopAnim", &"WalkFB", 0, &"WalkForward", &"WalkFB", 1, &"WalkBackward", &"crouch", 0, &"Standing", &"crouch", 1, &"crouching", &"crouching", 0, &"CrouchIdle", &"crouching", 1, &"CrouchWalkingForward"]
 
 [sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_jqd3m"]
 resource_local_to_scene = true
-graph_offset = Vector2(251.731, 825.534)
 nodes/AnimTurnLeft/node = SubResource("AnimationNodeAnimation_mb2kt")
 nodes/AnimTurnLeft/position = Vector2(500, 1540)
 nodes/AnimTurnRight/node = SubResource("AnimationNodeAnimation_2rfjg")
@@ -177,26 +183,75 @@ resource_local_to_scene = true
 radius = 0.375
 height = 1.0
 
-[node name="Character" instance=ExtResource("1_ihvpu")]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4jtp6"]
+bg_color = Color(0.615686, 0.121569, 0.227451, 1)
 
-[node name="MotionWarping" parent="." index="0" instance=ExtResource("2_0jifq")]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_agyl7"]
+bg_color = Color(0, 0, 0, 1)
 
-[node name="GroundCheck" parent="." index="1"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ueab0"]
+bg_color = Color(0.745098, 0.905882, 1, 1)
+
+[node name="Character" groups=["player"] instance=ExtResource("1_ihvpu")]
+
+[node name="CombatSystem" parent="." index="0" node_paths=PackedStringArray("attribute_map") instance=ExtResource("2_806xw")]
+attribute_map = NodePath("../AttributesManager")
+
+[node name="TargetingComponent" parent="." index="1" node_paths=PackedStringArray("detection_raycast", "combat_component") instance=ExtResource("3_0qp7j")]
+detection_raycast = NodePath("../SpringArm3D/Camera/TargetRayCast")
+combat_component = NodePath("../CombatSystem")
+
+[node name="AttributesManager" parent="." index="2" node_paths=PackedStringArray("character") instance=ExtResource("3_2cn4e")]
+character = NodePath("../CharacterMovementComponent")
+
+[node name="HealthAttribute" parent="AttributesManager" index="0" node_paths=PackedStringArray("health_bar") instance=ExtResource("4_7c4a2")]
+script = ExtResource("5_hlhwh")
+health_bar = NodePath("../../Status/HealthBar")
+attribute_name = "health"
+maximum_value = 100.0
+current_value = 100.0
+
+[node name="StaminaAttribute" parent="AttributesManager" index="1" node_paths=PackedStringArray("cooldown_bar") instance=ExtResource("4_7c4a2")]
+script = ExtResource("6_8dtn8")
+cooldown_regeneration_speed = 10.0
+cooldown_regen_wait_time_no_exaust = 2.0
+cooldown_regen_wait_time_exaust = 4.0
+cooldown_bar = NodePath("../../Status/StaminaBar")
+cooldown_unfill_normal_color = Color(0, 0, 0, 1)
+cooldown_unfill_exaust_color = Color(1, 0, 0, 0.384314)
+attribute_name = "stamina"
+maximum_value = 100.0
+current_value = 100.0
+
+[node name="MotionWarping" parent="." index="3" instance=ExtResource("2_0jifq")]
+
+[node name="GroundCheck" parent="." index="4"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
 
-[node name="CharacterMovementComponent" parent="." index="2"]
+[node name="CharacterMovementComponent" parent="." index="5" node_paths=PackedStringArray("stamina_attribute", "networking", "targeting_component")]
 script = ExtResource("3_jj2if")
-networking_path = NodePath("../Networking")
-OnePressJump = true
-UsingSprintToggle = false
-UsingCrouchToggle = true
+stamina_use = true
+stamina_energy_consumption = 15.0
+stamina_attribute = NodePath("../AttributesManager/StaminaAttribute")
+networking = NodePath("../Networking")
+targeting_component = NodePath("../TargetingComponent")
 tilt_power = 0.0
 deacceleration = 5.0
 
-[node name="Networking" parent="." index="3" instance=ExtResource("4_8jv5v")]
+[node name="PlayerController" type="Node" parent="." index="6" node_paths=PackedStringArray("character_component", "networking")]
+script = ExtResource("4_7eusw")
+OnePressJump = true
+UsingCrouchToggle = true
+character_component = NodePath("../CharacterMovementComponent")
+networking = NodePath("../Networking")
+
+[node name="Networking" parent="." index="7" instance=ExtResource("4_8jv5v")]
 character_movement_component = NodePath("../CharacterMovementComponent")
 
-[node name="AnimationTree" parent="." index="4"]
+[node name="CameraComponent" parent="." index="8" node_paths=PackedStringArray("networking")]
+networking = NodePath("../Networking")
+
+[node name="AnimationTree" parent="." index="9"]
 tree_root = SubResource("AnimationNodeBlendTree_jqd3m")
 parameters/VelocityDirection/JogFB/current_state = ""
 parameters/VelocityDirection/JogFB/current_index = -1
@@ -207,10 +262,7 @@ parameters/VelocityDirection/WalkFB/current_index = -1
 parameters/VelocityDirection/crouching/current_state = ""
 parameters/VelocityDirection/crouching/current_index = -1
 
-[node name="CameraComponent" parent="." index="5" node_paths=PackedStringArray("networking")]
-networking = NodePath("../Networking")
-
-[node name="CollisionShape3D" parent="." index="6"]
+[node name="CollisionShape3D" parent="." index="10"]
 shape = SubResource("CapsuleShape3D_jrjkm")
 
 [node name="Skeleton3D" parent="Armature" index="0"]
@@ -278,7 +330,10 @@ light_energy = 10.0
 [node name="Camera" parent="SpringArm3D" index="0"]
 current = true
 
-[node name="Status" type="Control" parent="." index="11"]
+[node name="TargetRayCast" type="RayCast3D" parent="SpringArm3D/Camera" index="1"]
+target_position = Vector3(0, 0, -10)
+
+[node name="Status" type="Control" parent="." index="15" node_paths=PackedStringArray("camera_root")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -286,6 +341,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("6_8h4hk")
+camera_root = NodePath("../CameraComponent")
 
 [node name="Control" type="Control" parent="Status" index="0"]
 layout_mode = 1
@@ -385,3 +441,19 @@ text = "                                      Controls
 (F) Interaction
 
 (L) Flashlight"
+
+[node name="HealthBar" type="ProgressBar" parent="Status" index="7"]
+layout_mode = 0
+offset_right = 284.0
+offset_bottom = 11.0
+theme_override_styles/fill = SubResource("StyleBoxFlat_4jtp6")
+show_percentage = false
+
+[node name="StaminaBar" type="ProgressBar" parent="Status" index="8"]
+layout_mode = 0
+offset_top = 23.0
+offset_right = 284.0
+offset_bottom = 34.0
+theme_override_styles/background = SubResource("StyleBoxFlat_agyl7")
+theme_override_styles/fill = SubResource("StyleBoxFlat_ueab0")
+show_percentage = false

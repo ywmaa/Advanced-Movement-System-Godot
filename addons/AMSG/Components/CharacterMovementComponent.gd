@@ -113,6 +113,8 @@ var actual_acceleration :Vector3
 ## returns the acceleration that the character should move with, aka input acceleration
 var input_acceleration :Vector3
 
+var input_direction:Vector3
+
 var vertical_velocity :Vector3 
 
 ## returns the actual velocity for the player.
@@ -545,7 +547,7 @@ var PrevVelocity :Vector3
 ## when Idle speed and direction should be passed as 0, and deacceleration passed, or leave them empty.
 func add_movement_input(direction: Vector3 = Vector3.ZERO, Speed: float = 0, Acceleration: float = deacceleration if character_node is CharacterBody3D else 0) -> void:
 	var max_speed : float = Speed
-	
+	input_direction = direction
 	
 	if character_node is RigidBody3D:
 		if is_flying == false:

@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dsum6nu2c2wm5"]
+
+[ext_resource type="Script" path="res://addons/AMSG/Components/TargetingComponent/TargetingComponent.gd" id="1_i15da"]
+
+[node name="TargetingComponent" type="Node"]
+script = ExtResource("1_i15da")
