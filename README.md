@@ -130,6 +130,7 @@ https://youtube.com/playlist?list=PLdcL5aF8ZcJvCyqWeCBYVGKbQgrQngen3) .
 
 (C) One Press : Switch Camera Angle (Right Shoulder,Left Shoulder,Head(Center) )
 
+(P) Pause : Toggles a lock on player movement, and shows a message on-screen
 
 (Space) Jump
 
