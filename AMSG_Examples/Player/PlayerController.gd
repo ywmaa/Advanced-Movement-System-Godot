@@ -20,8 +20,13 @@ var h_rotation :float
 var previous_rotation_mode 
 var direction := Vector3.ZERO
 
+#####################################
+#Locks System
+@export var lock_system : LockSystem
+#####################################
 
-@export var mouse_sensitvity : float = 0.01
+@export var mouse_sensitivity : float = 0.01
+
 
 
 
@@ -43,7 +48,11 @@ func possess_character(p_character_component:CharacterMovementComponent,control:
 func _physics_process(delta):
 	if !networking.is_local_authority():
 		return
-
+	
+	if lock_system != null && lock_system.is_locked:
+		direction = Vector3.ZERO
+		character_component.add_movement_input()
+		return
 	
 	#------------------ Input Movement ------------------#
 	h_rotation = character_component.camera_root.HObject.transform.basis.get_euler().y
@@ -132,8 +141,8 @@ func _input(event):
 	if event is InputEventMouseMotion:
 		if !character_component or !controls_the_possessed_character:
 			return
-		character_component.camera_root.camera_h += -event.relative.x * mouse_sensitvity
-		character_component.camera_root.camera_v += -event.relative.y * mouse_sensitvity
+		character_component.camera_root.camera_h += -event.relative.x * mouse_sensitivity
+		character_component.camera_root.camera_v += -event.relative.y * mouse_sensitivity
 	#------------------ Motion Warping test------------------#
 	if event.is_action_pressed("fire"):
 		character_component.anim_ref.active = false
@@ -173,3 +182,8 @@ func _input(event):
 				if character_component.camera_root.view_mode == Global.view_mode.first_person:
 					character_component.camera_root.view_mode = Global.view_mode.third_person
 					
+	if(Input.is_action_pressed("pause")):
+		if(lock_system.contains_lock("pauseGame")):
+			lock_system.remove_lock("pauseGame")
+		else:
+			lock_system.add_lock("pauseGame")

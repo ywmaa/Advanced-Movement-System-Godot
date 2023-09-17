@@ -3,7 +3,7 @@ class_name CharacterMovementComponent
 
 
 #####################################
-@export_category("Refrences")
+@export_category("References")
 #Refrences
 
 ## Refrence to character mesh, should be assigned to a [Node3D] that is a parent to the actual mesh (Skeleton3D)
