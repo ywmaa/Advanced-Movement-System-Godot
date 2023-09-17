@@ -239,24 +239,24 @@ targeting_component = NodePath("../TargetingComponent")
 tilt_power = 0.0
 deacceleration = 5.0
 
-[node name="PlayerController" type="Node" parent="." index="6" node_paths=PackedStringArray("character_component", "networking", "lock_system")]
+[node name="LockSystem" type="Node" parent="." index="6"]
+script = ExtResource("11_06pi7")
+
+[node name="PlayerController" type="Node" parent="." index="7" node_paths=PackedStringArray("character_component", "networking", "lock_system")]
 script = ExtResource("4_7eusw")
 OnePressJump = true
 UsingCrouchToggle = true
 character_component = NodePath("../CharacterMovementComponent")
 networking = NodePath("../Networking")
-lock_system = NodePath("LockSystem")
+lock_system = NodePath("../LockSystem")
 
-[node name="LockSystem" type="Node" parent="PlayerController" index="0"]
-script = ExtResource("11_06pi7")
-
-[node name="Networking" parent="." index="7" instance=ExtResource("4_8jv5v")]
+[node name="Networking" parent="." index="8" instance=ExtResource("4_8jv5v")]
 character_movement_component = NodePath("../CharacterMovementComponent")
 
-[node name="CameraComponent" parent="." index="8" node_paths=PackedStringArray("networking")]
+[node name="CameraComponent" parent="." index="9" node_paths=PackedStringArray("networking")]
 networking = NodePath("../Networking")
 
-[node name="AnimationTree" parent="." index="9"]
+[node name="AnimationTree" parent="." index="10"]
 tree_root = SubResource("AnimationNodeBlendTree_jqd3m")
 parameters/VelocityDirection/JogFB/current_state = ""
 parameters/VelocityDirection/JogFB/current_index = -1
@@ -267,7 +267,7 @@ parameters/VelocityDirection/WalkFB/current_index = -1
 parameters/VelocityDirection/crouching/current_state = ""
 parameters/VelocityDirection/crouching/current_index = -1
 
-[node name="CollisionShape3D" parent="." index="10"]
+[node name="CollisionShape3D" parent="." index="11"]
 shape = SubResource("CapsuleShape3D_jrjkm")
 
 [node name="Skeleton3D" parent="Armature" index="0"]
@@ -338,7 +338,7 @@ current = true
 [node name="TargetRayCast" type="RayCast3D" parent="SpringArm3D/Camera" index="1"]
 target_position = Vector3(0, 0, -10)
 
-[node name="Status" type="Control" parent="." index="15" node_paths=PackedStringArray("camera_root")]
+[node name="Status" type="Control" parent="." index="16" node_paths=PackedStringArray("camera_root")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -481,4 +481,4 @@ text = "Character locked. Press P to unlock."
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[connection signal="Lock_Status_Changed" from="PlayerController/LockSystem" to="Status/PauseText" method="set_visible"]
+[connection signal="Lock_Status_Changed" from="LockSystem" to="Status/PauseText" method="set_visible"]

@@ -171,7 +171,7 @@ nodes/crouching/node = SubResource("AnimationNodeTransition_rufvy")
 nodes/crouching/position = Vector2(-120, 640)
 node_connections = [&"output", 0, &"crouch", &"JogFB", 0, &"JogForward", &"JogFB", 1, &"JogBackward", &"Standing", 0, &"Idle", &"Standing", 1, &"WalkFB", &"Standing", 2, &"Run", &"Standing", 3, &"JogFB", &"Standing", 4, &"StopSeek", &"StopSeek", 0, &"StopAnim", &"WalkFB", 0, &"WalkForward", &"WalkFB", 1, &"WalkBackward", &"crouch", 0, &"Standing", &"crouch", 1, &"crouching", &"crouching", 0, &"CrouchIdle", &"crouching", 1, &"CrouchWalkingForward"]
 
-[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_m668p"]
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_kgjnt"]
 resource_local_to_scene = true
 nodes/AnimTurnLeft/node = SubResource("AnimationNodeAnimation_mb2kt")
 nodes/AnimTurnLeft/position = Vector2(500, 1540)
@@ -455,7 +455,7 @@ PlayerRef = NodePath("../CharacterMovementComponent")
 first_person_camera_bone = NodePath("../Armature/Skeleton3D/BoneAttachment3D")
 
 [node name="AnimationTree" parent="." node_paths=PackedStringArray("movement_script") instance=ExtResource("3_86f8p")]
-tree_root = SubResource("AnimationNodeBlendTree_m668p")
+tree_root = SubResource("AnimationNodeBlendTree_kgjnt")
 anim_player = NodePath("../AnimationPlayer")
 active = true
 parameters/VelocityDirection/JogFB/current_state = "Forward"
@@ -962,7 +962,7 @@ mesh = ExtResource("6_e2l25")
 skin = SubResource("Skin_hh536")
 
 [node name="BoneAttachment3D" type="BoneAttachment3D" parent="Armature/Skeleton3D"]
-transform = Transform3D(0.997853, -0.0651962, 0.00621694, 0.0582333, 0.839814, -0.539742, 0.029968, 0.538945, 0.841807, -0.017434, 1.49834, 0.112726)
+transform = Transform3D(0.997853, -0.0651963, 0.00621715, 0.0582334, 0.839814, -0.539742, 0.0299679, 0.538945, 0.841808, -0.0174341, 1.49834, 0.112726)
 bone_name = "Head"
 bone_idx = 5
 
