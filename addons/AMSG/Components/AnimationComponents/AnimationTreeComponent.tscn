@@ -25,12 +25,13 @@ sync = true
 
 [sub_resource type="AnimationNodeTransition" id="AnimationNodeTransition_3twx3"]
 sync = true
-enabled_inputs = 2
 xfade_time = 0.3
 input_0/name = "stand"
 input_0/auto_advance = false
+input_0/reset = true
 input_1/name = "crouch"
 input_1/auto_advance = false
+input_1/reset = true
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_id6x0"]
 animation = &"CrouchIdle"
@@ -69,11 +70,12 @@ animation = &"Idle"
 animation = &"Jogbackward"
 
 [sub_resource type="AnimationNodeTransition" id="AnimationNodeTransition_mk3d0"]
-enabled_inputs = 2
 input_0/name = "Forward"
 input_0/auto_advance = false
+input_0/reset = true
 input_1/name = "Backward"
 input_1/auto_advance = false
+input_1/reset = true
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_6bsh6"]
 animation = &"JogForward"
@@ -86,7 +88,7 @@ nodes/FB/node = SubResource("AnimationNodeTransition_mk3d0")
 nodes/FB/position = Vector2(140, 140)
 nodes/Forward/node = SubResource("AnimationNodeAnimation_6bsh6")
 nodes/Forward/position = Vector2(-100, 100)
-node_connections = [&"output", 0, &"FB", &"FB", 0, &"Forward", &"FB", 1, &"Backward"]
+node_connections = [&"FB", 0, &"Forward", &"FB", 1, &"Backward", &"output", 0, &"FB"]
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_pgipy"]
 animation = &"Run"
@@ -102,17 +104,18 @@ nodes/StopAnim/node = SubResource("AnimationNodeAnimation_hwdqf")
 nodes/StopAnim/position = Vector2(-260, 180)
 nodes/StopSeek/node = SubResource("AnimationNodeTimeSeek_3wh8r")
 nodes/StopSeek/position = Vector2(-60, 160)
-node_connections = [&"output", 0, &"StopSeek", &"StopSeek", 0, &"StopAnim"]
+node_connections = [&"StopSeek", 0, &"StopAnim", &"output", 0, &"StopSeek"]
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_dxjg6"]
 animation = &"WalkingBackward"
 
 [sub_resource type="AnimationNodeTransition" id="AnimationNodeTransition_tyxgb"]
-enabled_inputs = 2
 input_0/name = "Forward"
 input_0/auto_advance = false
+input_0/reset = true
 input_1/name = "Backward"
 input_1/auto_advance = false
+input_1/reset = true
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_3y4dp"]
 animation = &"Walk"
@@ -125,7 +128,7 @@ nodes/FB/node = SubResource("AnimationNodeTransition_tyxgb")
 nodes/FB/position = Vector2(140, 100)
 nodes/Forward/node = SubResource("AnimationNodeAnimation_3y4dp")
 nodes/Forward/position = Vector2(-60, 60)
-node_connections = [&"output", 0, &"FB", &"FB", 0, &"Forward", &"FB", 1, &"Backward"]
+node_connections = [&"FB", 0, &"Forward", &"FB", 1, &"Backward", &"output", 0, &"FB"]
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_wnbtw"]
 xfade_time = 0.2
@@ -214,7 +217,7 @@ nodes/crouching/node = SubResource("AnimationNodeStateMachine_2xodt")
 nodes/crouching/position = Vector2(-100, 420)
 nodes/standing/node = SubResource("AnimationNodeStateMachine_ieguh")
 nodes/standing/position = Vector2(-120, 40)
-node_connections = [&"output", 0, &"crouch", &"crouch", 0, &"standing", &"crouch", 1, &"crouching"]
+node_connections = [&"crouch", 0, &"standing", &"crouch", 1, &"crouching", &"output", 0, &"crouch"]
 
 [sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_5nmia"]
 resource_local_to_scene = true
@@ -234,7 +237,7 @@ nodes/Turn/position = Vector2(980, 1400)
 nodes/VelocityDirection/node = SubResource("AnimationNodeBlendTree_ml0kl")
 nodes/VelocityDirection/position = Vector2(680, 1400)
 nodes/output/position = Vector2(1540, 1400)
-node_connections = [&"output", 0, &"InAir", &"InAir", 0, &"Turn", &"InAir", 1, &"FallAnimation", &"RightOrLeft", 0, &"AnimTurnLeft", &"RightOrLeft", 1, &"AnimTurnRight", &"Turn", 0, &"VelocityDirection", &"Turn", 1, &"RightOrLeft"]
+node_connections = [&"InAir", 0, &"Turn", &"InAir", 1, &"FallAnimation", &"RightOrLeft", 0, &"AnimTurnLeft", &"RightOrLeft", 1, &"AnimTurnRight", &"Turn", 0, &"VelocityDirection", &"Turn", 1, &"RightOrLeft", &"output", 0, &"InAir"]
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id="AnimationNodeStateMachinePlayback_wc2uc"]
 

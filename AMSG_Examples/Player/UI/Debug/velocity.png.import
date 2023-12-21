@@ -16,9 +16,9 @@ dest_files=["res://.godot/imported/velocity.png-1d9e4b73ab49623978c32500b4446591
 [params]
 
 compress/mode=1
+compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=1
-compress/bptc_ldr=0
 compress/normal_map=0
 compress/channel_pack=0
 mipmaps/generate=false

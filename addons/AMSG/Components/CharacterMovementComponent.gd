@@ -308,7 +308,7 @@ func _ready():
 	
 	update_animations()
 	update_character_movement()
-var pose_warping_instance = pose_warping.new()
+var pose_warping_instance = PoseWarping.new()
 func _process(delta):
 
 

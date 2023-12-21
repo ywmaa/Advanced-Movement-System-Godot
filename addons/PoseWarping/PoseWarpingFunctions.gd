@@ -1,5 +1,37 @@
 extends Node
-class_name pose_warping
+class_name PoseWarping
+## a Node that Handles Pose Warping for character for enhanced animations
+
+## The Character Skeleton that is going to be modified
+@export var character_skeleton : Skeleton3D
+
+
+@export_subgroup("Orientation Warping", "orientation_warping_")
+@export var orientation_warping_enable : bool
+## This is tthe object that contains the camera horizontal rotation
+## it could be the camera object itself.
+@export var orientation_warping_camera_h_object : Node3D
+## MUST BE MODIFIED THROUGH MOVEMENT SCRIPT TO MATCH PLAYER MOVEMENT SPEED
+@export var orientation_warping_character_velocity : Vector3
+## Hips bone name, Please Write the correct hips bone name according to your skeleton.
+@export var orientation_warping_hip_bone_name : String = "Hips" 
+## Spine Bones Names, Please Write the correct bone names for all of the spine bones according to your skeleton.
+@export var orientation_warping_spine_bones_names : Array[String] = ["Spine","Spine1","Spine2"] 
+
+## An offset added to the Spine Bones rotation relative to camera forward
+@export var orientation_warping_offset := 0.0 
+## 
+@export var orientation_warping_turn_rate :float= 10.0
+
+
+@export_subgroup("Stride - Speed Warping", "stride_warping_")
+@export var stride_warping_enable : bool
+
+
+@export_subgroup("Slope Warping - Leg on ground IK", "slope_warping_")
+@export var slope_warping_enable : bool
+
+
 ## For Predicting Stop Location
 ## it uses a linear equation : d = v*t + 0.5 * a * t^2
 ## v is velocity. t is time. a is acceleration

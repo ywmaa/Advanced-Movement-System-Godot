@@ -1,4 +1,4 @@
-[gd_scene load_steps=45 format=3 uid="uid://c2l3xxr5mfm6w"]
+[gd_scene load_steps=65 format=3 uid="uid://c2l3xxr5mfm6w"]
 
 [ext_resource type="PackedScene" uid="uid://cth47yn1duvdh" path="res://AMSG_Examples/Character/mixamo_character.tscn" id="1_ihvpu"]
 [ext_resource type="PackedScene" uid="uid://bfkejs88xm680" path="res://addons/PoseWarping/MotionWarping.tscn" id="2_0jifq"]
@@ -9,7 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://bkw0qe3jh352j" path="res://addons/AMSG/Components/AttributesComponent/GameAttribute.tscn" id="4_7c4a2"]
 [ext_resource type="Script" path="res://AMSG_Examples/Player/PlayerController.gd" id="4_7eusw"]
 [ext_resource type="PackedScene" uid="uid://cegbfvlakd2rw" path="res://addons/AMSG/Components/Networking.tscn" id="4_8jv5v"]
-[ext_resource type="PackedScene" path="res://AMSG_Examples/Player/flashlight/Flashlight.tscn" id="5_euvsl"]
+[ext_resource type="PackedScene" uid="uid://bpe4kqq0dsptn" path="res://AMSG_Examples/Player/flashlight/Flashlight.tscn" id="5_euvsl"]
 [ext_resource type="Script" path="res://addons/AMSG/Components/AttributesComponent/HealthAttribute.gd" id="5_hlhwh"]
 [ext_resource type="Script" path="res://addons/AMSG/Components/AttributesComponent/StaminaAttribute.gd" id="6_8dtn8"]
 [ext_resource type="Script" path="res://AMSG_Examples/Player/Status.gd" id="6_8h4hk"]
@@ -17,6 +17,48 @@
 [ext_resource type="Texture2D" uid="uid://ijv6wr22hov8" path="res://AMSG_Examples/Player/UI/Debug/direction.png" id="8_t071y"]
 [ext_resource type="Texture2D" uid="uid://ck5riwbh478s4" path="res://AMSG_Examples/Player/UI/Debug/velocity.png" id="9_464xm"]
 [ext_resource type="Script" path="res://addons/AMSG/Components/LockComponent/LockSystem.gd" id="11_06pi7"]
+[ext_resource type="Animation" uid="uid://xhse6rakv0vp" path="res://AMSG_Examples/Character/Animations/CrouchIdle.res" id="13_15hcd"]
+[ext_resource type="Animation" uid="uid://bfwuav455uabl" path="res://AMSG_Examples/Character/Animations/CrouchWalkingForward.res" id="14_l7yu0"]
+[ext_resource type="Animation" uid="uid://cxd1wjiaayrn6" path="res://AMSG_Examples/Character/Animations/Falling.res" id="15_o3sl6"]
+[ext_resource type="Animation" uid="uid://bjimeh2fh7g6v" path="res://AMSG_Examples/Character/Animations/FallingStart.res" id="16_r2kuc"]
+[ext_resource type="Animation" uid="uid://b224n8qfg8tgq" path="res://AMSG_Examples/Character/Animations/FallingToRoll.res" id="17_fjf80"]
+[ext_resource type="Animation" uid="uid://b70e3ssiman4m" path="res://AMSG_Examples/Character/Animations/HardFalling.res" id="18_6427q"]
+[ext_resource type="Animation" uid="uid://daq1w2ysqgh2u" path="res://AMSG_Examples/Character/Animations/Idle.res" id="19_kb02o"]
+[ext_resource type="Animation" uid="uid://bl171l8rn5qj1" path="res://AMSG_Examples/Character/Animations/Idle1.res" id="20_x2p8y"]
+[ext_resource type="Animation" uid="uid://bvxw7rnencmno" path="res://AMSG_Examples/Character/Animations/Idle2.res" id="21_b1fju"]
+[ext_resource type="Animation" uid="uid://cklbyyhlh6h4y" path="res://AMSG_Examples/Character/Animations/JogForward.res" id="22_lubt6"]
+[ext_resource type="Animation" uid="uid://da8dkhg47tprj" path="res://AMSG_Examples/Character/Animations/Jogbackward.res" id="23_c75je"]
+[ext_resource type="Animation" uid="uid://dafqqqlhn3ua5" path="res://AMSG_Examples/Character/Animations/Kick.res" id="24_5itbc"]
+[ext_resource type="Animation" uid="uid://c5mm314uy284i" path="res://AMSG_Examples/Character/Animations/Run.res" id="25_ppe4f"]
+[ext_resource type="Animation" uid="uid://ciye7exjrais1" path="res://AMSG_Examples/Character/Animations/RunToStop.res" id="26_m5y1a"]
+[ext_resource type="Animation" uid="uid://bylwxa24gre04" path="res://AMSG_Examples/Character/Animations/TPose.res" id="27_m5nv1"]
+[ext_resource type="Animation" uid="uid://d4glqsi6uhv0c" path="res://AMSG_Examples/Character/Animations/TurnLeft.res" id="28_ejs2y"]
+[ext_resource type="Animation" uid="uid://f8m1upuenduu" path="res://AMSG_Examples/Character/Animations/TurnRight.res" id="29_8xpe7"]
+[ext_resource type="Animation" uid="uid://xxj1rcp4b5k0" path="res://AMSG_Examples/Character/Animations/Walk.res" id="30_0tci8"]
+[ext_resource type="Animation" uid="uid://bl4cuhnoma34i" path="res://AMSG_Examples/Character/Animations/WalkingBackward.res" id="31_vuu6b"]
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_5egkr"]
+_data = {
+"CrouchIdle": ExtResource("13_15hcd"),
+"CrouchWalkingForward": ExtResource("14_l7yu0"),
+"Falling": ExtResource("15_o3sl6"),
+"FallingStart": ExtResource("16_r2kuc"),
+"FallingToRoll": ExtResource("17_fjf80"),
+"HardFalling": ExtResource("18_6427q"),
+"Idle": ExtResource("19_kb02o"),
+"Idle1": ExtResource("20_x2p8y"),
+"Idle2": ExtResource("21_b1fju"),
+"JogForward": ExtResource("22_lubt6"),
+"Jogbackward": ExtResource("23_c75je"),
+"Kick": ExtResource("24_5itbc"),
+"Run": ExtResource("25_ppe4f"),
+"RunToStop": ExtResource("26_m5y1a"),
+"TPose": ExtResource("27_m5nv1"),
+"TurnLeft": ExtResource("28_ejs2y"),
+"TurnRight": ExtResource("29_8xpe7"),
+"Walk": ExtResource("30_0tci8"),
+"WalkingBackward": ExtResource("31_vuu6b")
+}
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_mb2kt"]
 animation = &"TurnLeft"
@@ -158,7 +200,7 @@ nodes/crouch/node = SubResource("AnimationNodeTransition_3twx3")
 nodes/crouch/position = Vector2(100, 180)
 nodes/crouching/node = SubResource("AnimationNodeTransition_rufvy")
 nodes/crouching/position = Vector2(-120, 640)
-node_connections = [&"output", 0, &"crouch", &"JogFB", 0, &"JogForward", &"JogFB", 1, &"JogBackward", &"Standing", 0, &"Idle", &"Standing", 1, &"WalkFB", &"Standing", 2, &"Run", &"Standing", 3, &"JogFB", &"Standing", 4, &"StopSeek", &"StopSeek", 0, &"StopAnim", &"WalkFB", 0, &"WalkForward", &"WalkFB", 1, &"WalkBackward", &"crouch", 0, &"Standing", &"crouch", 1, &"crouching", &"crouching", 0, &"CrouchIdle", &"crouching", 1, &"CrouchWalkingForward"]
+node_connections = [&"JogFB", 0, &"JogForward", &"JogFB", 1, &"JogBackward", &"Standing", 0, &"Idle", &"Standing", 1, &"WalkFB", &"Standing", 2, &"Run", &"Standing", 3, &"JogFB", &"Standing", 4, &"StopSeek", &"StopSeek", 0, &"StopAnim", &"WalkFB", 0, &"WalkForward", &"WalkFB", 1, &"WalkBackward", &"crouch", 0, &"Standing", &"crouch", 1, &"crouching", &"crouching", 0, &"CrouchIdle", &"crouching", 1, &"CrouchWalkingForward", &"output", 0, &"crouch"]
 
 [sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_jqd3m"]
 resource_local_to_scene = true
@@ -177,7 +219,7 @@ nodes/Turn/position = Vector2(980, 1400)
 nodes/VelocityDirection/node = SubResource("AnimationNodeBlendTree_ml0kl")
 nodes/VelocityDirection/position = Vector2(680, 1400)
 nodes/output/position = Vector2(1540, 1400)
-node_connections = [&"output", 0, &"InAir", &"InAir", 0, &"Turn", &"InAir", 1, &"FallAnimation", &"RightOrLeft", 0, &"AnimTurnLeft", &"RightOrLeft", 1, &"AnimTurnRight", &"Turn", 0, &"VelocityDirection", &"Turn", 1, &"RightOrLeft"]
+node_connections = [&"InAir", 0, &"Turn", &"InAir", 1, &"FallAnimation", &"RightOrLeft", 0, &"AnimTurnLeft", &"RightOrLeft", 1, &"AnimTurnRight", &"Turn", 0, &"VelocityDirection", &"Turn", 1, &"RightOrLeft", &"output", 0, &"InAir"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_jrjkm"]
 resource_local_to_scene = true
@@ -257,6 +299,9 @@ character_movement_component = NodePath("../CharacterMovementComponent")
 networking = NodePath("../Networking")
 
 [node name="AnimationTree" parent="." index="10"]
+libraries = {
+"": SubResource("AnimationLibrary_5egkr")
+}
 tree_root = SubResource("AnimationNodeBlendTree_jqd3m")
 parameters/VelocityDirection/JogFB/current_state = ""
 parameters/VelocityDirection/JogFB/current_index = -1
@@ -325,8 +370,14 @@ bones/63/rotation = Quaternion(-0.307456, 0.043324, -0.0155887, 0.950448)
 bones/64/rotation = Quaternion(0.442158, -0.046071, -0.0947431, 0.890729)
 bones/65/rotation = Quaternion(0.352065, -0.016805, -0.00581727, 0.935807)
 
-[node name="BoneAttachment3D" parent="Armature/Skeleton3D" index="2"]
+[node name="HeadBone" parent="Armature/Skeleton3D" index="2"]
 transform = Transform3D(0.990253, -0.111666, -0.0832491, 0.0474898, 0.832572, -0.551877, 0.130937, 0.542544, 0.82976, -0.0634186, 1.48843, 0.0344127)
+
+[node name="SkeletonIK3D" parent="Armature/Skeleton3D" index="3"]
+process_priority = 1
+
+[node name="Knee" parent="Armature/Skeleton3D/SkeletonIK3D" index="0"]
+transform = Transform3D(-0.749232, 0.216858, -0.625799, -0.244034, -0.968789, -0.0435476, -0.615711, 0.120089, 0.778768, -0.00737142, 0.51281, 0.311666)
 
 [node name="flashlight" parent="Armature" index="1" instance=ExtResource("5_euvsl")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 1.12407, 0.156779)

@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://AMSG_Examples/Maps/main.gd" id="1_rvsng"]
 [ext_resource type="Material" uid="uid://bf6te7t23qtp3" path="res://AMSG_Examples/Maps/GridMat.tres" id="3_27oba"]
 [ext_resource type="Script" path="res://addons/AMSG/Interactable/Light/InteractableLight.gd" id="4_kyyln"]
-[ext_resource type="PackedScene" path="res://AMSG_Examples/3DObjects/Apple/Apple.tscn" id="6_aiuj0"]
+[ext_resource type="PackedScene" uid="uid://f1hgkwi56ss6" path="res://AMSG_Examples/3DObjects/Apple/Apple.tscn" id="6_aiuj0"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_2afi4"]
 
