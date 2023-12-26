@@ -1,7 +1,8 @@
-[gd_scene load_steps=12 format=3 uid="uid://mpaxkxn0fdto"]
+[gd_scene load_steps=13 format=3 uid="uid://mpaxkxn0fdto"]
 
 [ext_resource type="Environment" uid="uid://cfsln575lgopi" path="res://AMSG_Examples/Maps/default_env.tres" id="1_7h7du"]
-[ext_resource type="Script" path="res://AMSG_Examples/Maps/main.gd" id="1_rvsng"]
+[ext_resource type="Script" path="res://AMSG_Examples/Maps/LevelManager.gd" id="1_rvsng"]
+[ext_resource type="PackedScene" uid="uid://daj0dc45avukm" path="res://AMSG_Examples/GameLogic/SpawnPoint/player_spawn_location.tscn" id="2_0g8sc"]
 [ext_resource type="Material" uid="uid://bf6te7t23qtp3" path="res://AMSG_Examples/Maps/GridMat.tres" id="3_27oba"]
 [ext_resource type="Script" path="res://addons/AMSG/Interactable/Light/InteractableLight.gd" id="4_kyyln"]
 [ext_resource type="PackedScene" uid="uid://f1hgkwi56ss6" path="res://AMSG_Examples/3DObjects/Apple/Apple.tscn" id="6_aiuj0"]
@@ -21,106 +22,11 @@ points = PackedVector3Array(1, 1, 1, 1, 1, -1, -1, 1, 1, 1, -1, 1, 1, -1, -1, -1
 
 [sub_resource type="SphereMesh" id="SphereMesh_frhet"]
 
-[node name="Node" type="Node"]
+[node name="Node" type="Node" node_paths=PackedStringArray("spawn_locations")]
 script = ExtResource("1_rvsng")
+spawn_locations = [NodePath("PlayerSpawnLocation")]
 
-[node name="ListenServer" type="Button" parent="."]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -144.0
-offset_top = -23.0
-offset_right = -4.0
-offset_bottom = 24.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-text = "Listen Server
-"
-
-[node name="DServer" type="Button" parent="."]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -144.0
-offset_top = 29.0
-offset_right = -4.0
-offset_bottom = 76.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-text = "Dedicated Server
-"
-
-[node name="Client" type="Button" parent="."]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = 8.0
-offset_top = -23.0
-offset_right = 151.0
-offset_bottom = 24.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-text = "Client
-"
-
-[node name="IP_address" type="TextEdit" parent="Client"]
-layout_mode = 0
-offset_top = 48.0
-offset_right = 144.0
-offset_bottom = 100.0
-placeholder_text = "localhost"
-metadata/_edit_layout_mode = 0
-metadata/_edit_use_custom_anchors = false
-
-[node name="Singleplayer" type="Button" parent="."]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -68.0
-offset_top = -85.0
-offset_right = 75.0
-offset_bottom = -38.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-text = "Singleplayer
-"
-
-[node name="MainMenu" type="Button" parent="."]
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -143.0
-offset_top = -47.0
-grow_horizontal = 0
-grow_vertical = 0
-size_flags_horizontal = 4
-size_flags_vertical = 4
-text = "Main Menu"
-
-[node name="PlayerSpawnLocation" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.91311, 7.03314, 0)
-
-[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://AMSG_Examples/Player/Player.tscn")
-spawn_path = NodePath("../PlayerSpawnLocation")
+[node name="PlayerSpawnLocation" parent="." instance=ExtResource("2_0g8sc")]
 
 [node name="light" type="StaticBody3D" parent="." groups=["detectable_object"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.84419, 1.95787, 16.7421)
@@ -378,10 +284,3 @@ mesh = SubResource("SphereMesh_frhet")
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.873827, 3.49466, 16.8514)
 pixel_size = 0.008
 text = "Look at the red box and press F to switch the light"
-
-[connection signal="pressed" from="ListenServer" to="." method="_on_server_pressed"]
-[connection signal="pressed" from="DServer" to="." method="_on_d_server_pressed"]
-[connection signal="pressed" from="Client" to="." method="_on_client_pressed"]
-[connection signal="text_changed" from="Client/IP_address" to="." method="_on_ip_address_text_changed"]
-[connection signal="pressed" from="Singleplayer" to="." method="_on_singleplayer_pressed"]
-[connection signal="pressed" from="MainMenu" to="." method="_on_main_menu_pressed"]

@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://daj0dc45avukm"]
+
+[node name="PlayerSpawnLocation" type="Marker3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.91311, 7.03314, 0)
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("res://AMSG_Examples/Player/Player.tscn")
+spawn_path = NodePath("..")

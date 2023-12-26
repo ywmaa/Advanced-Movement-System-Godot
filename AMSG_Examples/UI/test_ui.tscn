@@ -1,0 +1,103 @@
+[gd_scene load_steps=2 format=3 uid="uid://cpte38hjq65na"]
+
+[sub_resource type="GDScript" id="GDScript_5sjy5"]
+script/source = "extends Control
+
+
+@export var single_player_button : Button
+@export var listen_server_button : Button
+@export var d_server_button : Button
+@export var client_button : Button
+@export var main_menu_button : Button
+@export var ip_textbox : TextEdit
+"
+
+[node name="TestUI" type="Control" node_paths=PackedStringArray("single_player_button", "listen_server_button", "d_server_button", "client_button", "main_menu_button", "ip_textbox")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = SubResource("GDScript_5sjy5")
+single_player_button = NodePath("CenterContainer/VBoxContainer/HBoxContainer2/SingleplayerButton")
+listen_server_button = NodePath("CenterContainer/VBoxContainer/HBoxContainer/ListenServerButton")
+d_server_button = NodePath("CenterContainer/VBoxContainer/HBoxContainer/DServerButton")
+client_button = NodePath("CenterContainer/VBoxContainer/HBoxContainer2/ClientButton")
+main_menu_button = NodePath("MainMenuButton")
+ip_textbox = NodePath("CenterContainer/VBoxContainer/HBoxContainer2/ClientButton/IP_addressTextBox")
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+custom_minimum_size = Vector2(500, 100)
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ListenServerButton" type="Button" parent="CenterContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Listen Server
+"
+
+[node name="DServerButton" type="Button" parent="CenterContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Dedicated Server
+"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ClientButton" type="Button" parent="CenterContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Client
+"
+
+[node name="IP_addressTextBox" type="TextEdit" parent="CenterContainer/VBoxContainer/HBoxContainer2/ClientButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 50.0
+offset_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+placeholder_text = "localhost"
+metadata/_edit_layout_mode = 0
+metadata/_edit_use_custom_anchors = false
+
+[node name="SingleplayerButton" type="Button" parent="CenterContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Singleplayer
+"
+
+[node name="MainMenuButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -143.0
+offset_top = -47.0
+grow_horizontal = 0
+grow_vertical = 0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "Main Menu"
