@@ -10,10 +10,12 @@ class_name PlayerGameplayComponent
 @export var targeting_component : TargetingComponent 
 
 func _ready():
+	super._ready()
 	targeting_component.connect("detected", func(p): print(p))
 
 
 func _process(delta):
+	super._process(delta)
 	if gait != Global.gait.sprinting and stamina_use:
 		stamina_attribute.being_used = false
 	if gait == Global.gait.sprinting and stamina_use:

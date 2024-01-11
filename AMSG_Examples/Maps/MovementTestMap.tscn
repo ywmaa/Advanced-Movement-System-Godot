@@ -284,3 +284,10 @@ mesh = SubResource("SphereMesh_frhet")
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.873827, 3.49466, 16.8514)
 pixel_size = 0.008
 text = "Look at the red box and press F to switch the light"
+
+[node name="CSGSphere3D" type="CSGSphere3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.32753, 0.0729122, -7.36135)
+use_collision = true
+radius = 2.09949
+radial_segments = 32
+rings = 32
