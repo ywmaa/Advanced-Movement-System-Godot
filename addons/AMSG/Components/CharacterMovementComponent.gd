@@ -31,32 +31,8 @@ class_name CharacterMovementComponent
 
 
 #Movement Settings
-@export_category("Advanced Movement")
-@export var LeftLegIK : SkeletonIK3D
-@export var LeftLegIKTarget : Marker3D
-@export var RightLegIK : SkeletonIK3D
-@export var RightLegIKTarget : Marker3D
-@export_subgroup("orientation_warping", "orientation_warping_")
-## Orientation Warping is a system that adjusts the character's Legs and Hips (Lower body)
-## To adapt to character movement direction.
-@export var orientation_warping_enable : bool = true
-@export_subgroup("stride_warping", "stride_warping_")
-## Stride Warping is a system that adjusts the character's Leg using the SkeletonIK3D node
-## To adapt to the character movement speed, to achieve more realistic look and less foot sliding.
-@export var stride_warping_enable : bool = true
-@export_subgroup("slope_warping", "slope_warping_")
-## Slope Warping is a system that adjusts the character's Leg using the SkeletonIK3D node
-## To adapt to the ground shape, like hills, and uneven ground, etc.
-@export var slope_warping_enable : bool = true
-## Locks the foot to the ground to prevent feet sliding.
-@export var slope_warping_feet_locking_enable : bool = true
-@export var slope_warping_raycast_left_touch_detection : RayCast3D
-@export var slope_warping_raycast_left : RayCast3D
-@export var slope_warping_raycast_tip_left : Marker3D
-@export var slope_warping_raycast_right_touch_detection : RayCast3D
-@export var slope_warping_raycast_right : RayCast3D
-@export var slope_warping_raycast_tip_right : Marker3D
-@export var slope_warping_foot_height_offset : float = 0.1
+@export_category("Distance Matching/Procedural Animation")
+@export var pose_warping : PoseWarping
 
 
 
@@ -315,73 +291,85 @@ func _ready():
 		character_node.axis_lock_angular_y = true
 		character_node.axis_lock_angular_z = true
 		character_node.linear_damp = deacceleration
-	#--------- These tests are for stride warping ---------# 
-	test_sphere.mesh = SphereMesh.new()
-	test_sphere1.mesh = SphereMesh.new()
-	test_sphere.mesh.height = 0.2
-	test_sphere.mesh.radius = 0.1
-	test_sphere1.mesh.height = 0.2
-	test_sphere1.mesh.radius = 0.1
-	test_sphere.mesh.material = StandardMaterial3D.new()
-	test_sphere1.mesh.material = StandardMaterial3D.new()
-	test_sphere.mesh.material.albedo_color = Color.GREEN
-	test_sphere1.mesh.material.albedo_color = Color.RED
-	slope_warping_raycast_left.add_exception(character_node)
-	slope_warping_raycast_right.add_exception(character_node)
-	slope_warping_raycast_left_touch_detection.add_exception(character_node)
-	slope_warping_raycast_right_touch_detection.add_exception(character_node)
+
 	update_animations()
 	update_character_movement()
-var pose_warping_instance = PoseWarping.new()
+
 func _process(delta):
 	calc_animation_data()
-	
-	if stride_warping_enable or slope_warping_enable:
-		var bone_transform_left = skeleton_ref.get_bone_global_pose_no_override(skeleton_ref.find_bone("LeftFoot"))
-		var bone_transform_right = skeleton_ref.get_bone_global_pose_no_override(skeleton_ref.find_bone("RightFoot"))
-		LeftLegIKTarget.transform = bone_transform_left.rotated(Vector3.UP,mesh_ref.rotation.y)
-		RightLegIKTarget.transform = bone_transform_right.rotated(Vector3.UP,mesh_ref.rotation.y)
-		if !LeftLegIK.is_running():
-			LeftLegIK.start()
-		if !RightLegIK.is_running():
-			RightLegIK.start()
-	else:
-		if LeftLegIK.is_running():
-			LeftLegIK.stop()
-		if RightLegIK.is_running():
-			RightLegIK.stop()
-			
-	if stride_warping_enable:
-		animation_stride_warping()
-	if slope_warping_enable:
-		update_ik_target_pos(LeftLegIKTarget, slope_warping_raycast_left, slope_warping_raycast_left_touch_detection, slope_warping_raycast_tip_left, 0)
-		update_ik_target_pos(RightLegIKTarget, slope_warping_raycast_right, slope_warping_raycast_right_touch_detection, slope_warping_raycast_tip_right, 1)
-	if orientation_warping_enable:
-		var orientation_warping_condition = rotation_mode != Global.rotation_mode.velocity_direction and movement_state == Global.movement_state.grounded and movement_action == Global.movement_action.none and gait != Global.gait.sprinting and input_is_moving
-		pose_warping_instance.orientation_warping( orientation_warping_condition,camera_root.HObject,animation_velocity,skeleton_ref,"Hips",["Spine","Spine1","Spine2"],0.0,delta)
+	pose_warping.character_velocity = actual_velocity
 
-var updated_raycast_pos : Array[bool]
-func update_ik_target_pos(target:Node3D, raycast:RayCast3D, touch_raycast:RayCast3D, no_raycast_pos, leg_number:int):
-	if updated_raycast_pos.size() < leg_number+1:
-		updated_raycast_pos.resize(leg_number+1)
-
-	if slope_warping_feet_locking_enable:
-		if touch_raycast.is_colliding():
-			if updated_raycast_pos[leg_number] == false:
-				raycast.global_position = no_raycast_pos.global_position + Vector3(0.0,0.25,0.0)
-				updated_raycast_pos[leg_number] = true
-		else:
-			updated_raycast_pos[leg_number] = false
-			# Update position to not let the leg yeet towards the old far location
-			raycast.global_position = no_raycast_pos.global_position + Vector3(0.0,0.25,0.0)
-	else:
-		raycast.global_position = no_raycast_pos.global_position + Vector3(0.0,0.25,0.0)
-
-	if raycast.is_colliding() and touch_raycast.is_colliding(): #if raycast is on ground
-		var hit_point = raycast.get_collision_point() + Vector3.UP*slope_warping_foot_height_offset #gets Y position of where the ground is.
-		target.global_transform.origin = hit_point #sets the target to the y position of the hitpoint
+#func stride_warping(target:Node3D, floor_normal:Vector3, skeleton_ref:Skeleton3D, hips_name:String, Foot:String, Thigh:String):
+	##add_sibling(test_sphere)
+	##add_sibling(test_sphere1)
+	#
+	##skeleton_ref.clear_bones_local_pose_override()
+	#var distance_in_each_frame = (actual_velocity*Vector3(1,0,1)).rotated(Vector3.UP,skeleton_ref.global_transform.basis.get_euler().y).length() 
+	#var hips = skeleton_ref.find_bone(hips_name)
+	#var hips_transform = skeleton_ref.get_bone_pose(hips)
+	#
+	#var hips_distance_to_ground
+	#var stride_scale : float = 1.0
+	##Get Bones
+	#var bone = skeleton_ref.find_bone(Foot)
+	#var bone_transform = skeleton_ref.get_bone_global_pose_no_override(bone)
+	#
+	#var thigh_bone = skeleton_ref.find_bone(Thigh)
+	#var thigh_transform = skeleton_ref.get_bone_global_pose_no_override(thigh_bone)
+	#var thigh_angle = thigh_transform.basis.get_euler().x
+	#
+	##Calculate
+	#var stride_direction : Vector3 = Vector3.FORWARD # important to use in orientation warping
+	#var stride_warping_plane_origin = Plane(floor_normal, bone_transform.origin).intersects_ray(thigh_transform.origin,Vector3.DOWN)
+##		print(stride_warping_plane_origin)
+	#if stride_warping_plane_origin == null:
+		#return #Failed to get a plane origin/ we are probably in air
+#
+	#var scale_origin = Plane(stride_direction,stride_warping_plane_origin).project(bone_transform.origin)
+	#var anim_speed = pow(hips_transform.origin.distance_to(bone_transform.origin),2) - pow(hips_transform.origin.y,2) 
+	#anim_speed = sqrt(abs(anim_speed))
+	#stride_scale = clampf(distance_in_each_frame/4/anim_speed,0.0,2.0)
+	#var foot_warped_location : Vector3 = scale_origin + (bone_transform.origin - scale_origin) * stride_scale
+	## Apply
+	#if stride_scale > 0.1:
+		#target.position = lerp(target.position, foot_warped_location.rotated(Vector3.UP,mesh_ref.rotation.y), 1)
+	##test
+	##test_sphere.position = foot_warped_location.rotated(Vector3.UP,movement_direction)
+#
+#
+#var updated_raycast_pos : Array[bool]
+#func foot_look_at_y(from:Vector3, to:Vector3, up_ref:Vector3 = Vector3.UP) -> Basis:
+	#var forward = (to - from).normalized()
+	#var right = up_ref.normalized().cross(forward).normalized()
+	#forward = right.cross(up_ref).normalized()
+	#return Basis(right, up_ref, forward)
+#func slope_warping(target:Node3D, raycast:RayCast3D, touch_raycast:RayCast3D, no_raycast_pos, leg_number:int):
+	#if updated_raycast_pos.size() < leg_number+1:
+		#updated_raycast_pos.resize(leg_number+1)
+#
+	#if slope_warping_feet_locking_enable:
+		#if touch_raycast.is_colliding():
+			#if updated_raycast_pos[leg_number] == false:
+				#raycast.global_position = no_raycast_pos.global_position + Vector3(0.0,0.25,0.0)
+				#updated_raycast_pos[leg_number] = true
 		#else:
-			#target.global_transform.origin.y = no_raycast_pos.global_transform.origin.y #if the raycast not colliding, the player is in the air and so the target position is set to the no_raycast_pos
+			#updated_raycast_pos[leg_number] = false
+			## Update position to not let the leg yeet towards the old far location
+			#raycast.global_position = no_raycast_pos.global_position + Vector3(0.0,0.25,0.0)
+	#else:
+		#raycast.global_position = no_raycast_pos.global_position + Vector3(0.0,0.25,0.0)
+#
+	#if raycast.is_colliding() and touch_raycast.is_colliding(): #if raycast is on ground
+		#var hit_point = raycast.get_collision_point() + Vector3.UP*slope_warping_foot_height_offset #gets Y position of where the ground is.
+		#target.global_transform.origin = hit_point #sets the target to the y position of the hitpoint
+		##if raycast.get_collision_normal() != Vector3.UP:
+		#var relative_normal = hit_point * raycast.get_collision_normal()
+		#target.look_at(relative_normal, Vector3.UP)
+			#target.global_transform = _basis_from_normal(target.global_transform, raycast.get_collision_normal())
+			#target.rotation += Vector3(-35, 0, 180)
+			#target.global_basis = foot_look_at_y(Vector3.ZERO, skeleton_ref.global_transform.basis.z, raycast.get_collision_normal()).rotated(Vector3.RIGHT, PI)#.rotated(raycast.get_collision_normal(), mesh_ref.rotation.y+PI/2)
+	#else:
+		#target.global_transform.origin = no_raycast_pos.global_transform.origin #if the raycast not colliding, the player is in the air and so the target position is set to the no_raycast_pos
 
 func _physics_process(delta):
 	#Debug()
@@ -526,53 +514,6 @@ func set_bone_x_rotation(skeleton,bone_name, x_rot,CharacterRootNode):
 var prev :Transform3D 
 var current :Transform3D
 var anim_speed
-func animation_stride_warping(): #this is currently being worked on and tested, so I don't reccomend using it.
-
-	#add_sibling(test_sphere)
-	#add_sibling(test_sphere1)
-	
-	#skeleton_ref.clear_bones_local_pose_override()
-	var distance_in_each_frame = (actual_velocity*Vector3(1,0,1)).rotated(Vector3.UP,mesh_ref.transform.basis.get_euler().y).length() 
-	var hips = skeleton_ref.find_bone("Hips")
-	var hips_transform = skeleton_ref.get_bone_pose(hips)
-	var Feet : Array = ["RightFoot","LeftFoot"]
-	var Thighs : Array = ["RightUpLeg","LeftUpLeg"]
-	
-	var hips_distance_to_ground
-	var stride_scale : float = 1.0
-	for Foot in Feet:
-		#Get Bones
-		var bone = skeleton_ref.find_bone(Foot)
-		var bone_transform = skeleton_ref.get_bone_global_pose_no_override(bone)
-		
-		var thigh_bone = skeleton_ref.find_bone(Thighs[Feet.find(Foot)])
-		var thigh_transform = skeleton_ref.get_bone_global_pose_no_override(thigh_bone)
-		var thigh_angle = thigh_transform.basis.get_euler().x
-		
-		#Calculate
-		var stride_direction : Vector3 = Vector3.FORWARD # important to use in orientation warping
-		var stride_warping_plane_origin = Plane(character_node.get_floor_normal(),bone_transform.origin).intersects_ray(thigh_transform.origin,Vector3.DOWN)
-#		print(stride_warping_plane_origin)
-		if stride_warping_plane_origin == null:
-			return #Failed to get a plane origin/ we are probably in air
-
-		var scale_origin = Plane(stride_direction,stride_warping_plane_origin).project(bone_transform.origin)
-		var anim_speed = pow(hips_transform.origin.distance_to(bone_transform.origin),2) - pow(hips_transform.origin.y,2) 
-		anim_speed = sqrt(abs(anim_speed))
-		stride_scale = clampf(distance_in_each_frame/4/anim_speed,0.0,2.0)
-		var foot_warped_location : Vector3 = scale_origin + (bone_transform.origin - scale_origin) * stride_scale
-		# Apply
-		if Foot.contains("Left"):
-			if stride_scale > 0.1:
-				LeftLegIKTarget.position = lerp(LeftLegIKTarget.position, foot_warped_location.rotated(Vector3.UP,mesh_ref.rotation.y), 1)
-		if Foot.contains("Right"):
-			if stride_scale > 0.1:
-				RightLegIKTarget.position = lerp(RightLegIKTarget.position, foot_warped_location.rotated(Vector3.UP,mesh_ref.rotation.y),1)
-		#test
-		test_sphere.position = foot_warped_location.rotated(Vector3.UP,movement_direction)
-		test_sphere1.position = bone_transform.origin.rotated(Vector3.UP,movement_direction)
-		#I should replace this with leg IK system, and its target position is the foot_warped_location
-		
 
 func calc_grounded_rotation_rate():
 	
@@ -658,7 +599,7 @@ func add_movement_input(direction: Vector3 = Vector3.ZERO, Speed: float = 0, Acc
 		if IsMovingBackwardRelativeToCamera:
 			MovementDirectionRelativeToCamera.x = MovementDirectionRelativeToCamera.x * -1
 
-		tiltVector = (MovementDirectionRelativeToCamera).rotated(Vector3.UP,-PI/2) / (8.0/tilt_power)
+		tiltVector = (MovementDirectionRelativeToCamera) / (8.0/tilt_power)
 		mesh_ref.rotation.x = lerp(mesh_ref.rotation.x,tiltVector.x,Acceleration * get_physics_process_delta_time())
 		mesh_ref.rotation.z = lerp(mesh_ref.rotation.z,tiltVector.z,Acceleration * get_physics_process_delta_time())
 	#

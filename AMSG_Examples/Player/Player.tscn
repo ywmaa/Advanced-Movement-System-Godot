@@ -226,6 +226,18 @@ current_value = 100.0
 
 [node name="MotionWarping" parent="." index="3" instance=ExtResource("2_0jifq")]
 
+[node name="GroundCheck" parent="." index="4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+
+[node name="CharacterMovementComponent" parent="." index="5" node_paths=PackedStringArray("stamina_attribute", "networking", "targeting_component")]
+script = ExtResource("3_jj2if")
+stamina_use = true
+stamina_energy_consumption = 15.0
+stamina_attribute = NodePath("../AttributesManager/StaminaAttribute")
+networking = NodePath("../Networking")
+targeting_component = NodePath("../TargetingComponent")
+deacceleration = 5.0
+
 [node name="LockSystem" type="Node" parent="." index="6"]
 script = ExtResource("11_06pi7")
 
@@ -240,23 +252,10 @@ lock_system = NodePath("../LockSystem")
 [node name="Networking" parent="." index="8" instance=ExtResource("4_8jv5v")]
 character_movement_component = NodePath("../CharacterMovementComponent")
 
-[node name="GroundCheck" parent="." index="9"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
-
-[node name="CharacterMovementComponent" parent="." index="10" node_paths=PackedStringArray("stamina_attribute", "networking", "targeting_component")]
-script = ExtResource("3_jj2if")
-stamina_use = true
-stamina_energy_consumption = 15.0
-stamina_attribute = NodePath("../AttributesManager/StaminaAttribute")
-networking = NodePath("../Networking")
-targeting_component = NodePath("../TargetingComponent")
-tilt_power = 0.0
-deacceleration = 5.0
-
-[node name="CameraComponent" parent="." index="11" node_paths=PackedStringArray("networking")]
+[node name="CameraComponent" parent="." index="9" node_paths=PackedStringArray("networking")]
 networking = NodePath("../Networking")
 
-[node name="AnimationTree" parent="." index="12"]
+[node name="AnimationTree" parent="." index="10"]
 tree_root = SubResource("AnimationNodeBlendTree_jqd3m")
 parameters/VelocityDirection/JogFB/current_state = ""
 parameters/VelocityDirection/JogFB/current_index = -1
@@ -267,7 +266,7 @@ parameters/VelocityDirection/WalkFB/current_index = -1
 parameters/VelocityDirection/crouching/current_state = ""
 parameters/VelocityDirection/crouching/current_index = -1
 
-[node name="CollisionShape3D" parent="." index="13"]
+[node name="CollisionShape3D" parent="." index="11"]
 shape = SubResource("CapsuleShape3D_jrjkm")
 
 [node name="Skeleton3D" parent="Armature" index="0"]
@@ -328,15 +327,35 @@ bones/65/rotation = Quaternion(0.352065, -0.016805, -0.00581727, 0.935807)
 [node name="HeadBone" parent="Armature/Skeleton3D" index="2"]
 transform = Transform3D(0.990253, -0.111666, -0.0832491, 0.0474898, 0.832572, -0.551877, 0.130937, 0.542544, 0.82976, -0.0634186, 1.48843, 0.0344127)
 
-[node name="LeftKnee" parent="Armature/Skeleton3D" index="7"]
-transform = Transform3D(-0.749232, 0.216858, -0.625799, -0.244034, -0.968789, -0.0435476, -0.615711, 0.120089, 0.778768, -0.00737142, 0.51281, 0.311666)
+[node name="LeftIKTarget" parent="Armature/Skeleton3D/PoseWarping" index="0"]
+transform = Transform3D(-0.776967, -0.466155, -0.423109, -0.0355596, -0.638521, 0.768783, -0.628536, 0.612365, 0.479534, 0.0839237, 0.104959, 0.362222)
 
-[node name="RightKnee" parent="Armature/Skeleton3D" index="8"]
-transform = Transform3D(-0.329198, 0.37111, -0.868278, 0.274437, -0.842236, -0.464029, -0.9035, -0.391045, 0.175416, -0.187829, 0.459531, -0.146101)
+[node name="RightIKTarget" parent="Armature/Skeleton3D/PoseWarping" index="1"]
+transform = Transform3D(-0.303158, -0.739914, -0.600519, 0.0355596, -0.638519, 0.768784, -0.952277, 0.211709, 0.219883, -0.0315955, 0.104958, -0.310727)
+
+[node name="LeftFootAttachment" parent="Armature/Skeleton3D/PoseWarping" index="2"]
+transform = Transform3D(-0.776963, -0.466153, -0.423106, -0.0355594, -0.638517, 0.768778, -0.628532, 0.612361, 0.479531, 0.0833106, 0.111479, 0.361883)
+external_skeleton = NodePath("/root/@EditorNode@17140/@Panel@13/@VBoxContainer@14/@HSplitContainer@17/@HSplitContainer@25/@HSplitContainer@33/@VBoxContainer@34/@VSplitContainer@36/@VSplitContainer@62/@VBoxContainer@63/@PanelContainer@110/MainScreen/@CanvasItemEditor@9462/@VSplitContainer@9281/@HSplitContainer@9283/@HSplitContainer@9285/@Control@9286/@SubViewportContainer@9287/@SubViewport@9288/Character/Armature/Skeleton3D")
+
+[node name="RightFootAttachment" parent="Armature/Skeleton3D/PoseWarping" index="3"]
+transform = Transform3D(-0.303158, -0.739914, -0.600519, 0.0355596, -0.638519, 0.768784, -0.952277, 0.211709, 0.219883, -0.0316372, 0.109252, -0.307104)
+external_skeleton = NodePath("/root/@EditorNode@17140/@Panel@13/@VBoxContainer@14/@HSplitContainer@17/@HSplitContainer@25/@HSplitContainer@33/@VBoxContainer@34/@VSplitContainer@36/@VSplitContainer@62/@VBoxContainer@63/@PanelContainer@110/MainScreen/@CanvasItemEditor@9462/@VSplitContainer@9281/@HSplitContainer@9283/@HSplitContainer@9285/@Control@9286/@SubViewportContainer@9287/@SubViewport@9288/Character/Armature/Skeleton3D")
+
+[node name="LeftLegRayCast" parent="Armature/Skeleton3D/PoseWarping" index="4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0833106, 0.361479, 0.361883)
+
+[node name="RightLegRayCast" parent="Armature/Skeleton3D/PoseWarping" index="5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0316372, 0.359252, -0.307104)
 
 [node name="flashlight" parent="Armature" index="1" instance=ExtResource("5_euvsl")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 1.12407, 0.156779)
 light_energy = 10.0
+
+[node name="Camera" parent="SpringArm3D" index="0"]
+current = true
+
+[node name="TargetRayCast" type="RayCast3D" parent="SpringArm3D/Camera" index="1"]
+target_position = Vector3(0, 0, -10)
 
 [node name="Status" type="Control" parent="." index="16" node_paths=PackedStringArray("camera_root")]
 layout_mode = 3
@@ -481,10 +500,6 @@ text = "Character locked. Press P to unlock."
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Camera" parent="SpringArm3D" index="0"]
-current = true
-
-[node name="TargetRayCast" type="RayCast3D" parent="SpringArm3D/Camera" index="1"]
-target_position = Vector3(0, 0, -10)
-
 [connection signal="Lock_Status_Changed" from="LockSystem" to="Status/PauseText" method="set_visible"]
+
+[editable path="Armature/Skeleton3D/PoseWarping"]
