@@ -64,3 +64,9 @@ debug_shape_thickness = 5
 [node name="RightLegRayCast" type="RayCast3D" parent="."]
 top_level = true
 debug_shape_thickness = 5
+
+[node name="LeftMagnet" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.25, 1, 1)
+
+[node name="RightMagnet" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.999999, 0, 0, 0, 1, -0.25, 1, 1)

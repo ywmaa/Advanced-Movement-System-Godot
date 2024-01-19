@@ -25,6 +25,7 @@ class_name CharacterMovementComponent
 @export var character_node : PhysicsBody3D
 ## Refrence to a [RayCast3D] that should detect if character is on ground
 @export var ground_check : RayCast3D
+@export var mantle_component : MantleComponent
 
 
 
@@ -248,6 +249,7 @@ func update_character_movement():
 	match rotation_mode:
 		Global.rotation_mode.velocity_direction:
 			tilt = false
+			pose_warping.orientation_warping_enable = false
 			match stance:
 				Global.stance.standing:
 					current_movement_data = velocity_direction_standing_data
@@ -257,6 +259,7 @@ func update_character_movement():
 					
 		Global.rotation_mode.looking_direction:
 			tilt = true
+			pose_warping.orientation_warping_enable = true
 			match stance:
 				Global.stance.standing:
 					current_movement_data = looking_direction_standing_data
@@ -265,6 +268,7 @@ func update_character_movement():
 					
 					
 		Global.rotation_mode.aiming:
+			pose_warping.orientation_warping_enable = true
 			match stance:
 				Global.stance.standing:
 					current_movement_data = aim_standing_data
@@ -299,77 +303,6 @@ func _process(delta):
 	calc_animation_data()
 	pose_warping.character_velocity = actual_velocity
 
-#func stride_warping(target:Node3D, floor_normal:Vector3, skeleton_ref:Skeleton3D, hips_name:String, Foot:String, Thigh:String):
-	##add_sibling(test_sphere)
-	##add_sibling(test_sphere1)
-	#
-	##skeleton_ref.clear_bones_local_pose_override()
-	#var distance_in_each_frame = (actual_velocity*Vector3(1,0,1)).rotated(Vector3.UP,skeleton_ref.global_transform.basis.get_euler().y).length() 
-	#var hips = skeleton_ref.find_bone(hips_name)
-	#var hips_transform = skeleton_ref.get_bone_pose(hips)
-	#
-	#var hips_distance_to_ground
-	#var stride_scale : float = 1.0
-	##Get Bones
-	#var bone = skeleton_ref.find_bone(Foot)
-	#var bone_transform = skeleton_ref.get_bone_global_pose_no_override(bone)
-	#
-	#var thigh_bone = skeleton_ref.find_bone(Thigh)
-	#var thigh_transform = skeleton_ref.get_bone_global_pose_no_override(thigh_bone)
-	#var thigh_angle = thigh_transform.basis.get_euler().x
-	#
-	##Calculate
-	#var stride_direction : Vector3 = Vector3.FORWARD # important to use in orientation warping
-	#var stride_warping_plane_origin = Plane(floor_normal, bone_transform.origin).intersects_ray(thigh_transform.origin,Vector3.DOWN)
-##		print(stride_warping_plane_origin)
-	#if stride_warping_plane_origin == null:
-		#return #Failed to get a plane origin/ we are probably in air
-#
-	#var scale_origin = Plane(stride_direction,stride_warping_plane_origin).project(bone_transform.origin)
-	#var anim_speed = pow(hips_transform.origin.distance_to(bone_transform.origin),2) - pow(hips_transform.origin.y,2) 
-	#anim_speed = sqrt(abs(anim_speed))
-	#stride_scale = clampf(distance_in_each_frame/4/anim_speed,0.0,2.0)
-	#var foot_warped_location : Vector3 = scale_origin + (bone_transform.origin - scale_origin) * stride_scale
-	## Apply
-	#if stride_scale > 0.1:
-		#target.position = lerp(target.position, foot_warped_location.rotated(Vector3.UP,mesh_ref.rotation.y), 1)
-	##test
-	##test_sphere.position = foot_warped_location.rotated(Vector3.UP,movement_direction)
-#
-#
-#var updated_raycast_pos : Array[bool]
-#func foot_look_at_y(from:Vector3, to:Vector3, up_ref:Vector3 = Vector3.UP) -> Basis:
-	#var forward = (to - from).normalized()
-	#var right = up_ref.normalized().cross(forward).normalized()
-	#forward = right.cross(up_ref).normalized()
-	#return Basis(right, up_ref, forward)
-#func slope_warping(target:Node3D, raycast:RayCast3D, touch_raycast:RayCast3D, no_raycast_pos, leg_number:int):
-	#if updated_raycast_pos.size() < leg_number+1:
-		#updated_raycast_pos.resize(leg_number+1)
-#
-	#if slope_warping_feet_locking_enable:
-		#if touch_raycast.is_colliding():
-			#if updated_raycast_pos[leg_number] == false:
-				#raycast.global_position = no_raycast_pos.global_position + Vector3(0.0,0.25,0.0)
-				#updated_raycast_pos[leg_number] = true
-		#else:
-			#updated_raycast_pos[leg_number] = false
-			## Update position to not let the leg yeet towards the old far location
-			#raycast.global_position = no_raycast_pos.global_position + Vector3(0.0,0.25,0.0)
-	#else:
-		#raycast.global_position = no_raycast_pos.global_position + Vector3(0.0,0.25,0.0)
-#
-	#if raycast.is_colliding() and touch_raycast.is_colliding(): #if raycast is on ground
-		#var hit_point = raycast.get_collision_point() + Vector3.UP*slope_warping_foot_height_offset #gets Y position of where the ground is.
-		#target.global_transform.origin = hit_point #sets the target to the y position of the hitpoint
-		##if raycast.get_collision_normal() != Vector3.UP:
-		#var relative_normal = hit_point * raycast.get_collision_normal()
-		#target.look_at(relative_normal, Vector3.UP)
-			#target.global_transform = _basis_from_normal(target.global_transform, raycast.get_collision_normal())
-			#target.rotation += Vector3(-35, 0, 180)
-			#target.global_basis = foot_look_at_y(Vector3.ZERO, skeleton_ref.global_transform.basis.z, raycast.get_collision_normal()).rotated(Vector3.RIGHT, PI)#.rotated(raycast.get_collision_normal(), mesh_ref.rotation.y+PI/2)
-	#else:
-		#target.global_transform.origin = no_raycast_pos.global_transform.origin #if the raycast not colliding, the player is in the air and so the target position is set to the no_raycast_pos
 
 func _physics_process(delta):
 	#Debug()
@@ -382,6 +315,8 @@ func _physics_process(delta):
 		Global.movement_state.none:
 			pass
 		Global.movement_state.grounded:
+			pose_warping.stride_warping_enable = true
+			pose_warping.slope_warping_enable = true
 			#------------------ Rotate Character Mesh ------------------#
 			match movement_action:
 				Global.movement_action.none:
@@ -390,6 +325,10 @@ func _physics_process(delta):
 								if (is_moving and input_is_moving) or (actual_velocity * Vector3(1.0,0.0,1.0)).length() > 0.5:
 									smooth_character_rotation(actual_velocity,calc_grounded_rotation_rate(),delta)
 							Global.rotation_mode.looking_direction:
+								if gait != Global.gait.sprinting:
+									pose_warping.orientation_warping_enable = true
+								else:
+									pose_warping.orientation_warping_enable = false
 								if (is_moving and input_is_moving) or (actual_velocity * Vector3(1.0,0.0,1.0)).length() > 0.5:
 									smooth_character_rotation(-camera_root.HObject.transform.basis.z if gait != Global.gait.sprinting else actual_velocity,calc_grounded_rotation_rate(),delta)
 								rotate_in_place_check()
@@ -402,14 +341,17 @@ func _physics_process(delta):
 						smooth_character_rotation(input_acceleration ,2.0,delta)
 		
 		Global.movement_state.in_air:
+			pose_warping.stride_warping_enable = false
+			pose_warping.slope_warping_enable = false
 			#------------------ Rotate Character Mesh In Air ------------------#
-			match rotation_mode:
-					Global.rotation_mode.velocity_direction: 
-						smooth_character_rotation(actual_velocity if (actual_velocity * Vector3(1.0,0.0,1.0)).length() > 1.0 else  -camera_root.HObject.transform.basis.z,5.0,delta)
-					Global.rotation_mode.looking_direction:
-						smooth_character_rotation(actual_velocity if (actual_velocity * Vector3(1.0,0.0,1.0)).length() > 1.0 else  -camera_root.HObject.transform.basis.z,5.0,delta)
-					Global.rotation_mode.aiming:
-						smooth_character_rotation(-camera_root.HObject.transform.basis.z ,15.0,delta)
+			if mantle_component and !mantle_component.is_climbing:
+				match rotation_mode:
+						Global.rotation_mode.velocity_direction: 
+							smooth_character_rotation(actual_velocity if (actual_velocity * Vector3(1.0,0.0,1.0)).length() > 1.0 else  -camera_root.HObject.transform.basis.z,5.0,delta)
+						Global.rotation_mode.looking_direction:
+							smooth_character_rotation(actual_velocity if (actual_velocity * Vector3(1.0,0.0,1.0)).length() > 1.0 else  -camera_root.HObject.transform.basis.z,5.0,delta)
+						Global.rotation_mode.aiming:
+							smooth_character_rotation(-camera_root.HObject.transform.basis.z ,15.0,delta)
 			#------------------ Mantle Check ------------------#
 			if input_is_moving == true:
 				mantle_check()
@@ -423,8 +365,14 @@ func _physics_process(delta):
 
 	#------------------ Gravity ------------------#
 	if is_flying == false and character_node is CharacterBody3D:
-		character_node.velocity.y =  lerp(character_node.velocity.y,vertical_velocity.y - character_node.get_floor_normal().y,delta * gravity)
-		character_node.move_and_slide()
+		if mantle_component:
+			if !mantle_component.is_climbing:
+				character_node.velocity.y =  lerp(character_node.velocity.y,vertical_velocity.y - character_node.get_floor_normal().y,delta * gravity)
+				character_node.move_and_slide()
+		else:
+			character_node.velocity.y =  lerp(character_node.velocity.y,vertical_velocity.y - character_node.get_floor_normal().y,delta * gravity)
+			character_node.move_and_slide()
+
 	if ground_check.is_colliding() and is_flying == false:
 		movement_state = Global.movement_state.grounded
 	else:
@@ -432,6 +380,7 @@ func _physics_process(delta):
 		movement_state = Global.movement_state.in_air
 		if character_node is CharacterBody3D:
 			vertical_velocity += Vector3.DOWN * gravity * delta
+
 	if character_node is CharacterBody3D and character_node.is_on_ceiling():
 		vertical_velocity.y = 0
 	#------------------ Stair climb ------------------#
@@ -556,6 +505,8 @@ var PrevVelocity :Vector3
 ## Adds input to move the character, should be called when Idle too, to execute deacceleration for CharacterBody3D or reset velocity for RigidBody3D.
 ## when Idle speed and direction should be passed as 0, and deacceleration passed, or leave them empty.
 func add_movement_input(direction: Vector3 = Vector3.ZERO, Speed: float = 0, Acceleration: float = deacceleration if character_node is CharacterBody3D else 0) -> void:
+	if mantle_component and mantle_component.is_climbing:
+		return
 	var max_speed : float = Speed
 	input_direction = direction
 	
@@ -615,7 +566,8 @@ func calc_animation_data(): # it is used to modify the animation data to get the
 	
 
 func mantle_check():
-	pass
+	if mantle_component:
+		mantle_component.detect_ledge()
 
 func jump() -> void:
 	if ground_check.is_colliding() and not head_bonked:

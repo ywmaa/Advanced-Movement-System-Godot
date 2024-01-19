@@ -1,0 +1,27 @@
+[gd_scene load_steps=3 format=3 uid="uid://dpniuhmc5sj82"]
+
+[ext_resource type="Script" path="res://addons/AMSG/Components/MantleComponent/MantleComponent.gd" id="1_ix4sf"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_70w0s"]
+resource_local_to_scene = true
+radius = 0.375
+height = 1.75
+
+[node name="MantleComponent" type="Node3D"]
+script = ExtResource("1_ix4sf")
+mantle_anim = "Kick"
+
+[node name="ShapeCast3D" type="ShapeCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+top_level = true
+shape = SubResource("CapsuleShape3D_70w0s")
+target_position = Vector3(0, 0, 0)
+
+[node name="LedgeTopDetect" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 2, 0)
+
+[node name="LedgeDetect" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 1.75, 0)
+
+[node name="LedgeGroundDetect" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 1)

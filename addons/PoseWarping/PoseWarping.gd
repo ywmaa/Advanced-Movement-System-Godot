@@ -1,5 +1,5 @@
 @tool
-extends Node
+extends Node3D
 class_name PoseWarping
 ## a Node that Handles Pose Warping for character for enhanced animations
 ## Must be a child of Skeleton3D
@@ -56,11 +56,11 @@ class_name PoseWarping
 @onready var slope_warping_raycast_right : RayCast3D = $RightLegRayCast
 @onready var slope_warping_bone_attachment_right_foot : BoneAttachment3D = $RightFootAttachment
 @export var slope_warping_foot_height_offset : float = 0.1
-#func _init(_character_node:PhysicsBody3D, _skeleton:Skeleton3D, _LeftLegIK:SkeletonIK3D, _RightLegIK:SkeletonIK3D):
-	#character_node = _character_node
-	#character_skeleton = _skeleton
-	#LeftLegIK = _LeftLegIK
-	#RightLegIK = _RightLegIK
+
+
+
+@onready var left_magnet = $LeftMagnet
+@onready var right_magnet = $RightMagnet
 
 func _get_configuration_warnings():
 	if not get_parent() is Skeleton3D:
@@ -91,6 +91,8 @@ func _ready():
 func _process(delta):
 	#if Engine.is_editor_hint():
 		#return
+	RightLegIK.magnet = right_magnet.position.rotated(Vector3.UP, orientation_direction)
+	LeftLegIK.magnet = left_magnet.position.rotated(Vector3.UP, orientation_direction)
 	if stride_warping_enable or slope_warping_enable:
 		var bone_transform_left = character_skeleton.get_bone_global_pose_no_override(character_skeleton.find_bone(String(LeftLegIK.tip_bone)))
 		var bone_transform_right = character_skeleton.get_bone_global_pose_no_override(character_skeleton.find_bone(String(RightLegIK.tip_bone)))
@@ -112,9 +114,13 @@ func _process(delta):
 	if slope_warping_enable:
 		slope_warping(LeftLegIKTarget, slope_warping_raycast_left, slope_warping_raycast_left_touch_detection, slope_warping_bone_attachment_left_foot, 0)
 		slope_warping(RightLegIKTarget, slope_warping_raycast_right, slope_warping_raycast_right_touch_detection, slope_warping_bone_attachment_right_foot, 1)
+
+	orientation_warping(orientation_warping_enable, orientation_warping_camera_h_object, character_velocity, character_skeleton, hips_bone_name, orientation_warping_spine_bones_names, orientation_warping_offset, delta, orientation_warping_turn_rate)
 	if orientation_warping_enable:
-		#var orientation_warping_condition = rotation_mode != Global.rotation_mode.velocity_direction and movement_state == Global.movement_state.grounded and movement_action == Global.movement_action.none and gait != Global.gait.sprinting and input_is_moving
-		orientation_warping(true, orientation_warping_camera_h_object, character_velocity, character_skeleton, hips_bone_name, orientation_warping_spine_bones_names, 0.0, delta)
+		rotation.y = orientation_direction
+	else:
+		orientation_direction = 0
+		rotation.y = 0
 
 
 
@@ -171,7 +177,7 @@ func orientation_warping(enabled:bool,CameraObject, Velocity:Vector3, character_
 	
 	set_bone_y_rotation(character_skeleton,Hip,orientation_direction)
 	for bone in Spines:
-		set_bone_y_rotation(character_skeleton,bone,(-orientation_direction/(Spines.size()))+Offset)
+		set_bone_y_rotation(character_skeleton,bone,(orientation_direction/(Spines.size()))+Offset)
 		
 	
 func set_bone_y_rotation(skeleton:Skeleton3D,bone_name:String, y_rot:float, presistant:bool=true):
@@ -242,11 +248,16 @@ func slope_warping(target:Node3D, raycast:RayCast3D, touch_raycast:RayCast3D, no
 	if raycast.is_colliding() and (touch_raycast.is_colliding() or character_velocity.length()<1.0): #if raycast is on ground
 		var hit_point = raycast.get_collision_point() + Vector3.UP*slope_warping_foot_height_offset #gets Y position of where the ground is.
 		target.global_transform.origin = hit_point #sets the target to the y position of the hitpoint
-		#if raycast.get_collision_normal() != Vector3.UP:
+		var up_ref = raycast.get_collision_normal()
+		#if up_ref != Vector3.UP:
+			#var forward = (character_skeleton.global_transform.basis.z).normalized()
+			#var right = up_ref.normalized().cross(forward).normalized()
+			#forward = right.cross(up_ref).normalized()
+			#target.rotate(Vector3.RIGHT, forward.angle_to(target.global_transform.basis.y))
 		#var relative_normal = hit_point * raycast.get_collision_normal()
-		#target.look_at(relative_normal, Vector3.UP)
+		
 			#target.global_transform = _basis_from_normal(target.global_transform, raycast.get_collision_normal())
 			#target.rotation += Vector3(-35, 0, 180)
-		#target.global_transform.basis = foot_look_at_y(Vector3.ZERO, character_skeleton.global_transform.basis.z, raycast.get_collision_normal())
+		#target.global_transfyouorm.basis = foot_look_at_y(Vector3.ZERO, character_skeleton.global_transform.basis.z, raycast.get_collision_normal())
 	#else:
 		#raycast.global_transform.origin = target.global_transform.origin #if the raycast not colliding, the player is in the air and so the target position is set to the no_raycast_pos

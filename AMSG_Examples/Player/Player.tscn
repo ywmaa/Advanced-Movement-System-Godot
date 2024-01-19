@@ -334,18 +334,18 @@ transform = Transform3D(-0.776967, -0.466155, -0.423109, -0.0355596, -0.638521, 
 transform = Transform3D(-0.303158, -0.739914, -0.600519, 0.0355596, -0.638519, 0.768784, -0.952277, 0.211709, 0.219883, -0.0315955, 0.104958, -0.310727)
 
 [node name="LeftFootAttachment" parent="Armature/Skeleton3D/PoseWarping" index="2"]
-transform = Transform3D(-0.776963, -0.466153, -0.423106, -0.0355594, -0.638517, 0.768778, -0.628532, 0.612361, 0.479531, 0.0833106, 0.111479, 0.361883)
+transform = Transform3D(-0.776963, -0.466153, -0.423106, -0.0355594, -0.638517, 0.768778, -0.628532, 0.612361, 0.479531, 0.0840908, 0.111218, 0.361871)
 external_skeleton = NodePath("/root/@EditorNode@17140/@Panel@13/@VBoxContainer@14/@HSplitContainer@17/@HSplitContainer@25/@HSplitContainer@33/@VBoxContainer@34/@VSplitContainer@36/@VSplitContainer@62/@VBoxContainer@63/@PanelContainer@110/MainScreen/@CanvasItemEditor@9462/@VSplitContainer@9281/@HSplitContainer@9283/@HSplitContainer@9285/@Control@9286/@SubViewportContainer@9287/@SubViewport@9288/Character/Armature/Skeleton3D")
 
 [node name="RightFootAttachment" parent="Armature/Skeleton3D/PoseWarping" index="3"]
-transform = Transform3D(-0.303158, -0.739914, -0.600519, 0.0355596, -0.638519, 0.768784, -0.952277, 0.211709, 0.219883, -0.0316372, 0.109252, -0.307104)
+transform = Transform3D(-0.303158, -0.739914, -0.600519, 0.0355596, -0.638519, 0.768784, -0.952277, 0.211709, 0.219883, -0.0313653, 0.102962, -0.312327)
 external_skeleton = NodePath("/root/@EditorNode@17140/@Panel@13/@VBoxContainer@14/@HSplitContainer@17/@HSplitContainer@25/@HSplitContainer@33/@VBoxContainer@34/@VSplitContainer@36/@VSplitContainer@62/@VBoxContainer@63/@PanelContainer@110/MainScreen/@CanvasItemEditor@9462/@VSplitContainer@9281/@HSplitContainer@9283/@HSplitContainer@9285/@Control@9286/@SubViewportContainer@9287/@SubViewport@9288/Character/Armature/Skeleton3D")
 
 [node name="LeftLegRayCast" parent="Armature/Skeleton3D/PoseWarping" index="4"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0833106, 0.361479, 0.361883)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0840908, 0.361218, 0.361871)
 
 [node name="RightLegRayCast" parent="Armature/Skeleton3D/PoseWarping" index="5"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0316372, 0.359252, -0.307104)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0313653, 0.352962, -0.312327)
 
 [node name="flashlight" parent="Armature" index="1" instance=ExtResource("5_euvsl")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 1.12407, 0.156779)
