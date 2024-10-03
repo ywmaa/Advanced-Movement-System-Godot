@@ -16,5 +16,3 @@ enum movement_direction {forward , right, left, backward}
 func map_range_clamped(value,InputMin,InputMax,OutputMin,OutputMax):
 	value = clamp(value,InputMin,InputMax)
 	return ((value - InputMin) / (InputMax - InputMin) * (OutputMax - OutputMin) + OutputMin)
-
-

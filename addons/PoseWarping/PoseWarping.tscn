@@ -10,33 +10,59 @@ material = SubResource("StandardMaterial3D_8kjlp")
 radius = 0.1
 height = 0.2
 
-[node name="PoseWarping" type="Node3D"]
+[node name="PoseWarping" type="SkeletonModifier3D"]
+_import_path = NodePath("")
+unique_name_in_owner = false
+process_mode = 0
+process_priority = 0
+process_physics_priority = 0
+process_thread_group = 0
+physics_interpolation_mode = 0
+auto_translate_mode = 0
+editor_description = ""
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+rotation_edit_mode = 0
+rotation_order = 2
+top_level = false
+visible = true
+visibility_parent = NodePath("")
+active = true
+influence = 1.0
 script = ExtResource("1_lecgu")
 
-[node name="LeftIKTarget" type="Marker3D" parent="."]
+[node name="LeftTargetRotation" type="Node3D" parent="."]
+
+[node name="LeftIKTarget" type="Marker3D" parent="LeftTargetRotation"]
 transform = Transform3D(-1, 8.74228e-08, 0, -5.61943e-08, -0.642788, 0.766044, 6.69697e-08, 0.766044, 0.642788, 0, 0, 0)
 
-[node name="ResultDebug" type="MeshInstance3D" parent="LeftIKTarget"]
+[node name="ResultDebug" type="MeshInstance3D" parent="LeftTargetRotation/LeftIKTarget"]
 transform = Transform3D(-1, -6.18173e-08, 6.18173e-08, 8.74228e-08, -0.707107, 0.707107, 0, 0.707107, 0.707107, 0, 0, 0)
 visible = false
 mesh = SubResource("SphereMesh_kea8p")
 skeleton = NodePath("../../..")
 
-[node name="RightIKTarget" type="Marker3D" parent="."]
+[node name="RightTargetRotation" type="Node3D" parent="."]
+
+[node name="RightIKTarget" type="Marker3D" parent="RightTargetRotation"]
 transform = Transform3D(-1, -8.74228e-08, 0, 5.61943e-08, -0.642788, 0.766044, -6.69697e-08, 0.766044, 0.642788, 0, 0, 0)
 
-[node name="ResultDebug" type="MeshInstance3D" parent="RightIKTarget"]
+[node name="ResultDebug" type="MeshInstance3D" parent="RightTargetRotation/RightIKTarget"]
 transform = Transform3D(-1, -6.18173e-08, 6.18173e-08, 8.74228e-08, -0.707107, 0.707107, 0, 0.707107, 0.707107, 0, 0, 0)
 visible = false
 mesh = SubResource("SphereMesh_kea8p")
 skeleton = NodePath("../../..")
 
 [node name="LeftFootAttachment" type="BoneAttachment3D" parent="."]
-transform = Transform3D(-0.975623, 0.0371672, 0.216283, -0.0696969, -0.987006, -0.144781, 0.208092, -0.156326, 0.965536, 0.079531, 0.255067, -0.210493)
 bone_name = "LeftFoot"
 bone_idx = 64
 use_external_skeleton = true
 external_skeleton = NodePath("")
+
+[node name="LeftLegGroundNormalRayCast" type="RayCast3D" parent="LeftFootAttachment"]
+transform = Transform3D(1, 0, 0, 0, 0.70711, 0.707111, 0, -0.70711, 0.707111, 0, 0, 0)
+target_position = Vector3(0, 1, 0)
+debug_shape_custom_color = Color(0.662745, 0, 0, 1)
+debug_shape_thickness = 5
 
 [node name="LeftLegTouchRayCast" type="RayCast3D" parent="LeftFootAttachment"]
 transform = Transform3D(1, 0, 0, 0, 0.70711, 0.707111, 0, -0.70711, 0.707111, 0, 0, 0)
@@ -45,28 +71,31 @@ debug_shape_custom_color = Color(0.662745, 0.647059, 0, 1)
 debug_shape_thickness = 5
 
 [node name="RightFootAttachment" type="BoneAttachment3D" parent="."]
-transform = Transform3D(-0.990874, -0.123241, -0.0545858, 0.0370522, -0.638419, 0.768797, -0.129596, 0.759758, 0.63716, -0.0396977, 0.103349, 0.111844)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0396977, 0.103349, 0.111844)
 bone_name = "RightFoot"
 bone_idx = 59
 use_external_skeleton = true
 external_skeleton = NodePath("")
 
-[node name="RightLegTouchRayCast" type="RayCast3D" parent="RightFootAttachment"]
+[node name="RightLegGroundNormalRayCast" type="RayCast3D" parent="RightFootAttachment"]
 transform = Transform3D(1, 0, 0, 0, 0.70711, 0.707112, 0, -0.70711, 0.707112, 0, 0, 0)
+target_position = Vector3(0, 1, 0)
+debug_shape_custom_color = Color(0.662745, 0, 0, 1)
+debug_shape_thickness = 5
+
+[node name="RightLegTouchRayCast" type="RayCast3D" parent="RightFootAttachment"]
+transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 0, 0)
 target_position = Vector3(0, 0.14, 0)
 debug_shape_custom_color = Color(0.662745, 0.647059, 0, 1)
 debug_shape_thickness = 5
 
-[node name="LeftLegRayCast" type="RayCast3D" parent="."]
+[node name="LeftLegTargetRayCast" type="RayCast3D" parent="."]
 top_level = true
 debug_shape_thickness = 5
 
-[node name="RightLegRayCast" type="RayCast3D" parent="."]
+[node name="RightLegTargetRayCast" type="RayCast3D" parent="."]
 top_level = true
 debug_shape_thickness = 5
 
-[node name="LeftMagnet" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.25, 1, 1)
-
-[node name="RightMagnet" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.999999, 0, 0, 0, 1, -0.25, 1, 1)
+[node name="OnFloorRayCast" type="RayCast3D" parent="."]
+target_position = Vector3(0, -0.4, 0)

@@ -66,7 +66,8 @@ var gravity : float = ProjectSettings.get_setting("physics/3d/default_gravity")
 @export var max_stair_climb_height : float = 0.5
 
 ## the distance to the stair that the script will start detecting it
-@export var max_close_stair_distance : float = 0.75
+@export var max_close_stair_distance : float = 0.5
+@export var stair_collision_shape_3d: CollisionShape3D 
 
 
 @export var roll_magnitude := 17.0
@@ -298,13 +299,19 @@ func _ready():
 
 	update_animations()
 	update_character_movement()
+	
+	stair_collision_shape_3d.shape.length = max_stair_climb_height
+	stair_collision_shape_3d.position.y = max_stair_climb_height
 
 func _process(delta):
 	calc_animation_data()
-	pose_warping.character_velocity = actual_velocity
 
-
+var pose_warping_active : bool = true
 func _physics_process(delta):
+	set_movement_info()
+	apply_deacceleration()
+	pose_warping.stride_warping_enable = pose_warping_active
+	pose_warping.slope_warping_enable = pose_warping_active
 	#Debug()
 	#
 	aim_rate_h = abs((camera_root.HObject.rotation.y - previous_aim_rate_h) / delta)
@@ -315,8 +322,6 @@ func _physics_process(delta):
 		Global.movement_state.none:
 			pass
 		Global.movement_state.grounded:
-			pose_warping.stride_warping_enable = true
-			pose_warping.slope_warping_enable = true
 			#------------------ Rotate Character Mesh ------------------#
 			match movement_action:
 				Global.movement_action.none:
@@ -341,8 +346,6 @@ func _physics_process(delta):
 						smooth_character_rotation(input_acceleration ,2.0,delta)
 		
 		Global.movement_state.in_air:
-			pose_warping.stride_warping_enable = false
-			pose_warping.slope_warping_enable = false
 			#------------------ Rotate Character Mesh In Air ------------------#
 			if mantle_component and !mantle_component.is_climbing:
 				match rotation_mode:
@@ -383,9 +386,6 @@ func _physics_process(delta):
 
 	if character_node is CharacterBody3D and character_node.is_on_ceiling():
 		vertical_velocity.y = 0
-	#------------------ Stair climb ------------------#
-	#stair movement must happen after gravity so it can override in air status
-	stair_move()
 
 func crouch_update(delta):
 	var direct_state = character_node.get_world_3d().direct_space_state
@@ -414,43 +414,12 @@ func crouch_update(delta):
 	collision_shape_ref.shape.height = clamp(collision_shape_ref.shape.height,crouch_height,default_height)
 
 
-func stair_move():
-	var direct_state = character_node.get_world_3d().direct_space_state
-	var obs_ray_info : PhysicsRayQueryParameters3D = PhysicsRayQueryParameters3D.new()
-	obs_ray_info.exclude = [RID(character_node)]
-	obs_ray_info.from = mesh_ref.global_transform.origin
-	if movement_direction:
-		obs_ray_info.to = obs_ray_info.from + Vector3(0, 0, max_close_stair_distance).rotated(Vector3.UP,movement_direction)
-	
-	#this is used to know if there is obstacle 
-	var first_collision = direct_state.intersect_ray(obs_ray_info)
-	if first_collision and input_is_moving:
-		var climb_ray_info : PhysicsRayQueryParameters3D = PhysicsRayQueryParameters3D.new()
-		climb_ray_info.exclude = [RID(character_node)]
-		climb_ray_info.from = first_collision.collider.global_position + Vector3(0, max_stair_climb_height, 0)
-		climb_ray_info.to = first_collision.collider.global_position
-		var stair_top_collision = direct_state.intersect_ray(climb_ray_info)
-		if stair_top_collision:
-			if stair_top_collision.position.y - character_node.global_position.y > 0 and stair_top_collision.position.y - character_node.global_position.y < 0.15:
-				movement_state = Global.movement_state.grounded
-				is_moving_on_stair = true
-				character_node.position.y += stair_top_collision.position.y - character_node.global_position.y
-				character_node.global_position += Vector3(0, 0, 0.01).rotated(Vector3.UP,movement_direction)
-			else:
-				await get_tree().create_timer(0.4).timeout
-				is_moving_on_stair = false
-		else:
-			await get_tree().create_timer(0.4).timeout
-			is_moving_on_stair = false
-	else:
-		await get_tree().create_timer(0.4).timeout
-		is_moving_on_stair = false
-
 
 
 func smooth_character_rotation(Target:Vector3,nodelerpspeed,delta):
 	mesh_ref.rotation.y = lerp_angle(mesh_ref.rotation.y, atan2(Target.x,Target.z) , delta * nodelerpspeed)
-
+	stair_collision_shape_3d.position.x = Target.normalized().x * max_close_stair_distance
+	stair_collision_shape_3d.position.z = Target.normalized().z * max_close_stair_distance
 
 func set_bone_x_rotation(skeleton,bone_name, x_rot,CharacterRootNode):
 	var bone = skeleton.find_bone(bone_name)
@@ -500,49 +469,37 @@ func ik_look_at(position: Vector3):
 		lookatobject.position = position
 
 
-var PrevVelocity :Vector3
-
+var prev_velocity :Vector3
+var current_max_speed : float
 ## Adds input to move the character, should be called when Idle too, to execute deacceleration for CharacterBody3D or reset velocity for RigidBody3D.
 ## when Idle speed and direction should be passed as 0, and deacceleration passed, or leave them empty.
-func add_movement_input(direction: Vector3 = Vector3.ZERO, Speed: float = 0, Acceleration: float = deacceleration if character_node is CharacterBody3D else 0) -> void:
+func add_movement_input(p_direction: Vector3 = Vector3.ZERO, p_speed: float = 0, Acceleration: float = deacceleration if character_node is CharacterBody3D else 0) -> void:
 	if mantle_component and mantle_component.is_climbing:
 		return
-	var max_speed : float = Speed
-	input_direction = direction
-	
+	current_max_speed = p_speed
+	input_direction = p_direction
+	input_acceleration = Acceleration * input_direction * (1 if current_max_speed != 0 else -1)
 	if character_node is RigidBody3D:
 		if is_flying == false:
-			velocity.x = direction.x * Acceleration * character_node.mass * get_physics_process_delta_time()
-			velocity.z = direction.z * Acceleration * character_node.mass * get_physics_process_delta_time()
+			velocity.x = p_direction.x * Acceleration * character_node.mass * get_physics_process_delta_time()
+			velocity.z = p_direction.z * Acceleration * character_node.mass * get_physics_process_delta_time()
 		else:
-			velocity = direction * Acceleration * character_node.mass * get_physics_process_delta_time()
+			velocity = p_direction * Acceleration * character_node.mass * get_physics_process_delta_time()
 		
 		if is_inf(character_node.linear_velocity.length()):
 			character_node.linear_velocity = velocity
-		if character_node.linear_velocity.length() > max_speed:
-			velocity = direction
+		if character_node.linear_velocity.length() > current_max_speed:
+			velocity = p_direction
 		character_node.apply_central_impulse(velocity)
 
 	if character_node is CharacterBody3D:
 		if is_flying == false:
-			character_node.velocity.x = lerp(character_node.velocity.x,(direction*max_speed).x,Acceleration/(max_speed if max_speed != 0 else (abs(character_node.velocity.x) if character_node.velocity.x != 0 else 1.0))*get_physics_process_delta_time())
-			character_node.velocity.z = lerp(character_node.velocity.z,(direction*max_speed).z,Acceleration/(max_speed if max_speed != 0 else (abs(character_node.velocity.z) if character_node.velocity.z != 0 else 1.0))*get_physics_process_delta_time())
+			character_node.velocity.x = lerp(character_node.velocity.x,(p_direction*current_max_speed).x,Acceleration/(current_max_speed if current_max_speed != 0 else 1.0)*get_physics_process_delta_time())
+			character_node.velocity.z = lerp(character_node.velocity.z,(p_direction*current_max_speed).z,Acceleration/(current_max_speed if current_max_speed != 0 else 1.0)*get_physics_process_delta_time())
 		else:
-			character_node.velocity = character_node.velocity.lerp((direction*max_speed),Acceleration/(max_speed if max_speed != 0 else character_node.velocity.x if character_node.velocity.x != 0 else 1.0)*get_physics_process_delta_time())
+			character_node.velocity = character_node.velocity.lerp((p_direction*current_max_speed),Acceleration/(current_max_speed if current_max_speed != 0 else 1.0)*get_physics_process_delta_time())
 			character_node.move_and_slide()
-	# Get the velocity from the character node
-	var character_node_velocity = character_node.velocity if character_node is CharacterBody3D else character_node.linear_velocity
-	
-	input_velocity = direction*max_speed if character_node is CharacterBody3D else velocity 
-	movement_direction = atan2(input_velocity.x,input_velocity.z)
-	input_is_moving = input_velocity.length() > 0.0
-	input_acceleration = Acceleration * direction * (1 if max_speed != 0 else -1)
-	#
-	
-	actual_acceleration = (character_node_velocity - PrevVelocity)  / (get_physics_process_delta_time())
-	PrevVelocity = character_node_velocity
-	#
-	actual_velocity = character_node_velocity
+
 	#tiltCharacterMesh
 	if tilt == true:
 		var MovementDirectionRelativeToCamera = input_velocity.normalized().rotated(Vector3.UP,-camera_root.HObject.transform.basis.get_euler().y)
@@ -555,6 +512,42 @@ func add_movement_input(direction: Vector3 = Vector3.ZERO, Speed: float = 0, Acc
 		mesh_ref.rotation.z = lerp(mesh_ref.rotation.z,tiltVector.z,Acceleration * get_physics_process_delta_time())
 	#
 
+var prev_acceleration : Vector3
+var prev_position : Vector3
+var current_position : Vector3
+func set_movement_info():
+	input_velocity = input_direction*current_max_speed if character_node is CharacterBody3D else velocity
+	movement_direction = atan2(input_velocity.x,input_velocity.z)
+	input_is_moving = input_velocity.length() > 0.0
+	
+	prev_position = current_position
+	prev_velocity = actual_velocity
+	prev_acceleration = actual_acceleration
+	
+	current_position = character_node.global_position
+	# Distance/Time = Velocity
+	actual_velocity = (current_position - prev_position) / get_physics_process_delta_time()
+	# Delta Velocity / Delta Time = Acceleration
+	actual_acceleration = (actual_velocity - prev_velocity) / get_physics_process_delta_time()
+
+	current_max_speed = 0
+
+
+func apply_deacceleration():
+	if input_is_moving:
+		return
+	if character_node is CharacterBody3D:
+		var velocity_without_up : Vector3 = (character_node.velocity*Vector3(1,0,1))
+		if velocity_without_up == Vector3.ZERO:
+			velocity_without_up = Vector3.ONE
+		if is_flying == false:
+			character_node.velocity.x = lerp(character_node.velocity.x, 0.0, (deacceleration/velocity_without_up.length())*get_physics_process_delta_time())
+			character_node.velocity.z = lerp(character_node.velocity.z, 0.0, (deacceleration/velocity_without_up.length())*get_physics_process_delta_time())
+		else:
+			character_node.velocity.x = lerp(character_node.velocity.x, 0.0, (deacceleration/velocity_without_up.length())*get_physics_process_delta_time())
+			character_node.velocity.y = lerp(character_node.velocity.y, 0.0, (deacceleration/velocity_without_up.length())*get_physics_process_delta_time())
+			character_node.velocity.z = lerp(character_node.velocity.z, 0.0, (deacceleration/velocity_without_up.length())*get_physics_process_delta_time())
+			character_node.move_and_slide()
 
 func calc_animation_data(): # it is used to modify the animation data to get the wanted animation result
 	animation_is_moving_backward_relative_to_camera = false if -actual_velocity.rotated(Vector3.UP,-camera_root.HObject.transform.basis.get_euler().y).z >= -0.1 else true
@@ -575,5 +568,3 @@ func jump() -> void:
 			character_node.apply_impulse(Vector3.UP * jump_magnitude * character_node.mass)
 		else:
 			vertical_velocity = Vector3.UP * jump_magnitude
-
-

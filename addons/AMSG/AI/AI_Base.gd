@@ -32,4 +32,3 @@ func _physics_process(delta):
 			ik_look_at(-$CameraRoot/SpringArm3D.transform.basis.z * 2.0 + Vector3(0.0,1.5,0.0))
 		Global.rotation_mode.aiming:
 			ik_look_at(-$CameraRoot/SpringArm3D.transform.basis.z * 2.0 + Vector3(0.0,1.5,0.0))
-

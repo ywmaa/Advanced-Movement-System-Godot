@@ -50,8 +50,6 @@ func _physics_process(delta):
 		return
 	
 	if lock_system != null && lock_system.is_locked:
-		direction = Vector3.ZERO
-		character_component.add_movement_input()
 		return
 	
 	#------------------ Input Movement ------------------#
@@ -69,9 +67,6 @@ func _physics_process(delta):
 			character_component.add_movement_input(direction, character_component.current_movement_data.run_speed,character_component.current_movement_data.run_acceleration)
 		else:
 			character_component.add_movement_input(direction, character_component.current_movement_data.walk_speed,character_component.current_movement_data.walk_acceleration)
-	else:
-		direction = Vector3.ZERO
-		character_component.add_movement_input()
 		
 	
 	#------------------ Input Crouch ------------------#
@@ -133,11 +128,22 @@ func _physics_process(delta):
 	if Input.is_action_just_pressed("interaction"):
 		character_component.camera_root.Camera.get_node("InteractionRaycast").Interact()
 
+	if Input.is_action_just_pressed("show_debug"):
+		pass
+	if Input.is_action_just_pressed("switch_distance_matching"):
+		character_component.pose_warping_active = !character_component.pose_warping_active
 
-
-
+	
 var view_changed_recently = false
 func _input(event):
+	if !Engine.is_editor_hint():
+		if Input.is_key_pressed(KEY_1):
+			DebugDraw3D.debug_enabled = !DebugDraw3D.debug_enabled
+		if Input.is_key_pressed(KEY_2):
+			DebugDraw2D.debug_enabled = !DebugDraw2D.debug_enabled
+		#if Input.is_key_pressed(KEY_3):
+			#DebugDrawManager.debug_enabled = !DebugDrawManager.debug_enabled
+
 	if event is InputEventMouseMotion:
 		if !character_component or !controls_the_possessed_character:
 			return

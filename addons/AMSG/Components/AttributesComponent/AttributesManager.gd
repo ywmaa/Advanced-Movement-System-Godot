@@ -10,5 +10,3 @@ func _ready():
 		if !(child is GameAttribute):
 			assert("Only GameAttribute childs are allowed")
 		attributes[child.attribute_name] = child
-
-

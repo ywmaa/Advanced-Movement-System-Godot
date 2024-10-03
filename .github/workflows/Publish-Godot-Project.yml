@@ -29,22 +29,12 @@ env:
  PROJECT_NAME: "AMSG" # Needs to be added, PLEASE DON'T USE SPACES
  ITCH_PROJECT_NAME: "amsg" # Needs to be added
  ITCH_USER_NAME: "ywmaa" # Needs to be added
- GODOT_VERSION: 4.1.1 # Needs to be added
+ GODOT_VERSION: 4.3 # Needs to be added
 jobs:
- CleanArtifacts:
-  # This job clears out the previous artifacts made so you don't run out of space in your github account
-  runs-on: ubuntu-latest
-  steps:
-  - uses: kolpav/purge-artifacts-action@v1
-    with:
-     token: ${{ secrets.GITHUB_TOKEN }}
-     expire-in: 1hr
-
  Export:
-  needs: CleanArtifacts # wait for artifacts to clean before making a new one
   runs-on: ubuntu-latest
   steps:
-  - uses: actions/checkout@v2
+  - uses: actions/checkout@v4
 
   - name: Download + Authorize Godot
     run: |
@@ -91,17 +81,18 @@ jobs:
      ./godot --headless --path ./ --export-release "Linux/X11" ./exports/${{ env.PROJECT_NAME }}.x86_64
 
 
-  - uses: actions/upload-artifact@v2
+  - uses: actions/upload-artifact@v4
     with:
      name: exports
      path: exports
+     overwrite: true
   
  Release:
   needs: Export
   if: github.event_name == 'workflow_dispatch' && github.event.inputs.release_github_page
   runs-on: ubuntu-latest
   steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
    
     - name: Version
       id: tag_version
@@ -114,7 +105,7 @@ jobs:
       run: exit 1
     
     - name: Download Exports
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v4
       with:
        name: exports
        path: exports
@@ -178,7 +169,7 @@ jobs:
        content: v${{ github.event.inputs.export_version }}
        mode: 0655
     
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v4
       with:
        name: VERSION
        path: ./VERSION.txt
@@ -189,7 +180,7 @@ jobs:
   runs-on: ubuntu-latest
   steps:
     - name: Download Exports
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v4
       with:
        name: exports
        path: exports

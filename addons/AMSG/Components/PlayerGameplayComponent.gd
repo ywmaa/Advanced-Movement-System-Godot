@@ -36,9 +36,6 @@ func _physics_process(delta):
 				add_movement_input(input_direction, current_movement_data.run_speed,current_movement_data.run_acceleration)
 			else:
 				add_movement_input(input_direction, current_movement_data.walk_speed,current_movement_data.walk_acceleration)
-		else:
-			add_movement_input(input_direction,0,deacceleration)
-			
 		return
 	#------------------ Look At ------------------#
 	match rotation_mode:

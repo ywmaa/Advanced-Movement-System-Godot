@@ -101,9 +101,9 @@ transform = Transform3D(1, 0, 0, 0, -0.996865, 0.0791203, 0, -0.0791203, -0.9968
 [node name="Stairs" type="Node3D" parent="."]
 
 [node name="CSGBox3D8" type="CSGBox3D" parent="Stairs"]
-transform = Transform3D(-0.999963, -0.00595152, -0.00617832, -0.0059514, 0.999982, -3.67712e-05, 0.00617843, 0, -0.99998, -1.42272, 1.61775, 1.38929)
+transform = Transform3D(-0.999963, -0.00595152, -0.00617832, -0.0059514, 0.999982, -3.67712e-05, 0.00617843, 0, -0.99998, -0.113655, 1.61365, 1.39355)
 use_collision = true
-size = Vector3(0.392448, 0.135761, 14.107)
+size = Vector3(1.77032, 0.135761, 14.107)
 material = ExtResource("3_27oba")
 
 [node name="CSGBox3D9" type="CSGBox3D" parent="Stairs"]

@@ -156,7 +156,3 @@ func create_player(id: int) -> void:
 	
 func destroy_player(id: int) -> void:
 	find_child(str(id),true,false).queue_free()
-
-
-
-
